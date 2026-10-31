@@ -1,127 +1,78 @@
-// A popup with a 3D scatter plot that can be rotated by dragging.
-// Shows points (colored by class), warped grid lines, and an optional plane n.h + d = 0.
+// A 3D scatter plot in its own panel, rotated by dragging like a trackball:
+// the side of the cube facing you follows the mouse.
 (function () {
   "use strict";
   const C = Stage.COLORS;
 
-  function open(o) {
-    const R = { x: 170, y: 40, w: 1260, h: 820 };
-    const pop = Stage.popup(R);
-    const panel = new Stage.Panel({ x: 0, y: 0, w: R.w, h: R.h }, pop.box);
-    let yaw = 0.6, pitch = 0.35, drag = null;
+  // 3x3 rotations about the screen's horizontal (x) and vertical (y) axes
+  const Rx = (a) => [[1, 0, 0], [0, Math.cos(a), -Math.sin(a)], [0, Math.sin(a), Math.cos(a)]];
+  const Ry = (a) => [[Math.cos(a), 0, Math.sin(a)], [0, 1, 0], [-Math.sin(a), 0, Math.cos(a)]];
+  const mul = (A, B) => A.map((r) => [0, 1, 2].map((j) => r[0] * B[0][j] + r[1] * B[1][j] + r[2] * B[2][j]));
 
-    // fit the view to the data
-    let lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
-    const all = o.points.concat(...o.lines);
-    for (const p of all) for (let k = 0; k < 3; k++) { lo[k] = Math.min(lo[k], p[k]); hi[k] = Math.max(hi[k], p[k]); }
-    const center = lo.map((v, k) => (v + hi[k]) / 2);
-    const half = Math.max(...hi.map((v, k) => (v - lo[k]) / 2), 1e-3);
-    const box = [0, 1, 2].map((k) => [center[k] - half, center[k] + half]);
-    const sc = Math.min(R.w, R.h) * 0.25 / half;
-
-    function project(p) {
-      const x = p[0] - center[0], y = p[1] - center[1], z = p[2] - center[2];
-      const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
-      const x1 = x * cy - y * sy, y1 = x * sy + y * cy;
-      const up = z * cp - y1 * sp, depth = y1 * cp + z * sp;
-      return [R.w / 2 + sc * x1, R.h / 2 - sc * up, depth];
+  class View3D {
+    // the data live in the cube [lo, hi]^3; axis labels name the three coordinates
+    constructor(rect, opts) {
+      this.o = Object.assign({ lo: -1, hi: 1, labels: ["x", "y", "z"] }, opts || {});
+      this.panel = new Stage.Panel(rect);
+      this.points = [];
+      this.classes = [];
+      // world (a, b, c) -> view: a to the right, c up, b into the screen; then tilt for an oblique look
+      const base = [[1, 0, 0], [0, 0, 1], [0, -1, 0]];
+      this.R = mul(Rx(0.45), mul(Ry(-0.65), base));
+      this.scale = Math.min(rect.w, rect.h) * 0.24;
+      const cv = this.panel.canvas;
+      cv.style.cursor = "grab";
+      let drag = null;
+      cv.addEventListener("pointerdown", (e) => { drag = this.panel.pos(e); cv.setPointerCapture(e.pointerId); cv.style.cursor = "grabbing"; });
+      cv.addEventListener("pointermove", (e) => {
+        if (!drag) return;
+        const p = this.panel.pos(e), k = 0.008;
+        this.R = mul(Ry((p.x - drag.x) * k), mul(Rx((p.y - drag.y) * k), this.R));
+        drag = p;
+        this.draw();
+      });
+      cv.addEventListener("pointerup", () => { drag = null; cv.style.cursor = "grab"; });
+      this.panel.onresize = () => this.draw();
     }
-
-    function planePolygon() {
-      if (!o.plane) return null;
-      const { n, d } = o.plane, pts = [];
-      // intersect the plane with the 12 edges of the bounding cube
-      const corners = [];
-      for (let i = 0; i < 8; i++) corners.push([box[0][i & 1], box[1][(i >> 1) & 1], box[2][(i >> 2) & 1]]);
-      const f = (p) => n[0] * p[0] + n[1] * p[1] + n[2] * p[2] + d;
-      for (let i = 0; i < 8; i++) for (let j = i + 1; j < 8; j++) {
-        const diff = i ^ j;
-        if (diff !== 1 && diff !== 2 && diff !== 4) continue;
-        const a = corners[i], b = corners[j], fa = f(a), fb = f(b);
-        if ((fa > 0) === (fb > 0)) continue;
-        const t = fa / (fa - fb);
-        pts.push(a.map((v, k) => v + t * (b[k] - v)));
-      }
-      if (pts.length < 3) return null;
-      const m = [0, 1, 2].map((k) => pts.reduce((s, p) => s + p[k], 0) / pts.length);
-      // order around the centroid within the plane
-      const nl = Math.hypot(...n), nn = n.map((v) => v / nl);
-      const e1 = Math.abs(nn[0]) < 0.9 ? [1, 0, 0] : [0, 1, 0];
-      const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
-      const u = cross(nn, e1), v = cross(nn, u);
-      const ang = (p) => Math.atan2((p[0] - m[0]) * v[0] + (p[1] - m[1]) * v[1] + (p[2] - m[2]) * v[2],
-        (p[0] - m[0]) * u[0] + (p[1] - m[1]) * u[1] + (p[2] - m[2]) * u[2]);
-      pts.sort((a, b) => ang(a) - ang(b));
-      return pts;
+    set(points, classes) { this.points = points; this.classes = classes; }
+    project(p) {
+      const m = (this.o.lo + this.o.hi) / 2, h = (this.o.hi - this.o.lo) / 2;
+      const q = [(p[0] - m) / h, (p[1] - m) / h, (p[2] - m) / h];
+      const R = this.R;
+      const v = R.map((r) => r[0] * q[0] + r[1] * q[1] + r[2] * q[2]);
+      return [this.panel.w / 2 + this.scale * v[0], this.panel.h / 2 - this.scale * v[1], v[2]];
     }
-    const plane = planePolygon();
-
-    function draw() {
-      const c = panel.clear("#fff");
-      // bounding cube
-      c.strokeStyle = "#ddd";
+    draw() {
+      const c = this.panel.clear("#fff"), lo = this.o.lo, hi = this.o.hi;
+      c.strokeStyle = "#bbb";
       c.lineWidth = 1.5;
+      c.strokeRect(0.75, 0.75, this.panel.w - 1.5, this.panel.h - 1.5);
+      // cube edges; the three edges from the (lo, lo, lo) corner are the labeled axes
+      const corner = (i) => [i & 1 ? hi : lo, i & 2 ? hi : lo, i & 4 ? hi : lo];
       for (let i = 0; i < 8; i++) for (let j = i + 1; j < 8; j++) {
-        const diff = i ^ j;
-        if (diff !== 1 && diff !== 2 && diff !== 4) continue;
-        const a = project([box[0][i & 1], box[1][(i >> 1) & 1], box[2][(i >> 2) & 1]]);
-        const b = project([box[0][j & 1], box[1][(j >> 1) & 1], box[2][(j >> 2) & 1]]);
+        const d = i ^ j;
+        if (d !== 1 && d !== 2 && d !== 4) continue;
+        const a = this.project(corner(i)), b = this.project(corner(j));
+        c.strokeStyle = i === 0 ? "#777" : "#d4d4d4";
+        c.lineWidth = i === 0 ? 2 : 1.5;
         c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo(b[0], b[1]); c.stroke();
       }
-      // axis labels at the far ends of three edges
-      c.fillStyle = C.grey;
-      c.font = `italic 24px ${C.font}`;
-      c.textAlign = "center"; c.textBaseline = "middle";
-      const lab = o.axisLabels || ["x", "y", "z"];
-      const ends = [[box[0][1] + half * 0.12, box[1][0], box[2][0]], [box[0][0], box[1][1] + half * 0.12, box[2][0]], [box[0][0], box[1][0], box[2][1] + half * 0.12]];
-      ends.forEach((e, k) => { const p = project(e); c.fillText(lab[k], p[0], p[1]); });
-
-      // warped grid
-      c.strokeStyle = "rgba(90, 90, 90, 0.35)";
-      c.lineWidth = 1.2;
-      for (const L of o.lines) {
-        c.beginPath();
-        L.forEach((p, i) => { const q = project(p); if (i === 0) c.moveTo(q[0], q[1]); else c.lineTo(q[0], q[1]); });
-        c.stroke();
-      }
-      // separating plane
-      if (plane) {
-        c.beginPath();
-        plane.forEach((p, i) => { const q = project(p); if (i === 0) c.moveTo(q[0], q[1]); else c.lineTo(q[0], q[1]); });
-        c.closePath();
-        c.fillStyle = "rgba(17, 85, 204, 0.10)";
-        c.fill();
-        c.strokeStyle = "rgba(17, 85, 204, 0.6)";
-        c.lineWidth = 2;
-        c.stroke();
-      }
+      const ext = lo + (hi - lo) * 1.16;
+      [[ext, lo, lo], [lo, ext, lo], [lo, lo, ext]].forEach((e, k) => {
+        const p = this.project(e);
+        NNDiagram.nodeLabel(c, this.o.labels[k], p[0], p[1] - 14);
+      });
       // points, far to near
-      const P = o.points.map((p, i) => [project(p), o.labels[i]]);
-      P.sort((a, b) => b[0][2] - a[0][2]);
+      const P = this.points.map((p, i) => [this.project(p), this.classes[i]]);
+      P.sort((a, b) => a[0][2] - b[0][2]);
       c.lineWidth = 1.2;
       c.strokeStyle = "#fff";
       for (const [q, k] of P) {
         c.fillStyle = NN.classColor(k);
-        c.beginPath(); c.arc(q[0], q[1], 6, 0, 2 * Math.PI); c.fill(); c.stroke();
+        c.beginPath(); c.arc(q[0], q[1], 5.5, 0, 2 * Math.PI); c.fill(); c.stroke();
       }
     }
-
-    const cv = panel.canvas;
-    cv.style.cursor = "grab";
-    cv.addEventListener("pointerdown", (e) => { drag = panel.pos(e); cv.setPointerCapture(e.pointerId); cv.style.cursor = "grabbing"; });
-    cv.addEventListener("pointermove", (e) => {
-      if (!drag) return;
-      const p = panel.pos(e);
-      yaw += (p.x - drag.x) * 0.008;
-      pitch = Optim.clamp(pitch + (p.y - drag.y) * 0.008, -Math.PI / 2, Math.PI / 2);
-      drag = p;
-      draw();
-    });
-    cv.addEventListener("pointerup", () => { drag = null; cv.style.cursor = "grab"; });
-    panel.onresize = draw;
-    draw();
-    return { pop, draw, set: (y, p) => { yaw = y; pitch = p; draw(); } };
   }
 
-  window.View3D = { open };
+  window.View3D = View3D;
 })();

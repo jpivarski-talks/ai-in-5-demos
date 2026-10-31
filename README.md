@@ -22,15 +22,15 @@ or use GitHub Pages (Settings → Pages → deploy from the `main` branch, root 
 | 1.2 `…/2-random.html` | random smooth slides (Chebyshev), time computed without animation | **random** (space) |
 | 1.3 `…/3-optimize.html` | gradient-free (1+1) evolution strategy on the 15 heights | **random + optimize** (space), **cycloid** overlay |
 | 2.1 `demo2-compression/1-fourier-1d.html` | 8 cosine templates fit to data | **1…8** (or keys 1–8 / space), **new data** |
-| 2.2 `…/2-fourier-image.html` | 2D cosine templates (JPEG-style), one frequency level per click; auto-advances after 10 | **add templates** (space), **difference**, **reset** |
-| 2.3 `…/3-logistic-1d.html` | 3 logistics with draggable handles (midpoint, right end, 90% point) | **fit** (space), **new data** |
+| 2.2 `…/2-fourier-image.html` | 2D cosine templates (JPEG-style), one frequency level per click; auto-advances after 10, up to 2016 templates | **add templates** (space), **difference**, **reset** |
+| 2.3 `…/3-logistic-1d.html` | 5 logistics with draggable handles (midpoint, right end, 90% point) | **fit** (space), **new data** |
 | 2.4 `…/4-adaptive-image.html` | 100 functions A·tanh(s·u)·exp(−v²/2ℓ²), fit with Adam | **run** (space), **difference**, **reset** |
-| 3.1 `demo3-generalization/1-overfit.html` | 1 hidden layer × 1000 neurons overfitting noisy XOR; in-sample vs out-of-sample loss | **resample data**, **reset model**, **train** |
-| 3.2 `…/2-circle.html` | 2 → 3 → 1 network with live weights | **new start**, **train**, **transform** (rotatable 3D view of the hidden layer) |
-| 3.3 `…/3-spirals.html` | the gist's 2 → 100 → 2 → 3 network; right panel shows the 2D layer's warped space | **new start**, **train** |
+| 3.1 `demo3-generalization/1-overfit.html` | 1 hidden layer × 1000 neurons overfitting noisy XOR; loss on this data vs new data | **resample data**, **reset model**, **train** |
+| 3.2 `…/2-circle.html` | 2 → 3 → 1 network with live weights; the fit, the hidden layer's 3D space (drag to rotate), and the network | **new start**, **train** |
+| 3.3 `…/3-spirals.html` | the gist's 2 → 100 → 2 → 3 network; the fit, the warped (u, v) space of the 2D layer, and the network | **new start**, **train** |
 | 4.1 `demo4-attention/1-embedding.html` | type a word + Enter: its 100-d vector and its 15 nearest words (PCA) | text field |
-| 4.2 `…/2-translation.html` | type an English sentence + Enter: French translation and the attention matrix | text field |
-| 5 `demo5-few-shot/1-complete.html` | base LLM completes the text box (completion in blue) | presets, **complete** (Ctrl/⌘-Enter; shift-click to let it run past the line), ⚙ settings |
+| 4.2 `…/2-translation.html` | type an English sentence + Enter: French translation and the attention matrix ("hot" colormap) | text field |
+| 5 `demo5-few-shot/1-complete.html` | base LLM completes the text box (completion in blue); starts empty, temperature 1 | presets, **complete** (Ctrl/⌘-Enter; shift-click to let it run past the line), ⚙ settings |
 
 Good Demo 4.2 sentences: *My older sister bought a beautiful blue car yesterday.* · *The white car is new.* · *He has a red bicycle and a black car.* · *The old man reads a book.*
 
@@ -57,7 +57,7 @@ brew install llama.cpp
 ./serve-llm.sh big      # Qwen3-30B-A3B-Base, Q4_K_M (≈18 GB; needs ≥ 32 GB RAM)
 ```
 
-All eight presets complete correctly with Qwen3-8B-Base at temperature 0. That was tested with the same GGUF file and llama.cpp b12017 on Linux/CUDA, not yet on a Mac. The ⚙ button changes the endpoint, model name, API key, temperature, and maximum tokens. These are stored only in the browser's localStorage. If a base model reappears on OpenRouter, set the endpoint to `https://openrouter.ai/api`, the model name, and your key.
+All eight presets complete correctly with Qwen3-8B-Base at temperature 0. The default is temperature 1, so expect some variety; set it to 0 with ⚙ for repeatable answers. That was tested with the same GGUF file and llama.cpp b12017 on Linux/CUDA, not yet on a Mac. The ⚙ button changes the endpoint, model name, API key, temperature, and maximum tokens. These are stored only in the browser's localStorage. If a base model reappears on OpenRouter, set the endpoint to `https://openrouter.ai/api`, the model name, and your key.
 
 Use Chrome. A page served from GitHub Pages (https) may call `http://localhost:8080`, but Chrome asks once for permission to reach the local network. Serving the pages locally (above) avoids that.
 

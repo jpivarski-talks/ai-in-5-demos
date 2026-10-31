@@ -16,8 +16,8 @@
 "use strict";
 const { N, LEFT, RIGHT } = ImageDemo;
 const MANUAL = 10;      // clicks before it starts advancing by itself
-const AUTO_TO = 43;     // stop auto-advancing after this many frequency levels
-const AUTO_DT = 0.15;   // seconds per level while auto-advancing
+const AUTO_TO = 62;     // stop auto-advancing after this many frequency levels (2016 numbers)
+const AUTO_DT = 0.12;   // seconds per level while auto-advancing
 const panel = new Stage.Panel(Stage.L.main);
 const readout = new Plots.Readout({ label: "loss" });
 const history = new Plots.History({ mode: "line", xSpan: AUTO_TO, yLabel: "loss", xLabel: "step" });

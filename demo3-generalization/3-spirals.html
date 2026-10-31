@@ -12,12 +12,14 @@
 <script src="../common/plots.js"></script>
 <script src="../common/optim.js"></script>
 <script src="nn-common.js"></script>
+<script src="nn-diagram.js"></script>
 <script>
 "use strict";
-const CFG = { nPer: 300, H: 100, lr: 0.004, l2: 1e-5, perFrame: 2, noise: 0.05, G: 90, lines: 21 };
+const CFG = { nPer: 300, H: 100, lr: 0.004, l2: 1e-5, perFrame: 2, noise: 0.05, G: 128, g: 36, lines: 21 };
 const u = Optim.rng();
 const C = Stage.COLORS;
-const P = 520;
+const P = 480;
+const D = NNDiagram, BOX = D.BOX;
 const panel = new Stage.Panel(Stage.L.main);
 const left = { x: 0, y: 0, w: P, h: P }, right = { x: 1060 - P, y: 0, w: P, h: P };
 const axL = new Plots.Axes(panel, left, [-1.1, 1.1], [-1.1, 1.1]);
@@ -28,7 +30,8 @@ const history = new Plots.History({ mode: "line", xSpan: 300, yLabel: "loss", xL
 const data = NN.spirals(CFG.nPer, Optim.rng(12345));
 const N = data.xs.length;
 const X = tf.tensor(data.xs), Yoh = tf.oneHot(tf.tensor1d(data.ys, "int32"), 3);
-const gridT = NN.grid(CFG.G, -1.1, 1.1);
+const gridT = NN.grid(CFG.G, -1.1, 1.1), gridSmall = NN.grid(CFG.g, -1.1, 1.1);
+const xin = D.inputGrid(CFG.g);
 // input-space grid lines, sampled densely so they can bend
 const lineVals = Array.from({ length: CFG.lines }, (_, k) => -1.1 + 2.2 * k / (CFG.lines - 1));
 const linePts = [];
@@ -36,7 +39,7 @@ for (const v of lineVals) for (let k = 0; k <= 80; k++) { const t = -1.1 + 2.2 *
 for (const v of lineVals) for (let k = 0; k <= 80; k++) { const t = -1.1 + 2.2 * k / 80; linePts.push([t, v]); }
 const lineT = tf.tensor(linePts);
 
-let model = null, opt = null, running = false, view = null, box = null;
+let model = null, opt = null, running = false, view = null, box = null, frameCount = 0;
 
 // first two layers start out (almost) as the identity map: pairs of ReLUs facing
 // opposite directions, ReLU(u.x) u - ReLU(-u.x) (-u) = (u.x) u, summed over directions
@@ -75,12 +78,16 @@ function lossFn() {
 function loss() { return tf.tidy(() => lossFn().dataSync()[0]); }
 
 function computeView() {
+  // the fine-grained input-space map is the slowest part, so refresh it every other frame
+  const probs = !view || !running || (frameCount++ % 2 === 0) ? tf.tidy(() => tf.softmax(model.forward(gridT)).dataSync()) : view.probs;
   view = tf.tidy(() => ({
-    probs: tf.softmax(model.forward(gridT)).dataSync(),
+    probs,
     z: model.forwardAll(X)[2].dataSync(),
     lines: model.forwardAll(lineT)[2].dataSync(),
     acc: tf.mean(tf.cast(tf.equal(tf.argMax(model.forward(X), 1), tf.argMax(Yoh, 1)), "float32")).dataSync()[0],
     w3: model.layers[2].W.arraySync(), b3: model.layers[2].b.arraySync(),
+    small: model.forwardAll(gridSmall)[2].dataSync(),
+    w1: model.layers[0].W.arraySync(), w2: model.layers[1].W.arraySync(),
   }));
   // square view box around the transformed data, eased so it doesn't jump
   let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
@@ -97,7 +104,7 @@ function computeView() {
 
 function drawRight(c) {
   // regions of the final (linear) layer, drawn in the transformed coordinates
-  const G = 70, probs = new Float32Array(G * G * 3), { w3, b3 } = view;
+  const G = 100, probs = new Float32Array(G * G * 3), { w3, b3 } = view;
   for (let j = 0; j < G; j++) for (let i = 0; i < G; i++) {
     const zx = axR.xlim[0] + (axR.xlim[1] - axR.xlim[0]) * (i + 0.5) / G;
     const zy = axR.ylim[1] - (axR.ylim[1] - axR.ylim[0]) * (j + 0.5) / G;
@@ -106,6 +113,7 @@ function drawRight(c) {
     for (let k = 0; k < 3; k++) probs[3 * (j * G + i) + k] = e[k] / s;
   }
   NN.paintRegions(c, right, probs, G, 3);
+  axR.clip((c) => NN.drawContours(c, right, probs, G, 3));
   axR.clip((c) => {
     c.strokeStyle = "rgba(60, 60, 60, 0.4)";
     c.lineWidth = 1;
@@ -122,11 +130,13 @@ function drawRight(c) {
     for (let i = 0; i < N; i++) zs.push([view.z[2 * i], view.z[2 * i + 1]]);
     NN.drawPoints(axR, zs, data.ys, { r: 3.5, lw: 0.8 });
   });
+  D.cornerAxes(c, right, "u", "v");
   c.strokeStyle = "#bbb"; c.lineWidth = 1.5; c.strokeRect(right.x, right.y, right.w, right.h);
 }
 
 function drawLeft(c) {
   NN.paintRegions(c, left, view.probs, CFG.G, 3);
+  axL.clip((c) => NN.drawContours(c, left, view.probs, CFG.G, 3));
   axL.clip((c) => {
     c.strokeStyle = "rgba(60, 60, 60, 0.18)";
     c.lineWidth = 1;
@@ -136,42 +146,27 @@ function drawLeft(c) {
     }
     NN.drawPoints(axL, data.xs, data.ys, { r: 3.5, lw: 0.8 });
   });
+  D.cornerAxes(c, left, "x", "y");
   c.strokeStyle = "#bbb"; c.lineWidth = 1.5; c.strokeRect(left.x, left.y, left.w, left.h);
 }
 
-// schematic of the network: 2 -> 100 -> 2 -> 3 (no live weights)
-function drawSchematic(c) {
-  const top = P + 40, bot = 770, mid = (top + bot) / 2;
-  const cols = [
-    { x: 150, n: 2, color: C.ink, panel: left },
-    { x: 400, n: CFG.H, color: "#999" },
-    { x: 660, n: 2, color: C.ink, panel: right },
-    { x: 910, n: 3, color: null },
-  ];
-  const ys = (col) => {
-    const n = col.n, span = n > 10 ? bot - top : Math.min(bot - top, (n - 1) * 70);
-    return Array.from({ length: n }, (_, i) => (n === 1 ? mid : mid - span / 2 + span * i / (n - 1)));
-  };
-  c.strokeStyle = "rgba(120, 120, 120, 0.12)";
-  c.lineWidth = 1;
-  for (let k = 0; k < cols.length - 1; k++) {
-    const a = cols[k], b = cols[k + 1], ya = ys(a), yb = ys(b);
-    for (const y0 of ya) for (const y1 of yb) { c.beginPath(); c.moveTo(a.x, y0); c.lineTo(b.x, y1); c.stroke(); }
-  }
-  cols.forEach((col, k) => {
-    ys(col).forEach((y, i) => {
-      c.fillStyle = col.color || NN.classColor(i);
-      c.beginPath(); c.arc(col.x, y, col.n > 10 ? 2 : 11, 0, 2 * Math.PI); c.fill();
-    });
-  });
-  // brackets linking the 2-node layers to the panels above them
-  c.strokeStyle = "#bbb";
-  c.lineWidth = 1.5;
-  c.setLineDash([5, 6]);
-  for (const col of [cols[0], cols[2]]) {
-    c.beginPath(); c.moveTo(col.x, top - 6); c.lineTo(col.panel.x + col.panel.w / 2, P + 4); c.stroke();
-  }
-  c.setLineDash([]);
+// the network, drawn like the previous page: x, y -> 100 ReLUs -> u, v -> three classes
+const MID = (P + 780) / 2 + 4;
+const IN_X = 110, HID_X = 390, Z_X = 640, OUT_X0 = 900, OUT_X1 = 990;
+const inY = D.stack(2, MID, BOX + 30).map((y) => y - BOX / 2);
+const zY = D.stack(2, MID, BOX + 30).map((y) => y - BOX / 2);
+const hidY = D.stack(CFG.H, MID, 2.6);
+const outY = D.stack(3, MID, 80);
+function drawNetwork(c) {
+  const { w1, w2, w3 } = view, m1 = D.maxAbs(w1), m2 = D.maxAbs(w2), m3 = D.maxAbs(w3);
+  for (let i = 0; i < 2; i++) for (let j = 0; j < CFG.H; j++) D.edge(c, IN_X + BOX, inY[i] + BOX / 2, HID_X, hidY[j], w1[i][j], m1, 1);
+  for (let j = 0; j < CFG.H; j++) for (let k = 0; k < 2; k++) D.edge(c, HID_X, hidY[j], Z_X, zY[k] + BOX / 2, w2[j][k], m2, 1);
+  for (let k = 0; k < 2; k++) for (let o = 0; o < 3; o++) D.edge(c, Z_X + BOX, zY[k] + BOX / 2, OUT_X0, outY[o], w3[k][o], m3);
+  c.fillStyle = "#777";
+  for (const y of hidY) { c.beginPath(); c.arc(HID_X, y, 1.6, 0, 2 * Math.PI); c.fill(); }
+  for (let o = 0; o < 3; o++) D.arrow(c, OUT_X0, outY[o], OUT_X1, outY[o], NN.classColor(o));
+  ["x", "y"].forEach((lab, i) => D.featureBox(c, IN_X, inY[i], xin, CFG.g, 2, i, lab, "left"));
+  ["u", "v"].forEach((lab, k) => D.featureBox(c, Z_X, zY[k], view.small, CFG.g, 2, k, lab));
 }
 
 function draw() {
@@ -179,7 +174,7 @@ function draw() {
   if (!view) return;
   drawLeft(c);
   drawRight(c);
-  drawSchematic(c);
+  drawNetwork(c);
 }
 
 function stop() { running = false; trainButton.textContent = "train"; trainButton.classList.remove("on"); }
@@ -200,8 +195,9 @@ readout.set(loss().toFixed(3));
 Stage.loop(() => {
   if (running) {
     for (let k = 0; k < CFG.perFrame; k++) {
-      opt.minimize(lossFn);
-      history.push(loss());
+      const L = opt.minimize(lossFn, true);   // returns the loss (before this step)
+      history.push(L.dataSync()[0]);
+      L.dispose();
     }
     computeView();
     readout.set(history.a[history.length - 1].toFixed(3));
@@ -211,7 +207,7 @@ Stage.loop(() => {
 });
 
 Stage.nav("2-circle.html", "../demo4-attention/1-embedding.html");
-window.demo = { CFG, get model() { return model; }, history, train, newModel, loss, get acc() { return view.acc; } };
+window.demo = { draw, CFG, get model() { return model; }, history, train, newModel, loss, get acc() { return view.acc; } };
 </script>
 </body>
 </html>

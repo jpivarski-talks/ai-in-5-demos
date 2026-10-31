@@ -28,7 +28,7 @@
 <script src="presets.js"></script>
 <script>
 "use strict";
-const DEFAULTS = { endpoint: "http://localhost:8080", model: "", key: "", temperature: "0", maxTokens: "60" };
+const DEFAULTS = { endpoint: "http://localhost:8080", model: "", key: "", temperature: "1", maxTokens: "60" };
 const cfg = Object.assign({}, DEFAULTS, JSON.parse(localStorage.getItem("demo5-settings") || "{}"));
 // allow ?endpoint=... in the URL as well
 const q = new URLSearchParams(location.search);
@@ -46,7 +46,7 @@ go.style.fontSize = "26px";
 const gear = Stage.el("div", { id: "gear", html: "&#9881;", title: "settings" });
 Stage.place(gear, { x: 1535, y: 822, w: 40, h: 40 });
 
-let current = PRESETS[0], abort = null;
+let current = null, abort = null;   // free-form until a preset is chosen
 
 for (const p of PRESETS) {
   Stage.button(p.label, () => { stop(); current = p; setText(p.prompt); }, side);
@@ -72,7 +72,7 @@ async function complete(more) {
   go.textContent = "stop";
   go.classList.add("on");
   const body = { prompt, max_tokens: more ? 250 : +cfg.maxTokens, temperature: +cfg.temperature, stream: true };
-  if (!more) body.stop = current && current.stop ? current.stop : ["\n"];
+  if (!more && current) body.stop = current.stop || ["\n"];
   if (cfg.model) body.model = cfg.model;
   const headers = { "Content-Type": "application/json" };
   if (cfg.key) headers.Authorization = "Bearer " + cfg.key;
@@ -134,7 +134,7 @@ text.addEventListener("keydown", (e) => {
   if (e.key === "Escape") stop();
 });
 
-setText(PRESETS[0].prompt);
+text.focus();
 Stage.nav("../demo4-attention/2-translation.html", null);
 window.demo = { complete, setText, cfg };
 </script>

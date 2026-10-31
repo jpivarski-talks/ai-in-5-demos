@@ -12,24 +12,31 @@
 <script src="../common/plots.js"></script>
 <script src="../common/optim.js"></script>
 <script src="nn-common.js"></script>
+<script src="nn-diagram.js"></script>
 <script src="view3d.js"></script>
 <script>
 "use strict";
 const CFG = { n: 200, lr: 0.03, perFrame: 4, w1: 1.0, G: 100, g: 36 };
 const u = Optim.rng();
 const C = Stage.COLORS;
-const panel = new Stage.Panel(Stage.L.main);
+const D = NNDiagram, BOX = D.BOX;
+const P = 480, M = Stage.L.main;
+// top: the fit (left) and the hidden layer's 3D space (right); bottom: the network
+const panel = new Stage.Panel(M);
+const FIT = { x: 0, y: 0, w: P, h: P };
+const ax = new Plots.Axes(panel, FIT, [-1.1, 1.1], [-1.1, 1.1]);
+const view3d = new View3D({ x: M.x + M.w - P, y: M.y, w: P, h: P }, { lo: -1, hi: 1, labels: ["h1", "h2", "h3"] });
 const readout = new Plots.Readout({ label: "loss" });
 const history = new Plots.History({ mode: "line", xSpan: 300, yLabel: "loss", xLabel: "iteration" });
 
 // network diagram geometry (main-panel coordinates)
-const NODE = 96;
-const inputs = [{ x: 40, y: 250 }, { x: 40, y: 440 }];
-const hidden = [{ x: 300, y: 160 }, { x: 300, y: 345 }, { x: 300, y: 530 }];
-const OUT = { x: 500, y: 110, w: 560, h: 560 };
-const ax = new Plots.Axes(panel, OUT, [-1.1, 1.1], [-1.1, 1.1]);
+const MID = (P + M.h) / 2 + 4;
+const IN_X = 150, HID_X = 450, FORK_X = 720, OUT_X = 830;
+const inY = D.stack(2, MID, BOX + 30).map((y) => y - BOX / 2);
+const hidY = D.stack(3, MID, BOX + 16).map((y) => y - BOX / 2);
 
 const gridBig = NN.grid(CFG.G, -1.1, 1.1), gridSmall = NN.grid(CFG.g, -1.1, 1.1);
+const xin = D.inputGrid(CFG.g);
 let data, X, Y, model = null, opt = null, running = false, view = null;
 
 function newData() {
@@ -51,58 +58,38 @@ function newModel() {
 function loss() { return tf.tidy(() => NN.bce(model.forward(X), Y).dataSync()[0]); }
 
 function computeView() {
-  view = tf.tidy(() => {
-    const big = model.forward(gridBig).dataSync();
-    const small = model.forwardAll(gridSmall)[1].dataSync();
-    return { big, small, w: model.weights() };
-  });
-}
-
-// paint a tanh-valued feature (-1..1) as orange -> white -> blue
-function paintFeature(c, r, vals, stride, k) {
-  const g = CFG.g, a = new Float32Array(g * g);
-  for (let p = 0; p < g * g; p++) a[p] = (vals[p * stride + k] + 1) / 2;
-  NN.paintRegions(c, r, a, g, 1);
-  c.strokeStyle = "#999"; c.lineWidth = 1.5; c.strokeRect(r.x, r.y, r.w, r.h);
-}
-
-function edge(c, x0, y0, x1, y1, w) {
-  c.strokeStyle = w > 0 ? C.blue : C.orange;
-  c.lineWidth = Math.min(10, 0.5 + 2.2 * Math.abs(w));
-  c.globalAlpha = Math.min(1, 0.25 + 0.4 * Math.abs(w));
-  const mx = (x0 + x1) / 2;
-  c.beginPath(); c.moveTo(x0, y0); c.bezierCurveTo(mx, y0, mx, y1, x1, y1); c.stroke();
-  c.globalAlpha = 1;
+  view = tf.tidy(() => ({
+    big: model.forward(gridBig).dataSync(),
+    small: model.forwardAll(gridSmall)[1].dataSync(),
+    hidden: model.forwardAll(X)[1].arraySync(),
+    w: model.weights(),
+  }));
+  view3d.set(view.hidden, data.ys);
 }
 
 function draw() {
   const c = panel.clear();
   if (!view) return;
-  const W1 = view.w[0].W, W2 = view.w[1].W;
-  for (let i = 0; i < 2; i++) for (let j = 0; j < 3; j++) {
-    edge(c, inputs[i].x + NODE, inputs[i].y + NODE / 2, hidden[j].x, hidden[j].y + NODE / 2, W1[i][j]);
-  }
-  for (let j = 0; j < 3; j++) edge(c, hidden[j].x + NODE, hidden[j].y + NODE / 2, OUT.x, OUT.y + OUT.h / 2, W2[j][0]);
-
-  // input features x1, x2
-  const g = CFG.g, xin = new Float32Array(g * g * 2);
-  for (let p = 0; p < g * g; p++) {
-    const i = p % g, j = Math.floor(p / g);
-    xin[2 * p] = -1 + 2 * (i + 0.5) / g;
-    xin[2 * p + 1] = 1 - 2 * (j + 0.5) / g;
-  }
-  for (let i = 0; i < 2; i++) paintFeature(c, { x: inputs[i].x, y: inputs[i].y, w: NODE, h: NODE }, xin, 2, i);
-  for (let j = 0; j < 3; j++) paintFeature(c, { x: hidden[j].x, y: hidden[j].y, w: NODE, h: NODE }, view.small, 3, j);
-  c.fillStyle = C.ink;
-  c.font = `italic 24px ${C.font}`;
-  c.textAlign = "center";
-  c.textBaseline = "top";
-  c.fillText("x₁", inputs[0].x + NODE / 2, inputs[0].y + NODE + 6);
-  c.fillText("x₂", inputs[1].x + NODE / 2, inputs[1].y + NODE + 6);
-
-  NN.paintRegions(c, OUT, view.big, CFG.G, 1);
+  // the fit
+  NN.paintRegions(c, FIT, view.big, CFG.G, 1);
   NN.drawPoints(ax, data.xs, data.ys, { r: 5, lw: 1.2 });
-  c.strokeStyle = "#bbb"; c.lineWidth = 1.5; c.strokeRect(OUT.x, OUT.y, OUT.w, OUT.h);
+  D.cornerAxes(c, FIT, "x", "y");
+  c.strokeStyle = "#bbb"; c.lineWidth = 1.5; c.strokeRect(0.75, 0.75, P - 1.5, P - 1.5);
+
+  // the network: x, y -> h1, h2, h3 -> output classes
+  const W1 = view.w[0].W, W2 = view.w[1].W, m1 = D.maxAbs(W1), m2 = D.maxAbs(W2);
+  for (let i = 0; i < 2; i++) for (let j = 0; j < 3; j++) {
+    D.edge(c, IN_X + BOX, inY[i] + BOX / 2, HID_X, hidY[j] + BOX / 2, W1[i][j], m1);
+  }
+  for (let j = 0; j < 3; j++) D.edge(c, HID_X + BOX, hidY[j] + BOX / 2, FORK_X, MID, W2[j][0], m2);
+  D.arrow(c, FORK_X, MID, OUT_X, MID - 50, C.blue);
+  D.arrow(c, FORK_X, MID, OUT_X, MID + 50, C.orange);
+  c.fillStyle = C.ink;
+  c.beginPath(); c.arc(FORK_X, MID, 7, 0, 2 * Math.PI); c.fill();
+  ["x", "y"].forEach((lab, i) => D.featureBox(c, IN_X, inY[i], xin, CFG.g, 2, i, lab, "left"));
+  ["h1", "h2", "h3"].forEach((lab, j) => D.featureBox(c, HID_X, hidY[j], view.small, CFG.g, 3, j, lab));
+
+  view3d.draw();
 }
 
 function stop() { running = false; trainButton.textContent = "train"; trainButton.classList.remove("on"); }
@@ -114,30 +101,9 @@ function train() {
   trainButton.classList.add("on");
 }
 
-// ---- the popup: how the hidden layer reshapes the plane, in 3D
-function showTransform() {
-  stop();
-  const w = model.weights();
-  const hid = (pts) => tf.tidy(() => model.forwardAll(tf.tensor(pts))[1].arraySync());
-  const lines = [];
-  const vals = [];
-  for (let k = 0; k <= 12; k++) vals.push(-1.1 + 2.2 * k / 12);
-  for (const v of vals) {
-    const a = [], b = [];
-    for (let k = 0; k <= 60; k++) { const t = -1.1 + 2.2 * k / 60; a.push([v, t]); b.push([t, v]); }
-    lines.push(hid(a), hid(b));
-  }
-  View3D.open({
-    points: hid(data.xs), labels: data.ys, lines,
-    plane: { n: w[1].W.map((r) => r[0]), d: w[1].b[0] },
-    axisLabels: ["h₁", "h₂", "h₃"],
-  });
-}
-
 const bar = Stage.controls();
-Stage.button("new start", () => { stop(); newModel(); }, bar);
+Stage.button("new start", () => { stop(); newModel(); readout.set(loss().toFixed(3)); }, bar);
 const trainButton = Stage.button("train", train, bar, { cls: "primary" });
-Stage.button("transform", showTransform, bar);
 
 newData();
 newModel();
@@ -156,7 +122,7 @@ Stage.loop(() => {
 });
 
 Stage.nav("1-overfit.html", "3-spirals.html");
-window.demo = { CFG, get model() { return model; }, history, train, newModel, loss, showTransform };
+window.demo = { CFG, get model() { return model; }, history, train, newModel, loss, view3d };
 </script>
 </body>
 </html>

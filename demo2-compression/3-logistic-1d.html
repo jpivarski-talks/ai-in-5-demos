@@ -14,11 +14,11 @@
 <script src="data1d.js"></script>
 <script>
 "use strict";
-const NL = 3, STEPS = Fits1D.FIT.steps;
+const NL = Fits1D.START.length / 3, STEPS = Fits1D.FIT.steps;
 // slow at first, where the interesting motion happens
 const perFrame = (step) => (step < 200 ? 1 : 6);
 const C = Stage.COLORS;
-const COLORS = [C.orange, "#2ca02c", "#9467bd"];
+const COLORS = [C.orange, "#2ca02c", "#9467bd", "#d62728", "#8c564b"];
 const LN9 = Math.log(9);
 const panel = new Stage.Panel(Stage.L.main);
 const readout = new Plots.Readout({ label: "loss" });
@@ -26,10 +26,11 @@ const history = new Plots.History({ mode: "line", xSpan: STEPS, yLabel: "loss", 
 const u = Optim.rng();
 const FX = Float64Array.from({ length: 300 }, (_, i) => i / 299);
 
-// three narrow panels (one logistic each) and a wide panel with the data and the sum
-const PW = 185, GAP = 18, H = 740;
-const small = [0, 1, 2].map((k) => new Plots.Axes(panel, { x: 10 + k * (PW + GAP), y: 10, w: PW, h: H }, [0, 1], [-1, 1]));
-const wide = new Plots.Axes(panel, { x: 10 + 3 * (PW + GAP) + 12, y: 10, w: 1060 - (10 + 3 * (PW + GAP) + 12) - 10, h: H }, [-0.02, 1.02], [-1, 1]);
+// a column of panels on the left (one logistic each) and a wide panel with the data and the sum
+const PW = 400, GAP = 14, PH = (740 - (NL - 1) * GAP) / NL;
+const small = Array.from({ length: NL }, (_, k) => new Plots.Axes(panel, { x: 10, y: 10 + k * (PH + GAP), w: PW, h: PH }, [0, 1], [-1, 1]));
+const WX = 10 + PW + 30;
+const wide = new Plots.Axes(panel, { x: WX, y: 10, w: 1060 - WX - 10, h: 740 }, [-0.02, 1.02], [-1, 1]);
 
 let y, p, opt = null, step = 0, running = false, drag = null;
 
@@ -45,7 +46,7 @@ function newData() {
   const pad = (hi - lo) * 0.12;
   wide.ylim = [lo - pad, hi + pad];
   const half = (hi - lo) / 2 + pad;
-  for (const a of small) a.ylim = [-1.3 * half, 1.3 * half];
+  for (const a of small) a.ylim = [-2.1 * half, 2.1 * half];   // fitted amplitudes reach ~1.9x the data range
   resetLogistics();
   history.clear();
   record();
@@ -113,6 +114,9 @@ function draw() {
   const base = Fits1D.bestConst(p, y);
   for (let k = 0; k < NL; k++) {
     const ax = small[k], x0 = p[3 * k], w = Math.exp(p[3 * k + 1]), A = p[3 * k + 2];
+    // grow (never shrink) the panel's scale to keep its curve and handles in view
+    const need = 1.15 * Math.abs(A);
+    if (need > ax.ylim[1]) ax.ylim = [-need, need];
     ax.frame();
     ax.clip(() => {
       c.strokeStyle = "#eee"; c.lineWidth = 1.5;

@@ -18,7 +18,7 @@
     for (let tries = 0; tries < 40; tries++) {
       y = F.smoothCurve(u, 0.07, 0.12);
       const s = score(y, u);
-      if (s.rc > 0.88 && s.rc < 0.975 && s.rl > 0.88 && s.rl < 0.975) return y;
+      if (s.rc > 0.88 && s.rc < 0.975 && s.rl > 0.92 && s.rl < 0.985) return y;
     }
     return y;
   }

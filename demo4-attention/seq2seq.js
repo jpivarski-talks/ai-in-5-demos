@@ -32,6 +32,24 @@
     }
     return toks;
   }
+  // the same tokens as tokenizeEn, but keeping the original capitalization (for display)
+  function tokenizeEnCased(s) {
+    const re = new RegExp(EN_RE.source, "gi"), toks = [];
+    const t = s.normalize("NFC").replace(/[\u2019\u2018]/g, "'").replace(/[\u00a0\u202f]/g, " ")
+      .replace(/[\u201c\u201d]/g, '"').replace(/\u2026/g, "...").trim();
+    for (const word of t.split(/\s+/).filter(Boolean)) {
+      const m = word.match(/^(.*[a-z])(n't)$/i);
+      if (m) { toks.push(...(m[1].match(re) || []), m[2]); continue; }
+      toks.push(...(word.match(re) || []));
+    }
+    return toks;
+  }
+  // capitalize the French like a sentence, and copy the capitalization of names
+  // (words that also appear capitalized, mid-sentence, in the English)
+  function caseFr(tgt, srcCased) {
+    const names = new Set(srcCased.filter((w, i) => i > 0 && /^[A-Z]/.test(w)).map((w) => w.toLowerCase()));
+    return tgt.map((t, i) => (i === 0 || names.has(t) ? t.charAt(0).toUpperCase() + t.slice(1) : t));
+  }
   // French tokens back into text
   function detokenizeFr(toks) {
     let out = "";
@@ -177,9 +195,11 @@
         att.push(Array.from(e));
         y = best;
       }
-      return { src, tgt, att, unknown: src.filter((w) => !this.enIndex.has(w)) };
+      const srcCased = tokenizeEnCased(text);
+      const display = srcCased.length === src.length ? srcCased : src;
+      return { src, tgt, att, srcCased: display, tgtCased: caseFr(tgt, display), unknown: src.filter((w) => !this.enIndex.has(w)) };
     }
   }
 
-  root.Seq2Seq = { Translator, tokenizeEn, detokenizeFr };
+  root.Seq2Seq = { Translator, tokenizeEn, tokenizeEnCased, caseFr, detokenizeFr };
 })(typeof window !== "undefined" ? window : globalThis);

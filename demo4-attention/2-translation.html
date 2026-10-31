@@ -15,55 +15,67 @@
 const C = Stage.COLORS;
 const input = Stage.el("input", { class: "text", type: "text", placeholder: "English sentence", spellcheck: "false", autocomplete: "off" });
 Stage.place(input, { x: 20, y: 20, w: 1530, h: null });
+// the French sits in an identical (borderless) box right below the input, in the same
+// font and size, so a word that's the same in both languages lines up letter for letter
 const out = Stage.el("div");
-Stage.place(out, { x: 20, y: 96, w: 1560, h: 60 });
-Object.assign(out.style, { fontSize: "38px", color: C.accent, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" });
+Stage.place(out, { x: 20, y: 84, w: 1530, h: null });
+const inStyle = getComputedStyle(input);
+for (const k of ["fontFamily", "fontSize", "fontWeight", "letterSpacing", "paddingTop", "paddingLeft", "paddingRight", "paddingBottom", "borderLeftWidth", "boxSizing"]) out.style[k] = inStyle[k];
+Object.assign(out.style, { color: C.accent, borderStyle: "solid", borderColor: "transparent", borderWidth: inStyle.borderLeftWidth, whiteSpace: "pre", overflow: "hidden" });
 out.textContent = "loading…";
-const panel = new Stage.Panel({ x: 20, y: 170, w: 1560, h: 715 });
+const panel = new Stage.Panel({ x: 20, y: 160, w: 1560, h: 725 });
 
 let tr = null, res = null, shown = 0;
 
 function translate() {
   res = tr.translate(input.value);
-  out.textContent = Seq2Seq.detokenizeFr(res.tgt);
+  out.textContent = Seq2Seq.detokenizeFr(res.tgtCased);
   shown = 0;
 }
 
+// Matplotlib's "hot" colormap: black -> red -> yellow -> white
+function hot(t) {
+  const r = Math.min(1, Math.max(0, (t + 0.0416) / 0.4066));
+  const g = Math.min(1, Math.max(0, (t - 0.365) / 0.381));
+  const b = Math.min(1, Math.max(0, (t - 0.746) / 0.254));
+  return `rgb(${Math.round(255 * r)},${Math.round(255 * g)},${Math.round(255 * b)})`;
+}
+
 // attention matrix in the style of Bahdanau et al. (2014), Figure 3:
-// English words across the top, French words down the side, brightness = weight
+// English words across the top, French words down the side
 function draw(dt) {
   const c = panel.clear();
   if (!res || res.tgt.length === 0) return;
   shown = Math.min(res.tgt.length, shown + dt * 12);   // rows appear one after another
-  const ns = res.src.length, nt = res.tgt.length;
-  c.font = `26px ${C.font}`;
-  const wl = Math.max(...res.tgt.map((t) => c.measureText(t).width)) + 18;
-  const wt = Math.max(...res.src.map((t) => c.measureText(t).width)) + 18;
-  const cell = Math.min(60, (panel.w - wl - 40) / ns, (panel.h - Math.min(wt, 200) - 10) / nt);
-  const W = cell * ns, H = cell * nt;
-  const x0 = Math.round((panel.w - wl - W) / 2 + wl), y0 = Math.round(Math.min(wt, 200) + 8);
-  c.fillStyle = "#000";
-  c.fillRect(x0, y0, W, H);
+  const src = res.srcCased, tgt = res.tgtCased, ns = src.length, nt = tgt.length;
+  c.font = `28px ${C.font}`;
+  const wl = Math.max(...tgt.map((t) => c.measureText(t).width)) + 18;
+  const wt = Math.max(...src.map((t) => c.measureText(t).width)) + 18;
+  const cell = Math.floor(Math.min(62, (panel.w - wl - 40) / ns, (panel.h - Math.min(wt, 210) - 10) / nt));
+  const W = cell * ns;
+  const x0 = Math.round((panel.w - wl - W) / 2 + wl), y0 = Math.round(Math.min(wt, 210) + 8);
   for (let i = 0; i < nt; i++) {
     const a = Math.max(0, Math.min(1, shown - i));
     if (a <= 0) break;
+    c.globalAlpha = a;
     for (let j = 0; j < ns; j++) {
-      const v = Math.round(255 * res.att[i][j]);
-      c.fillStyle = `rgba(${v},${v},${v},${a})`;
-      c.fillRect(x0 + j * cell, y0 + i * cell, cell + 0.5, cell + 0.5);
+      c.fillStyle = hot(res.att[i][j]);
+      // a 1-pixel white gap between neighboring squares
+      c.fillRect(x0 + j * cell, y0 + i * cell, cell - 1, cell - 1);
     }
+    c.globalAlpha = 1;
   }
-  c.fillStyle = C.ink;
   c.textBaseline = "middle";
   c.textAlign = "right";
-  for (let i = 0; i < nt; i++) c.fillText(res.tgt[i], x0 - 10, y0 + (i + 0.5) * cell);
+  c.fillStyle = C.accent;
+  for (let i = 0; i < nt; i++) c.fillText(tgt[i], x0 - 10, y0 + (i + 0.5) * cell);
   c.textAlign = "left";
   for (let j = 0; j < ns; j++) {
     c.save();
     c.translate(x0 + (j + 0.5) * cell, y0 - 10);
     c.rotate(-Math.PI / 2);
     c.fillStyle = res.unknown.includes(res.src[j]) ? C.grey : C.ink;
-    c.fillText(res.src[j], 0, 0);
+    c.fillText(src[j], 0, 0);
     c.restore();
   }
 }

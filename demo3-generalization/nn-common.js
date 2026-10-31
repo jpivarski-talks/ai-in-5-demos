@@ -115,6 +115,36 @@
     ctx.drawImage(off, r.x, r.y, r.w, r.h);
   }
 
+  // smooth lines where the most likely class changes (marching squares on each
+  // class's margin p_k - max_{j != k} p_j), drawn into rect r
+  function drawContours(ctx, r, probs, G, K, opts) {
+    opts = opts || {};
+    const f = new Float32Array(G * G);
+    const X = (i) => r.x + (i + 0.5) / G * r.w, Y = (j) => r.y + (j + 0.5) / G * r.h;
+    ctx.beginPath();
+    for (let k = 0; k < K; k++) {
+      for (let p = 0; p < G * G; p++) {
+        let other = -Infinity;
+        for (let q = 0; q < K; q++) if (q !== k) other = Math.max(other, probs[p * K + q]);
+        f[p] = probs[p * K + k] - other;
+      }
+      for (let j = 0; j < G - 1; j++) for (let i = 0; i < G - 1; i++) {
+        const a = f[j * G + i], b = f[j * G + i + 1], c = f[(j + 1) * G + i + 1], d = f[(j + 1) * G + i];
+        // crossing points on the four cell edges (top, right, bottom, left)
+        const pts = [];
+        if ((a > 0) !== (b > 0)) pts.push([X(i + a / (a - b)), Y(j)]);
+        if ((b > 0) !== (c > 0)) pts.push([X(i + 1), Y(j + b / (b - c))]);
+        if ((d > 0) !== (c > 0)) pts.push([X(i + d / (d - c)), Y(j + 1)]);
+        if ((a > 0) !== (d > 0)) pts.push([X(i), Y(j + a / (a - d))]);
+        for (let s = 0; s + 1 < pts.length; s += 2) { ctx.moveTo(pts[s][0], pts[s][1]); ctx.lineTo(pts[s + 1][0], pts[s + 1][1]); }
+      }
+    }
+    ctx.strokeStyle = opts.color || "rgba(0, 0, 0, 0.85)";
+    ctx.lineWidth = opts.width || 1.6;
+    ctx.lineJoin = "round";
+    ctx.stroke();
+  }
+
   function drawPoints(ax, xs, ys, opts) {
     opts = opts || {};
     const c = ax.p.ctx, rad = opts.r || 5;
@@ -132,5 +162,5 @@
     return tf.neg(tf.mean(tf.add(tf.mul(y, tf.log(tf.add(p, e))), tf.mul(tf.sub(1, y), tf.log(tf.add(tf.sub(1, p), e))))));
   }
 
-  window.NN = { xor, circle, spirals, MLP, randn, grid, paintRegions, drawPoints, bce, classColor, CLASS_RGB, BG_RGB };
+  window.NN = { xor, circle, spirals, MLP, randn, grid, paintRegions, drawContours, drawPoints, bce, classColor, CLASS_RGB, BG_RGB };
 })();

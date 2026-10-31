@@ -103,7 +103,8 @@
   }
 
   // the starting logistics on page 3, and the optimizer its "fit" button runs
-  const START = [0.2, Math.log(0.1), 0.6, 0.5, Math.log(0.1), -0.6, 0.8, Math.log(0.1), 0.6];
+  const START = [0.1, Math.log(0.07), 0.6, 0.3, Math.log(0.07), -0.6, 0.5, Math.log(0.07), 0.6,
+    0.7, Math.log(0.07), -0.6, 0.9, Math.log(0.07), 0.6];
   const FIT = { steps: 900, lr: 0.02 };
   function keepInView(p) {
     for (let j = 0; j < p.length; j += 3) {
