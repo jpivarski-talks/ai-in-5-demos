@@ -75,7 +75,7 @@ function lossFn() { return tf.sum(tf.square(tf.sub(model(), target))); }
 function loss() { return tf.tidy(() => lossFn().dataSync()[0]); }
 function render() { fit = tf.tidy(() => Float64Array.from(model().dataSync())); }
 
-function stop() { running = false; runButton.textContent = "run"; runButton.classList.remove("on"); }
+function stop() { running = false; runButton.textContent = "optimize"; runButton.classList.remove("on"); }
 function run() {
   if (running) { stop(); return; }
   if (step >= CFG.steps) return;
@@ -91,8 +91,8 @@ function draw() {
 }
 
 const bar = Stage.controls();
-const runButton = Stage.button("run", run, bar, { cls: "primary" });
-Stage.button("difference", () => ImageDemo.showDifference(img, fit), bar);
+const runButton = Stage.button("optimize", run, bar, { cls: "primary" });
+Stage.button("show difference", () => ImageDemo.showDifference(img, fit), bar);
 Stage.el("div", { style: { width: "30px" } }, bar);
 Stage.button("reset", () => { stop(); init(); readout.set(history.a[0].toFixed(1)); }, bar);
 document.addEventListener("keydown", (e) => { if (e.key === " ") { e.preventDefault(); run(); } });

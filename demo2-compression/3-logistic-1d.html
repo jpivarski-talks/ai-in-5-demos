@@ -59,7 +59,7 @@ function record() {
   readout.set(L.toFixed(1));
 }
 
-function stop() { running = false; fitButton.textContent = "fit"; fitButton.classList.remove("on"); }
+function stop() { running = false; fitButton.textContent = "optimize"; fitButton.classList.remove("on"); }
 function fit() {
   if (running) { stop(); return; }
   opt = new Optim.Adam(p.length, Fits1D.FIT.lr);
@@ -137,7 +137,14 @@ function draw() {
 }
 
 const bar = Stage.controls();
-const fitButton = Stage.button("fit", fit, bar, { cls: "primary" });
+// all logistics start with the same shape (so they'd all move alike); randomize spreads them out
+Stage.button("randomize", () => {
+  stop();
+  p = Float64Array.from(Fits1D.randomStart(u));
+  history.clear();
+  record();
+}, bar);
+const fitButton = Stage.button("optimize", fit, bar, { cls: "primary" });
 Stage.el("div", { style: { width: "30px" } }, bar);
 Stage.button("new data", newData, bar);
 document.addEventListener("keydown", (e) => { if (e.key === " ") { e.preventDefault(); fit(); } });

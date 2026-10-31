@@ -94,8 +94,8 @@ function draw() {
 }
 
 const bar = Stage.controls();
-Stage.button("add templates", click, bar, { cls: "primary" });
-Stage.button("difference", () => ImageDemo.showDifference(img, fit), bar);
+Stage.button("add template", click, bar, { cls: "primary" });
+Stage.button("show difference", () => ImageDemo.showDifference(img, fit), bar);
 Stage.el("div", { style: { width: "30px" } }, bar);
 Stage.button("reset", reset, bar);
 document.addEventListener("keydown", (e) => { if (e.key === " ") { e.preventDefault(); click(); } });

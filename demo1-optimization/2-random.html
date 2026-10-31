@@ -19,7 +19,8 @@ const readout = new Plots.Readout({ label: "time" });
 const history = new Plots.History({ mode: "bars", slots: 30, yMax: Demo1.T_MAX, yLabel: "time (s)", xLabel: "trial" });
 const u = Optim.rng();
 
-readout.set("–.–––", Stage.COLORS.grey, "s");
+// the page starts with the straight slide, so show its time
+readout.set(Demo1.fmtTime(Brach.travelTime(view.heights, view.curve)), Stage.COLORS.accent, "s");
 
 function random() {
   view.setHeights(Brach.randomShape(u));

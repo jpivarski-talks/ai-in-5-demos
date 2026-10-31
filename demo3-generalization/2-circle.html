@@ -16,7 +16,7 @@
 <script src="view3d.js"></script>
 <script>
 "use strict";
-const CFG = { n: 200, lr: 0.03, perFrame: 4, w1: 1.0, G: 100, g: 36 };
+const CFG = { n: 200, lr: 0.03, perFrame: 4, scale: 1.0, noise: 0.15, G: 100, g: 36 };
 const u = Optim.rng();
 const C = Stage.COLORS;
 const D = NNDiagram, BOX = D.BOX;
@@ -25,13 +25,14 @@ const P = 480, M = Stage.L.main;
 const panel = new Stage.Panel(M);
 const FIT = { x: 0, y: 0, w: P, h: P };
 const ax = new Plots.Axes(panel, FIT, [-1.1, 1.1], [-1.1, 1.1]);
-const view3d = new View3D({ x: M.x + M.w - P, y: M.y, w: P, h: P }, { lo: -1, hi: 1, labels: ["h1", "h2", "h3"] });
+const view3d = new View3D({ x: M.x + M.w - P, y: M.y, w: P, h: P }, { lo: -1, hi: 1, labels: ["h1", "h2", "h3"], toward: [1, 0.75, 1.25] });
 const readout = new Plots.Readout({ label: "loss" });
 const history = new Plots.History({ mode: "line", xSpan: 300, yLabel: "loss", xLabel: "iteration" });
 
 // network diagram geometry (main-panel coordinates)
 const MID = (P + M.h) / 2 + 4;
-const IN_X = 150, HID_X = 450, FORK_X = 720, OUT_X = 830;
+const IN_X = 150, HID_X = 450, OUT_X0 = 740, OUT_X1 = 830;
+const outY = D.stack(2, MID, 90);
 const inY = D.stack(2, MID, BOX + 30).map((y) => y - BOX / 2);
 const hidY = D.stack(3, MID, BOX + 16).map((y) => y - BOX / 2);
 
@@ -42,24 +43,33 @@ let data, X, Y, model = null, opt = null, running = false, view = null;
 function newData() {
   data = NN.circle(CFG.n, u);
   X = tf.tensor(data.xs);
-  Y = tf.tensor(data.ys, [CFG.n, 1]);
+  Y = tf.oneHot(tf.tensor1d(data.ys, "int32"), 2);
 }
+// The hidden layer starts out close to the identity: three directions 120 degrees apart,
+// small enough that tanh is nearly linear, so the plane sits flat inside the cube.
 function newModel() {
   if (model) model.dispose();
+  const W1 = new Float32Array(6);
+  for (let k = 0; k < 3; k++) {
+    const a = Math.PI / 2 + 2 * Math.PI * k / 3;
+    W1[k] = CFG.scale * Math.cos(a) + CFG.noise * u.normal();
+    W1[3 + k] = CFG.scale * Math.sin(a) + CFG.noise * u.normal();
+  }
   model = new NN.MLP([
-    { W: NN.randn([2, 3], CFG.w1, u), b: NN.randn([3], 0.1, u), act: "tanh" },
-    { W: NN.randn([3, 1], 0.5, u), b: tf.zeros([1]), act: "sigmoid" },
+    { W: tf.tensor(W1, [2, 3]), b: NN.randn([3], 0.05, u), act: "tanh" },
+    { W: NN.randn([3, 2], 0.5, u), b: tf.zeros([2]) },   // one output per class
   ]);
   if (opt) opt.dispose();
   opt = tf.train.adam(CFG.lr);
   history.clear();
   computeView();
 }
-function loss() { return tf.tidy(() => NN.bce(model.forward(X), Y).dataSync()[0]); }
+const lossFn = () => tf.losses.softmaxCrossEntropy(Y, model.forward(X));
+function loss() { return tf.tidy(() => lossFn().dataSync()[0]); }
 
 function computeView() {
   view = tf.tidy(() => ({
-    big: model.forward(gridBig).dataSync(),
+    big: tf.softmax(model.forward(gridBig)).slice([0, 1], [-1, 1]).dataSync(),   // P(blue)
     small: model.forwardAll(gridSmall)[1].dataSync(),
     hidden: model.forwardAll(X)[1].arraySync(),
     w: model.weights(),
@@ -81,18 +91,18 @@ function draw() {
   for (let i = 0; i < 2; i++) for (let j = 0; j < 3; j++) {
     D.edge(c, IN_X + BOX, inY[i] + BOX / 2, HID_X, hidY[j] + BOX / 2, W1[i][j], m1);
   }
-  for (let j = 0; j < 3; j++) D.edge(c, HID_X + BOX, hidY[j] + BOX / 2, FORK_X, MID, W2[j][0], m2);
-  D.arrow(c, FORK_X, MID, OUT_X, MID - 50, C.blue);
-  D.arrow(c, FORK_X, MID, OUT_X, MID + 50, C.orange);
-  c.fillStyle = C.ink;
-  c.beginPath(); c.arc(FORK_X, MID, 7, 0, 2 * Math.PI); c.fill();
+  // every hidden node feeds both outputs: orange (class 0) and blue (class 1)
+  for (let j = 0; j < 3; j++) for (let o = 0; o < 2; o++) {
+    D.edge(c, HID_X + BOX, hidY[j] + BOX / 2, OUT_X0, outY[o], W2[j][o], m2);
+  }
+  for (let o = 0; o < 2; o++) D.arrow(c, OUT_X0, outY[o], OUT_X1, outY[o], NN.classColor(o));
   ["x", "y"].forEach((lab, i) => D.featureBox(c, IN_X, inY[i], xin, CFG.g, 2, i, lab, "left"));
   ["h1", "h2", "h3"].forEach((lab, j) => D.featureBox(c, HID_X, hidY[j], view.small, CFG.g, 3, j, lab));
 
   view3d.draw();
 }
 
-function stop() { running = false; trainButton.textContent = "train"; trainButton.classList.remove("on"); }
+function stop() { running = false; trainButton.textContent = "optimize"; trainButton.classList.remove("on"); }
 function train() {
   if (running) { stop(); return; }
   if (history.length === 0) history.push(loss());
@@ -103,7 +113,7 @@ function train() {
 
 const bar = Stage.controls();
 Stage.button("new start", () => { stop(); newModel(); readout.set(loss().toFixed(3)); }, bar);
-const trainButton = Stage.button("train", train, bar, { cls: "primary" });
+const trainButton = Stage.button("optimize", train, bar, { cls: "primary" });
 
 newData();
 newModel();
@@ -111,8 +121,9 @@ readout.set(loss().toFixed(3));
 Stage.loop(() => {
   if (running) {
     for (let k = 0; k < CFG.perFrame; k++) {
-      opt.minimize(() => NN.bce(model.forward(X), Y));
-      history.push(loss());
+      const L = opt.minimize(lossFn, true);
+      history.push(L.dataSync()[0]);
+      L.dispose();
     }
     computeView();
     readout.set(history.a[history.length - 1].toFixed(3));

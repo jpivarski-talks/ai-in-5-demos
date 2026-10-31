@@ -102,9 +102,17 @@
     return best;
   }
 
-  // the starting logistics on page 3, and the optimizer its "fit" button runs
-  const START = [0.1, Math.log(0.07), 0.6, 0.3, Math.log(0.07), -0.6, 0.5, Math.log(0.07), 0.6,
-    0.7, Math.log(0.07), -0.6, 0.9, Math.log(0.07), 0.6];
+  // page 3: every logistic starts with the same shape; "randomize" spreads them out
+  const NLOG = 5;
+  const START = [].concat(...Array.from({ length: NLOG }, () => [0.5, Math.log(0.07), 0.6]));
+  function randomStart(u) {
+    const p = [];
+    for (let k = 0; k < NLOG; k++) {
+      // one transition in each fifth of the plot, with random width and height
+      p.push((k + 0.15 + 0.7 * u()) / NLOG, Math.log(0.03 + 0.09 * u()), (u() < 0.5 ? -1 : 1) * (0.4 + 0.8 * u()));
+    }
+    return p;
+  }
   const FIT = { steps: 900, lr: 0.02 };
   function keepInView(p) {
     for (let j = 0; j < p.length; j += 3) {
@@ -118,12 +126,12 @@
     keepInView(p);
     return r.loss;
   }
-  function fitFromStart(y) {
-    const p = Float64Array.from(START), opt = new O.Adam(p.length, FIT.lr);
+  function fitFromStart(y, start) {
+    const p = Float64Array.from(start || START), opt = new O.Adam(p.length, FIT.lr);
     for (let t = 0; t < FIT.steps; t++) fitStep(p, y, opt, t);
     return { p, c: bestConst(p, y) };
   }
 
-  const api = { START, FIT, keepInView, fitStep, fitFromStart, NPTS, xs, smoothCurve, r2, sse, template, cosineFit, cosineCurve, logistic, logisticSum, bestConst, logisticGrad, fitLogistics };
+  const api = { NLOG, START, randomStart, FIT, keepInView, fitStep, fitFromStart, NPTS, xs, smoothCurve, r2, sse, template, cosineFit, cosineCurve, logistic, logisticSum, bestConst, logisticGrad, fitLogistics };
   if (typeof module !== "undefined") module.exports = api; else root.Fits1D = api;
 })(typeof window !== "undefined" ? window : globalThis);

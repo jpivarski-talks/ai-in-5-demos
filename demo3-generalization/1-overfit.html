@@ -50,7 +50,7 @@ function refresh() {
   const [a] = losses();
   readout.set(a.toFixed(3));
 }
-function stop() { running = false; trainButton.textContent = "train"; trainButton.classList.remove("on"); }
+function stop() { running = false; trainButton.textContent = "optimize"; trainButton.classList.remove("on"); }
 function train() {
   if (running) { stop(); return; }
   if (opt) opt.dispose();
@@ -82,7 +82,7 @@ function draw() {
 const bar = Stage.controls();
 Stage.button("resample data", () => { newData(); refresh(); }, bar);
 Stage.button("reset model", () => { stop(); newModel(); history.clear(); refresh(); }, bar);
-const trainButton = Stage.button("train", train, bar, { cls: "primary" });
+const trainButton = Stage.button("optimize", train, bar, { cls: "primary" });
 
 newData();
 newModel();

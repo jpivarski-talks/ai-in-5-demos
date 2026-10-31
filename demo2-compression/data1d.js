@@ -4,12 +4,17 @@
   "use strict";
   const F = typeof module !== "undefined" ? require("./fits1d.js") : root.Fits1D;
 
+  // R^2 of the 8 cosine templates, and the worst R^2 of the logistics after
+  // "randomize" + "optimize" from a few different random starts (page 3)
   function score(y, u) {
     const c = F.cosineFit(y, 8);
     const rc = F.r2(y, F.cosineCurve(c.mean, c.amps, 8));
-    // the logistics must get there from page 3's starting point
-    const l = F.fitFromStart(y);
-    const rl = F.r2(y, F.logisticSum(l.p, l.c));
+    let rl = Infinity;
+    for (let t = 0; t < 3; t++) {
+      const l = F.fitFromStart(y, F.randomStart(u));
+      rl = Math.min(rl, F.r2(y, F.logisticSum(l.p, l.c)));
+      if (rl < 0.92) break;
+    }
     return { rc, rl };
   }
 

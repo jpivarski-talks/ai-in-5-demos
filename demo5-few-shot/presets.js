@@ -6,14 +6,6 @@ window.PRESETS = [
     prompt: "France → Paris\nJapan → Tokyo\nKenya → Nairobi\nCanada → Ottawa\nArgentina → Buenos Aires\nPeru →",
   },
   {
-    label: "elements",
-    prompt: "hydrogen → H\ncarbon → C\nsodium → Na\nchlorine → Cl\niron → Fe\nsilver →",
-  },
-  {
-    label: "antonyms",
-    prompt: "hot → cold\ntall → short\nempty → full\nancient → modern\nquiet → loud\ngenerous →",
-  },
-  {
     label: "English → French",
     prompt:
       "English: The cat is sleeping.\nFrench: Le chat dort.\n\n" +
@@ -46,16 +38,5 @@ window.PRESETS = [
       "She opened the window. → She the window opened.\n" +
       "We painted the fence on Sunday. → We the fence on Sunday painted.\n" +
       "The old fisherman repaired his boat before the storm. →",
-  },
-  {
-    label: "postpositions",
-    prompt:
-      "The cat is on the mat. → The cat is the mat on.\n" +
-      "We walked to the store after lunch. → We walked the store to lunch after.\n" +
-      "She hid the key under a rock near the door. → She hid the key a rock under the door near.\n" +
-      "The bird flew over the house. → The bird flew the house over.\n" +
-      "He sat beside his friend during the movie. → He sat his friend beside the movie during.\n" +
-      "They swam across the river with their dog. → They swam the river across their dog with.\n" +
-      "The dog slept under the old wooden table. →",
   },
 ];

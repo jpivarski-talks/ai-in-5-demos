@@ -177,7 +177,7 @@ function draw() {
   drawNetwork(c);
 }
 
-function stop() { running = false; trainButton.textContent = "train"; trainButton.classList.remove("on"); }
+function stop() { running = false; trainButton.textContent = "optimize"; trainButton.classList.remove("on"); }
 function train() {
   if (running) { stop(); return; }
   if (history.length === 0) history.push(loss());
@@ -188,7 +188,7 @@ function train() {
 
 const bar = Stage.controls({ x: 20, y: 815, w: 1060, h: 70 });
 Stage.button("new start", () => { stop(); newModel(); readout.set(loss().toFixed(3)); }, bar);
-const trainButton = Stage.button("train", train, bar, { cls: "primary" });
+const trainButton = Stage.button("optimize", train, bar, { cls: "primary" });
 
 newModel();
 readout.set(loss().toFixed(3));

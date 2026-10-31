@@ -16,9 +16,12 @@
       this.panel = new Stage.Panel(rect);
       this.points = [];
       this.classes = [];
-      // world (a, b, c) -> view: a to the right, c up, b into the screen; then tilt for an oblique look
-      const base = [[1, 0, 0], [0, 0, 1], [0, -1, 0]];
-      this.R = mul(Rx(0.45), mul(Ry(-0.65), base));
+      // initial view: look along -toward (toward points at the viewer), with the third axis up
+      const t = this.o.toward || [0.6, -1, 0.45], tl = Math.hypot(...t), f = t.map((v) => v / tl);
+      let up = [0 - f[2] * f[0], 0 - f[2] * f[1], 1 - f[2] * f[2]];
+      const ul = Math.hypot(...up); up = up.map((v) => v / ul);
+      const right = [up[1] * f[2] - up[2] * f[1], up[2] * f[0] - up[0] * f[2], up[0] * f[1] - up[1] * f[0]];
+      this.R = [right, up, f];
       this.scale = Math.min(rect.w, rect.h) * 0.24;
       const cv = this.panel.canvas;
       cv.style.cursor = "grab";

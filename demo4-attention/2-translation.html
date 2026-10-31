@@ -63,7 +63,19 @@ function draw(dt) {
       // a 1-pixel white gap between neighboring squares
       c.fillRect(x0 + j * cell, y0 + i * cell, cell - 1, cell - 1);
     }
+    // the weight itself, where the square is bright enough for black text
+    c.fillStyle = "#000";
+    c.font = `${Math.round(cell * 0.34)}px ${C.font}`;
+    c.textAlign = "center";
+    c.textBaseline = "middle";
+    for (let j = 0; j < ns; j++) {
+      const v = res.att[i][j];
+      if (v < 0.4) continue;
+      const label = v >= 0.95 ? "1" : v.toFixed(1);
+      c.fillText(label, x0 + (j + 0.5) * cell - 0.5, y0 + (i + 0.5) * cell);
+    }
     c.globalAlpha = 1;
+    c.font = `28px ${C.font}`;
   }
   c.textBaseline = "middle";
   c.textAlign = "right";

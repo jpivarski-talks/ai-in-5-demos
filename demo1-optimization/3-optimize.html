@@ -20,21 +20,35 @@ const history = new Plots.History({ mode: "line", xSpan: 500, yMax: Demo1.T_MAX,
 const u = Optim.rng();
 const PER_FRAME = 10, MAX_ITER = 4000;
 
-readout.set("–.–––", Stage.COLORS.grey, "s");
-
 // (1+1) evolution strategy: perturb the 15 heights at random, keep the change if
 // the ball gets there faster, and adapt the step size (the "1/5 success rule")
-let x = null, T = Infinity, sigma = 0, iter = 0, running = false;
+let x = Brach.PRESETS.linear.slice(), T = Brach.travelTime(x), sigma = 0, iter = 0, running = false;
 
-function start() {
-  x = Brach.randomShape(u);
-  T = Brach.travelTime(x);
-  sigma = 0.06;
-  iter = 0;
-  running = true;
+function showShape() {
+  view.setHeights(x);
+  view.ghost = null;
+  readout.set(Demo1.fmtTime(T), Stage.COLORS.accent, "s");
   history.clear();
   history.push(T);
-  view.setHeights(x);
+  history.draw();
+}
+function stop() { running = false; view.ghost = null; optButton.textContent = "optimize"; optButton.classList.remove("on"); }
+function randomize() {
+  stop();
+  x = Brach.randomShape(u);
+  T = Brach.travelTime(x);
+  showShape();
+}
+// optimize from whatever the slide is now
+function optimize() {
+  if (running) { stop(); return; }
+  sigma = 0.06;
+  iter = 0;
+  history.clear();
+  history.push(T);
+  running = true;
+  optButton.textContent = "stop";
+  optButton.classList.add("on");
 }
 
 function step() {
@@ -47,13 +61,14 @@ function step() {
 }
 
 const bar = Stage.controls();
-Stage.button("random + optimize", start, bar, { cls: "primary" });
+Stage.button("randomize", randomize, bar);
+const optButton = Stage.button("optimize", optimize, bar, { cls: "primary" });
 Stage.el("div", { style: { width: "30px" } }, bar);
-const cycButton = Stage.button("cycloid", () => {
+const cycButton = Stage.button("show optimal", () => {
   view.showCycloid = !view.showCycloid;
   cycButton.classList.toggle("on", view.showCycloid);
 }, bar);
-document.addEventListener("keydown", (e) => { if (e.key === " ") { e.preventDefault(); start(); } });
+document.addEventListener("keydown", (e) => { if (e.key === " ") { e.preventDefault(); optimize(); } });
 
 Stage.loop(() => {
   if (running) {
@@ -62,15 +77,16 @@ Stage.loop(() => {
     view.setHeights(x);
     view.ghost = y;
     readout.set(Demo1.fmtTime(T), Stage.COLORS.accent, "s");
-    if (iter >= MAX_ITER || (iter > 1500 && sigma < 2e-4)) { running = false; view.ghost = null; }
+    if (iter >= MAX_ITER || (iter > 1500 && sigma < 2e-4)) stop();
     history.draw();
   }
   view.draw();
 });
 
+showShape();
 view.draw();
 Stage.nav("2-random.html", "../demo2-compression/1-fourier-1d.html");
-window.demo = { view, history, start, get T() { return T; }, get iter() { return iter; } };
+window.demo = { view, history, randomize, optimize, get T() { return T; }, get iter() { return iter; } };
 </script>
 </body>
 </html>

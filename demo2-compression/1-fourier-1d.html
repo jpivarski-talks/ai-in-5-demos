@@ -48,7 +48,7 @@ function add(k) {
   anim = { k, t: 0 };
 }
 
-const DESCEND = 0.9, FOLD = 0.6;
+const DESCEND = 0.9;
 function draw() {
   const c = panel.clear();
   ax.frame({ xlabel: "x", ylabel: "y" });
@@ -58,11 +58,9 @@ function draw() {
     ax.curve(FX, Fits1D.cosineCurve(fit.mean, fit.amps, shown, FX), { color: C.accent, width: 4 });
     if (anim) {
       const k = anim.k, a = fit.amps[k];
-      let off, alpha = 1;
-      if (anim.t < DESCEND) off = mid + span * (1 - Optim.smooth(anim.t / DESCEND));
-      else { off = mid; alpha = 1 - (anim.t - DESCEND) / FOLD; }
+      const off = mid + span * (1 - Optim.smooth(Math.min(1, anim.t / DESCEND)));
       const tY = Array.from(FX, (x) => off + a * Math.cos((k + 1) * Math.PI * x));
-      ax.curve(FX, tY, { color: C.orange, width: 4, alpha });
+      ax.curve(FX, tY, { color: C.orange, width: 4 });
     }
   });
 }
@@ -81,8 +79,8 @@ document.addEventListener("keydown", (e) => {
 Stage.loop((dt) => {
   if (anim) {
     anim.t += dt;
-    if (anim.t > DESCEND) shown = included + Optim.smooth(Math.min(1, (anim.t - DESCEND) / FOLD));
-    if (anim.t >= DESCEND + FOLD) {
+    // once the template lands in the middle, it disappears and the fit snaps to include it
+    if (anim.t >= DESCEND) {
       included++;
       shown = included;
       anim = null;
