@@ -5,7 +5,9 @@
 # (or download a release from https://github.com/ggml-org/llama.cpp/releases).
 # The first run downloads the model (~5 GB) into llama.cpp's cache.
 #
-#   ./serve-llm.sh          Qwen3-8B-Base (needs ~6 GB of free memory)
+#   ./serve-llm.sh          Qwen3-8B-Base (same as `qwen`; needs ~6 GB of free memory)
+#   ./serve-llm.sh qwen     Qwen3-8B-Base (its pretraining included instruction datasets)
+#   ./serve-llm.sh llama    Llama-3.1-8B, the base model (~6 GB)
 #   ./serve-llm.sh big      Qwen3-30B-A3B-Base (needs ~20 GB; better at the harder prompts)
 #
 # Then open demo5-few-shot/1-complete.html; it talks to http://localhost:8080.
@@ -13,14 +15,23 @@
 # the oldest text is dropped instead of stopping.
 set -euo pipefail
 
-case "${1:-}" in
+case "${1:-qwen}" in
+  qwen)
+    REPO=mradermacher/Qwen3-8B-Base-GGUF        # revision 11c0eaa7581c2cedab123814f676ff44da1bc7b0
+    FILE=Qwen3-8B-Base.Q4_K_M.gguf
+    ;;
+  llama)
+    # Meta's Llama 3.1 Community License; an ungated GGUF conversion of meta-llama/Llama-3.1-8B
+    REPO=mradermacher/Meta-Llama-3.1-8B-GGUF    # revision ab71df44c1fd2e0ac7fbf0e5da902636f7f0bfbf
+    FILE=Meta-Llama-3.1-8B.Q4_K_M.gguf
+    ;;
   big)
     REPO=mradermacher/Qwen3-30B-A3B-Base-GGUF   # revision c8063198732762d149f728f1e05021eeb3df95d1
     FILE=Qwen3-30B-A3B-Base.Q4_K_M.gguf
     ;;
   *)
-    REPO=mradermacher/Qwen3-8B-Base-GGUF        # revision 11c0eaa7581c2cedab123814f676ff44da1bc7b0
-    FILE=Qwen3-8B-Base.Q4_K_M.gguf
+    echo "usage: $0 [qwen | llama | big]   (default: qwen)" >&2
+    exit 1
     ;;
 esac
 

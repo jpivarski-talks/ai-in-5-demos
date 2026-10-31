@@ -19,9 +19,9 @@
   .settings label { display: block; font-size: 20px; color: #555; margin: 14px 0 4px; }
   .settings input { width: 100%; box-sizing: border-box; font-size: 20px; padding: 6px 10px; }
   #err { position: absolute; font-size: 20px; color: #c0392b; }
-  #temp { position: absolute; box-sizing: border-box; font-family: var(--font); font-size: 24px; padding: 4px 10px;
+  .knob { position: absolute; box-sizing: border-box; font-family: var(--font); font-size: 24px; padding: 4px 10px;
           color: var(--ink); border: 1.5px solid #bbb; border-radius: 8px; outline: none; text-align: center; }
-  #temp:focus { border-color: var(--accent); }
+  .knob:focus { border-color: var(--accent); }
   #gear { position: absolute; font-size: 30px; color: #bbb; cursor: pointer; }
   #gear:hover { color: var(--accent); }
 </style>
@@ -43,14 +43,24 @@ Stage.place(text, { x: 20, y: 20, w: 1250, h: 860 });
 const side = Stage.el("div", { id: "side" });
 Stage.place(side, { x: 1300, y: 20, w: 280, h: 700 });
 const err = Stage.el("div", { id: "err" });
-Stage.place(err, { x: 1300, y: 640, w: 280, h: 90 });
-// temperature sits out here (not in settings) so it can be switched quickly, e.g. to 0 for repeatable answers
-Stage.label("temperature", { x: 1300, y: 760, w: 150, h: 30 }, { fontSize: "22px" });
-const temp = Stage.el("input", { id: "temp", type: "number", min: "0", max: "2", step: "0.1", value: cfg.temperature, title: "temperature" });
-Stage.place(temp, { x: 1460, y: 750, w: 110, h: 44 });
+Stage.place(err, { x: 1300, y: 590, w: 280, h: 90 });
+// temperature and max tokens sit out here (not in settings) so they can be changed quickly,
+// e.g. temperature 0 for repeatable answers; max tokens blank means no limit
+Stage.label("temperature", { x: 1300, y: 710, w: 150, h: 30 }, { fontSize: "22px" });
+const temp = Stage.el("input", { id: "temp", class: "knob", type: "number", min: "0", max: "2", step: "0.1", value: cfg.temperature, title: "temperature" });
+Stage.place(temp, { x: 1460, y: 700, w: 110, h: 44 });
 temp.addEventListener("change", () => {
   cfg.temperature = temp.value.trim() || DEFAULTS.temperature;
   temp.value = cfg.temperature;
+  localStorage.setItem("demo5-settings", JSON.stringify(cfg));
+});
+Stage.label("max tokens", { x: 1300, y: 766, w: 150, h: 30 }, { fontSize: "22px" });
+const maxTok = Stage.el("input", { id: "maxtok", class: "knob", type: "number", min: "1", step: "1", value: cfg.maxTokens, title: "max tokens" });
+Stage.place(maxTok, { x: 1460, y: 756, w: 110, h: 44 });
+maxTok.addEventListener("change", () => {
+  const v = Math.floor(+maxTok.value);
+  cfg.maxTokens = maxTok.value.trim() && v > 0 ? String(v) : "";
+  maxTok.value = cfg.maxTokens;
   localStorage.setItem("demo5-settings", JSON.stringify(cfg));
 });
 const go = Stage.button("complete", () => complete(), null, { cls: "primary" });
@@ -134,11 +144,11 @@ async function complete() {
 
 // settings: where the base model lives
 gear.addEventListener("click", () => {
-  const pop = Stage.popup({ x: 450, y: 200, w: 700, h: 440 });
+  const pop = Stage.popup({ x: 450, y: 220, w: 700, h: 360 });
   const box = Stage.el("div", { class: "settings" }, pop.box);
   Object.assign(box.style, { padding: "30px 40px" });
   const fields = [["endpoint", "endpoint (OpenAI-compatible, without /v1)"], ["model", "model (blank for llama.cpp)"],
-    ["key", "API key (stored only in this browser)"], ["maxTokens", "max tokens (blank: no limit)"]];
+    ["key", "API key (stored only in this browser)"]];
   const inputs = {};
   for (const [k, lab] of fields) {
     Stage.el("label", { text: lab }, box);
