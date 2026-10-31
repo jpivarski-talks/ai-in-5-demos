@@ -57,7 +57,7 @@ brew install llama.cpp
 ./serve-llm.sh big      # Qwen3-30B-A3B-Base, Q4_K_M (≈18 GB; needs ≥ 32 GB RAM)
 ```
 
-All five presets complete correctly with Qwen3-8B-Base at temperature 0. The default is temperature 1, so expect some variety; set it to 0 with ⚙ for repeatable answers. That was tested with the same GGUF file and llama.cpp b12017 on Linux/CUDA, not yet on a Mac. The ⚙ button changes the endpoint, model name, API key, temperature, and maximum tokens. These are stored only in the browser's localStorage. If a base model reappears on OpenRouter, set the endpoint to `https://openrouter.ai/api`, the model name, and your key.
+All eleven presets complete correctly with Qwen3-8B-Base at temperature 0. The default is temperature 1, because plain free-form completion at temperature 0 tends to fall into repeating loops. At temperature 1, expect some variety. Most presets are still right every time, but *made-up language* and *what does she think?* go wrong about half the time, so type 0 in the temperature box (next to **complete**) for those. Their answers are *Kina pim nam sula tal.* and *on the piano*. That was tested with the same GGUF file and llama.cpp b12017 on Linux, not yet on a Mac. The ⚙ button changes the endpoint, model name, API key, and maximum tokens. These are stored only in the browser's localStorage. If a base model reappears on OpenRouter, set the endpoint to `https://openrouter.ai/api`, the model name, and your key.
 
 Use Chrome. A page served from GitHub Pages (https) may call `http://localhost:8080`, but Chrome asks once for permission to reach the local network. Serving the pages locally (above) avoids that.
 
