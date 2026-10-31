@@ -16,13 +16,23 @@
 <script src="image-common.js"></script>
 <script>
 "use strict";
-// f(x, y) = A tanh(s u) exp(-v^2 / 2 l^2),  u, v = coordinates rotated by theta around (x0, y0)
-// with s = exp(rho), l = exp(lambda); the approximation is a constant plus M of these
-const CFG = { M: 100, steps: 1200, lr: 0.03, s0: 8, l0: 0.2, frameMs: 30 };
+// The approximation is a constant plus M adaptive functions of two kinds, each with
+// 6 numbers (x0, y0, theta, two widths, height A); u, v are coordinates rotated by
+// theta around (x0, y0):
+//   blob:  A exp(-u^2 / 2a^2 - v^2 / 2b^2)            (a = exp(r1), b = exp(r2))
+//   edge:  A tanh(s u) exp(-v^2 / 2l^2)                (s = exp(r1), l = exp(r2))
+// Optimized with Adam. Every so often, the functions doing the least are moved to
+// where the leftover error is largest ("respawning").
+const CFG = {
+  M: 200, edges: 20,            // 20 edge functions and 180 blobs (edges up to ~20% fit this image as well as pure blobs)
+  lr: 0.03, ease: 800, floor: 0.05,   // learning rate eases down over 800 steps, then stays at 5%
+  respawnEvery: 25, respawnN: 10, respawnUntil: 640,
+  frameMs: 30,
+};
 const { N, LEFT, RIGHT } = ImageDemo;
 const panel = new Stage.Panel(Stage.L.main);
-const readout = new Plots.Readout({ label: "loss" });
-const history = new Plots.History({ mode: "line", xSpan: CFG.steps, yLabel: "loss", xLabel: "iteration" });
+const readout = new Plots.Readout();
+const history = new Plots.History({ mode: "line", xSpan: CFG.ease, yLabel: "loss", xLabel: "iteration" });
 ImageDemo.caption(LEFT, "original");
 ImageDemo.caption(RIGHT, "approximation");
 const u = Optim.rng();
@@ -35,27 +45,44 @@ for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
 }
 const X = tf.tensor(xs, [1, N * N]), Y = tf.tensor(ys, [1, N * N]);
 
-let img, target, P = null, bias = null, opt = null, step = 0, running = false, fit = null;
+// All functions' numbers live in one variable, one row per function, columns NAMES;
+// the first `edges` rows are edge functions, the rest are blobs. (One variable keeps the
+// optimizer to a handful of GPU calls per step.)
+let img, target, params = null, bias = null, vars = [], adam = null, step = 0, running = false, fit = null;
+let nEdge = 0, nBlob = 0;
+
+// starting and respawning shapes for each kind (log widths)
+const SHAPE = {
+  edge: { start: [Math.log(15), Math.log(0.1)], respawn: [Math.log(8), Math.log(0.15)] },
+  blob: { start: [Math.log(0.1), Math.log(0.1)], respawn: [Math.log(0.05), Math.log(0.05)] },
+};
+const kindOf = (k) => (k < nEdge ? "edge" : "blob");
 
 function init() {
-  if (P) for (const v of Object.values(P)) v.dispose();
-  if (bias) bias.dispose();
-  if (opt) opt.dispose();
+  for (const v of vars) v.dispose();
+  if (adam) for (const t of [...adam.m, ...adam.v]) t.dispose();
   const M = CFG.M, g = Math.ceil(Math.sqrt(M)), rows = Math.ceil(M / g);
-  const a = (f) => tf.variable(tf.tensor(Float32Array.from({ length: M }, (_, k) => f(k)), [M, 1]));
-  // centers spread uniformly over the image (a jittered grid)
-  P = {
-    x0: a((k) => ((k % g) + 0.5 + 0.5 * (u() - 0.5)) / g * 2 - 1),
-    y0: a((k) => (Math.floor(k / g) + 0.5 + 0.5 * (u() - 0.5)) / rows * 2 - 1),
-    th: a(() => 2 * Math.PI * u()),
-    rho: a(() => Math.log(CFG.s0)),
-    lam: a(() => Math.log(CFG.l0)),
-    A: a(() => 0.01 * u.normal()),
-  };
+  // centers on a jittered grid covering the image; the edge functions are spread evenly among them
+  const cells = Array.from({ length: M }, (_, k) => [
+    ((k % g) + 0.5 + 0.5 * (u() - 0.5)) / g * 2 - 1,
+    (Math.floor(k / g) + 0.5 + 0.5 * (u() - 0.5)) / rows * 2 - 1,
+  ]);
+  const edgeCells = new Set(Array.from({ length: CFG.edges }, (_, i) => Math.round(i * (M - 1) / Math.max(1, CFG.edges - 1))));
+  const ordered = [...cells.filter((_, k) => edgeCells.has(k)), ...cells.filter((_, k) => !edgeCells.has(k))];
+  nEdge = CFG.edges; nBlob = M - nEdge;
+  const P = new Float32Array(M * 6);
+  ordered.forEach(([x0, y0], k) => {
+    const sh = SHAPE[kindOf(k)].start;
+    P.set([x0, y0, 2 * Math.PI * u(), sh[0], sh[1], 0.01 * u.normal()], 6 * k);
+  });
+  params = tf.variable(tf.tensor(P, [M, 6]));
+  if (r1sign) r1sign.dispose();
+  r1sign = tf.keep(tf.tensor(Float32Array.from({ length: M }, (_, k) => (k < nEdge ? 1 : -1)), [M, 1]));
   let mean = 0;
   for (const v of img) mean += v / img.length;
   bias = tf.variable(tf.scalar(mean));
-  opt = tf.train.adam(CFG.lr);
+  vars = [params, bias];
+  adam = { m: vars.map((v) => tf.keep(tf.zerosLike(v))), v: vars.map((v) => tf.keep(tf.zerosLike(v))), t: 0 };
   step = 0;
   history.clear();
   render();
@@ -63,23 +90,129 @@ function init() {
   history.draw();
 }
 
-function model() {
-  const dx = tf.sub(X, P.x0), dy = tf.sub(Y, P.y0);
-  const c = tf.cos(P.th), s = tf.sin(P.th);
-  const uu = tf.add(tf.mul(dx, c), tf.mul(dy, s));
-  const vv = tf.sub(tf.mul(dy, c), tf.mul(dx, s));
-  const edge = tf.tanh(tf.mul(tf.exp(P.rho), uu));
-  const ridge = tf.exp(tf.div(tf.neg(tf.square(vv)), tf.mul(2, tf.exp(tf.mul(2, P.lam)))));
-  return tf.add(bias, tf.sum(tf.mul(P.A, tf.mul(edge, ridge)), 0));
+// Per-function geometry and shape, plus the shape's derivatives along u and v:
+// everything is [M, pixels], edges first, then blobs.
+function pieces(P) {
+  const [x0, y0, th, r1, r2, A] = tf.split(P, 6, 1);
+  const dx = tf.sub(X, x0), dy = tf.sub(Y, y0), c = tf.cos(th), s = tf.sin(th);
+  const uu = tf.add(tf.mul(dx, c), tf.mul(dy, s)), vv = tf.sub(tf.mul(dy, c), tf.mul(dx, s));
+  const S = [], Su = [], Sv = [];
+  const rows = (t, start, n) => tf.slice(t, [start, 0], [n, -1]);
+  if (nEdge) {   // tanh(k u) exp(-v^2 / 2l^2), k = exp(r1), l = exp(r2)
+    const e = (t) => rows(t, 0, nEdge), u_ = e(uu), v_ = e(vv), k = tf.exp(e(r1)), il2 = tf.exp(tf.mul(-2, e(r2)));
+    const t = tf.tanh(tf.mul(k, u_)), h = tf.exp(tf.mul(-0.5, tf.mul(tf.square(v_), il2))), th_ = tf.mul(t, h);
+    S.push(th_);
+    Su.push(tf.mul(tf.mul(h, k), tf.sub(1, tf.square(t))));
+    Sv.push(tf.neg(tf.mul(th_, tf.mul(v_, il2))));
+  }
+  if (nBlob) {   // exp(-u^2 / 2a^2 - v^2 / 2b^2), a = exp(r1), b = exp(r2)
+    const b = (t) => rows(t, nEdge, nBlob), u_ = b(uu), v_ = b(vv);
+    const ia2 = tf.exp(tf.mul(-2, b(r1))), ib2 = tf.exp(tf.mul(-2, b(r2)));
+    const g = tf.exp(tf.mul(-0.5, tf.add(tf.mul(tf.square(u_), ia2), tf.mul(tf.square(v_), ib2))));
+    S.push(g);
+    Su.push(tf.neg(tf.mul(g, tf.mul(u_, ia2))));
+    Sv.push(tf.neg(tf.mul(g, tf.mul(v_, ib2))));
+  }
+  const cat = (L) => (L.length > 1 ? tf.concat(L, 0) : L[0]);
+  return { c, s, uu, vv, A, S: cat(S), Su: cat(Su), Sv: cat(Sv) };
 }
+// d(shape)/d(r1) = +u dS/du for edges and -u dS/du for blobs; d/d(r2) = -v dS/dv for both
+let r1sign = null;
+
+// the approximation, with its gradient written out by hand (far fewer GPU operations
+// than automatic differentiation would use)
+const approx = tf.customGrad((P, b, save) => {
+  const { c, s, uu, vv, A, S, Su, Sv } = pieces(P);
+  save([c, s, uu, vv, A, S, Su, Sv]);   // reused by the gradient, so nothing is computed twice
+  return {
+    value: tf.add(b, tf.sum(tf.mul(A, S), 0)),
+    gradFunc: (dy, [c, s, uu, vv, A, S, Su, Sv]) => {
+      const R = tf.reshape(dy, [1, -1]);
+      const Fu = tf.mul(R, tf.mul(A, Su)), Fv = tf.mul(R, tf.mul(A, Sv));
+      const sum = (t) => tf.sum(t, 1, true);
+      const gu = sum(Fu), gv = sum(Fv);
+      const dP = tf.concat([
+        tf.sub(tf.mul(s, gv), tf.mul(c, gu)),                           // x0
+        tf.neg(tf.add(tf.mul(s, gu), tf.mul(c, gv))),                   // y0
+        sum(tf.sub(tf.mul(Fu, vv), tf.mul(Fv, uu))),                    // theta
+        tf.mul(r1sign, sum(tf.mul(Fu, uu))),                            // r1
+        tf.neg(sum(tf.mul(Fv, vv))),                                    // r2
+        sum(tf.mul(R, S)),                                              // A
+      ], 1);
+      return [dP, tf.sum(dy)];
+    },
+  };
+});
+function model() { return approx(params, bias); }
+function units() { return tf.tidy(() => { const { A, S } = pieces(params); return tf.mul(A, S); }); }
 function lossFn() { return tf.sum(tf.square(tf.sub(model(), target))); }
 function loss() { return tf.tidy(() => lossFn().dataSync()[0]); }
 function render() { fit = tf.tidy(() => Float64Array.from(model().dataSync())); }
 
+// one Adam step (written out, so respawned functions can have their history cleared)
+function adamStep(lr) {
+  const b1 = 0.9, b2 = 0.999, eps = 1e-8;
+  adam.t++;
+  const c1 = 1 - Math.pow(b1, adam.t), c2 = 1 - Math.pow(b2, adam.t);
+  const { value, grads } = tf.variableGrads(lossFn, vars);
+  const L = value.dataSync()[0];
+  vars.forEach((v, i) => {
+    const g = grads[v.name];
+    const [m, s] = tf.tidy(() => {
+      const m = tf.add(tf.mul(b1, adam.m[i]), tf.mul(1 - b1, g));
+      const s = tf.add(tf.mul(b2, adam.v[i]), tf.mul(1 - b2, tf.square(g)));
+      v.assign(tf.sub(v, tf.mul(lr / c1, tf.div(m, tf.add(tf.sqrt(tf.div(s, c2)), eps)))));
+      return [m, s];
+    });
+    adam.m[i].dispose(); adam.v[i].dispose();
+    adam.m[i] = tf.keep(m); adam.v[i] = tf.keep(s);
+  });
+  value.dispose();
+  for (const g of Object.values(grads)) g.dispose();
+  return L;
+}
+
+// move the functions that contribute least to where the leftover error is largest
+function respawn() {
+  const [R, contrib] = tf.tidy(() => {
+    const f = units();
+    return [tf.sub(target, tf.add(bias, tf.sum(f, 0))).dataSync(), tf.sum(tf.square(f), 1).dataSync()];
+  });
+  const weakest = Array.from(contrib, (c, k) => [c, k]).sort((a, b) => a[0] - b[0]).slice(0, CFG.respawnN);
+  // squared error, blurred over 5x5 pixels, as a probability for where to go
+  const E = new Float64Array(N * N);
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+    let s = 0;
+    for (let dj = -2; dj <= 2; dj++) for (let di = -2; di <= 2; di++) {
+      const jj = j + dj, ii = i + di;
+      if (jj >= 0 && jj < N && ii >= 0 && ii < N) s += R[jj * N + ii] ** 2;
+    }
+    E[j * N + i] = s;
+  }
+  let total = 0;
+  for (const e of E) total += e;
+  const pick = () => { let r = u() * total, p = 0; while (p < N * N - 1 && (r -= E[p]) > 0) p++; return p; };
+  const P = params.dataSync().slice(), m = adam.m[0].dataSync().slice(), v = adam.v[0].dataSync().slice();
+  for (const [, k] of weakest) {
+    const p = pick(), sh = SHAPE[kindOf(k)].respawn;
+    P.set([xs[p], ys[p], 2 * Math.PI * u(), sh[0], sh[1], 0.5 * R[p]], 6 * k);
+    m.fill(0, 6 * k, 6 * k + 6);   // forget the moved function's Adam history
+    v.fill(0, 6 * k, 6 * k + 6);
+  }
+  tf.tidy(() => params.assign(tf.tensor(P, [CFG.M, 6])));
+  adam.m[0].dispose(); adam.v[0].dispose();
+  adam.m[0] = tf.keep(tf.tensor(m, [CFG.M, 6])); adam.v[0] = tf.keep(tf.tensor(v, [CFG.M, 6]));
+}
+
+function learningRate(t) {
+  const e = t < CFG.ease ? 0.5 * (1 + Math.cos(Math.PI * t / CFG.ease)) : 0;
+  return CFG.lr * (CFG.floor + (1 - CFG.floor) * e);
+}
+
 function stop() { running = false; runButton.textContent = "optimize"; runButton.classList.remove("on"); }
+// runs until the stop button is pressed
 function run() {
   if (running) { stop(); return; }
-  if (step >= CFG.steps) return;
   running = true;
   runButton.textContent = "stop";
   runButton.classList.add("on");
@@ -108,25 +241,21 @@ ImageDemo.loadImage(TEST_IMAGE.src).then((a) => {
     if (running) {
       // as many steps as fit in the frame budget (faster GPUs show faster progress)
       const t0 = performance.now();
-      while (step < CFG.steps && (performance.now() - t0 < CFG.frameMs)) {
-        // learning rate eases off toward the end (cosine schedule)
-        opt.learningRate = CFG.lr * 0.5 * (1 + Math.cos(Math.PI * step / CFG.steps));
-        const L = opt.minimize(lossFn, true);
-        history.push(L.dataSync()[0]);
-        L.dispose();
+      while (performance.now() - t0 < CFG.frameMs) {
+        history.push(adamStep(learningRate(step)));
         step++;
+        if (step % CFG.respawnEvery === 0 && step <= CFG.respawnUntil) respawn();
       }
       render();
       readout.set(history.a[history.length - 1].toFixed(3));
       history.draw();
-      if (step >= CFG.steps) stop();
     }
     draw();
   });
 });
 
 Stage.nav("3-logistic-1d.html", "../demo3-generalization/1-overfit.html");
-window.demo = { CFG, run, init, get step() { return step; }, get loss() { return history.a[history.length - 1]; } };
+window.demo = { CFG, run, init, loss, get params() { return params; }, get bias() { return bias; }, pieces, lossFn, approx, get step() { return step; }, get ready() { return !!params; }, get last() { return history.a[history.length - 1]; } };
 </script>
 </body>
 </html>

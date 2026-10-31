@@ -24,7 +24,7 @@ or use GitHub Pages (Settings → Pages → deploy from the `main` branch, root 
 | 2.1 `demo2-compression/1-fourier-1d.html` | 8 cosine templates fit to data | **1…8** (or keys 1–8 / space), **new data** |
 | 2.2 `…/2-fourier-image.html` | 2D cosine templates (JPEG-style), one frequency level per click; auto-advances after 10, up to 2016 templates | **add template** (space), **show difference**, **reset** |
 | 2.3 `…/3-logistic-1d.html` | 5 logistics with draggable handles (midpoint, right end, 90% point) | **randomize** (the logistics start identical), **optimize** (space), **new data** |
-| 2.4 `…/4-adaptive-image.html` | 100 functions A·tanh(s·u)·exp(−v²/2ℓ²), fit with Adam | **optimize** (space), **show difference**, **reset** |
+| 2.4 `…/4-adaptive-image.html` | 200 adaptive functions (180 rotated Gaussian blobs A·exp(−u²/2a²−v²/2b²), 20 edges A·tanh(s·u)·exp(−v²/2ℓ²)), fit with Adam; the weakest are periodically moved to where the error is largest | **optimize** (space), **show difference**, **reset** |
 | 3.1 `demo3-generalization/1-overfit.html` | 1 hidden layer × 1000 neurons overfitting noisy XOR; loss on this data vs new data | **resample data**, **reset model**, **optimize** |
 | 3.2 `…/2-circle.html` | 2 → 3 → 1 network with live weights; the fit, the hidden layer's 3D space (drag to rotate), and the network | **new start**, **optimize** |
 | 3.3 `…/3-spirals.html` | the gist's 2 → 100 → 2 → 3 network; the fit, the warped (u, v) space of the 2D layer, and the network | **new start**, **optimize** |
