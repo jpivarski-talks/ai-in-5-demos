@@ -32,7 +32,7 @@
 <script src="presets.js"></script>
 <script>
 "use strict";
-const DEFAULTS = { endpoint: "http://localhost:8080", model: "", key: "", temperature: "1", maxTokens: "60" };
+const DEFAULTS = { endpoint: "http://localhost:8080", model: "", key: "", temperature: "0.5", maxTokens: "" };   // blank max tokens: no limit
 const cfg = Object.assign({}, DEFAULTS, JSON.parse(localStorage.getItem("demo5-settings") || "{}"));
 // allow ?endpoint=... in the URL as well
 const q = new URLSearchParams(location.search);
@@ -53,16 +53,17 @@ temp.addEventListener("change", () => {
   temp.value = cfg.temperature;
   localStorage.setItem("demo5-settings", JSON.stringify(cfg));
 });
-const go = Stage.button("complete", (e) => complete(e.shiftKey), null, { cls: "primary" });
+const go = Stage.button("complete", () => complete(), null, { cls: "primary" });
 Stage.place(go, { x: 1300, y: 812, w: 210, h: 64 });
 go.style.fontSize = "26px";
 const gear = Stage.el("div", { id: "gear", html: "&#9881;", title: "settings" });
 Stage.place(gear, { x: 1535, y: 822, w: 40, h: 40 });
 
-let current = null, abort = null;   // free-form until a preset is chosen
+let abort = null;
 
+// a preset just fills in the text box
 for (const p of PRESETS) {
-  Stage.button(p.label, () => { stop(); current = p; setText(p.prompt); }, side);
+  Stage.button(p.label, () => { stop(); setText(p.prompt); }, side);
 }
 function setText(s) { text.textContent = s; err.textContent = ""; placeCaret(); }
 function placeCaret() {
@@ -74,7 +75,7 @@ function placeCaret() {
 function stop() { if (abort) abort.abort(); }
 
 // stream a completion of the whole text box from an OpenAI-compatible /v1/completions endpoint
-async function complete(more) {
+async function complete() {
   if (abort) { stop(); return; }
   err.textContent = "";
   const prompt = text.textContent;
@@ -84,8 +85,17 @@ async function complete(more) {
   abort = new AbortController();
   go.textContent = "stop";
   go.classList.add("on");
-  const body = { prompt, max_tokens: more ? 250 : +cfg.maxTokens, temperature: +cfg.temperature, stream: true };
-  if (!more && current) body.stop = current.stop || ["\n"];
+  // the temperature field and the max-tokens setting are all there is: with no max tokens,
+  // the model keeps going until "stop" is pressed
+  // top_p = 1 turns off "nucleus" truncation, so temperature alone decides how random it is
+  const body = { prompt, temperature: +cfg.temperature, top_p: 1, stream: true };
+  // llama.cpp also trims unlikely words before applying temperature (top_k 40, min_p 0.05 by
+  // default), which mutes high temperatures; turn that off too (other servers don't know these)
+  if (!cfg.model) { body.top_k = 0; body.min_p = 0; }
+  if (+cfg.maxTokens > 0) body.max_tokens = +cfg.maxTokens;
+  // a base model ends a "document" with an end-of-text token; llama.cpp can be told to
+  // ignore it, so that with no limit the text really goes on until "stop" is pressed
+  else if (!cfg.model) body.ignore_eos = true;
   if (cfg.model) body.model = cfg.model;
   const headers = { "Content-Type": "application/json" };
   if (cfg.key) headers.Authorization = "Bearer " + cfg.key;
@@ -128,7 +138,7 @@ gear.addEventListener("click", () => {
   const box = Stage.el("div", { class: "settings" }, pop.box);
   Object.assign(box.style, { padding: "30px 40px" });
   const fields = [["endpoint", "endpoint (OpenAI-compatible, without /v1)"], ["model", "model (blank for llama.cpp)"],
-    ["key", "API key (stored only in this browser)"], ["maxTokens", "max tokens"]];
+    ["key", "API key (stored only in this browser)"], ["maxTokens", "max tokens (blank: no limit)"]];
   const inputs = {};
   for (const [k, lab] of fields) {
     Stage.el("label", { text: lab }, box);
@@ -143,7 +153,7 @@ gear.addEventListener("click", () => {
 });
 
 text.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); complete(e.shiftKey); }
+  if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); complete(); }
   if (e.key === "Escape") stop();
 });
 

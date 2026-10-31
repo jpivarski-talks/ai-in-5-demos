@@ -9,6 +9,8 @@
 #   ./serve-llm.sh big      Qwen3-30B-A3B-Base (needs ~20 GB; better at the harder prompts)
 #
 # Then open demo5-few-shot/1-complete.html; it talks to http://localhost:8080.
+# --context-shift lets a completion run indefinitely: when the 4096-token context fills up,
+# the oldest text is dropped instead of stopping.
 set -euo pipefail
 
 case "${1:-}" in
@@ -26,4 +28,5 @@ exec llama-server \
   --hf-repo "$REPO" --hf-file "$FILE" \
   --host 127.0.0.1 --port 8080 \
   --ctx-size 4096 \
+  --context-shift \
   --n-gpu-layers 999
