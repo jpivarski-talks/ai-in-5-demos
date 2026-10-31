@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="data:,">
 <title>Demo 2.3: adaptive functions</title>
 <link rel="stylesheet" href="../common/stage.css">
 </head>
@@ -29,10 +30,12 @@ const FX = Float64Array.from({ length: 300 }, (_, i) => i / 299);
 // a column of panels on the left (one logistic each) and a wide panel with the data and the sum
 const PW = 400, GAP = 14, PH = (740 - (NL - 1) * GAP) / NL;
 const small = Array.from({ length: NL }, (_, k) => new Plots.Axes(panel, { x: 10, y: 10 + k * (PH + GAP), w: PW, h: PH }, [0, 1], [-1, 1]));
-const WX = 10 + PW + 30;
+const WX = 10 + PW + 48;
 const wide = new Plots.Axes(panel, { x: WX, y: 10, w: 1060 - WX - 10, h: 740 }, [-0.02, 1.02], [-1, 1]);
 
-let y, p, opt = null, step = 0, running = false, drag = null;
+// base: the constant offset of the sum. It is re-fit to the data only by optimize,
+// randomize, and new data, never while dragging, so a drag changes just one logistic.
+let y, p, base = 0, opt = null, step = 0, running = false, drag = null;
 
 function resetLogistics() {
   // parameters per logistic: [x0, log(width), A]
@@ -47,16 +50,17 @@ function newData() {
   wide.ylim = [lo - pad, hi + pad];
   const half = (hi - lo) / 2 + pad;
   for (const a of small) a.ylim = [-2.1 * half, 2.1 * half];   // fitted amplitudes reach ~1.9x the data range
-  resetLogistics();
+  refitBase();
   history.clear();
   record();
 }
-function lossNow() { return Fits1D.logisticGrad(p, y).loss; }
+function refitBase() { base = Fits1D.bestConst(p, y); }
+function lossNow() { return Fits1D.sse(y, Fits1D.logisticSum(p, base)); }
 function record() {
   const L = lossNow();
   history.push(L);
   history.draw();
-  readout.set(L.toFixed(1));
+  readout.set(L.toFixed(3));
 }
 
 function stop() { running = false; fitButton.textContent = "optimize"; fitButton.classList.remove("on"); }
@@ -111,7 +115,6 @@ window.addEventListener("pointerup", () => { drag = null; });
 
 function draw() {
   const c = panel.clear();
-  const base = Fits1D.bestConst(p, y);
   for (let k = 0; k < NL; k++) {
     const ax = small[k], x0 = p[3 * k], w = Math.exp(p[3 * k + 1]), A = p[3 * k + 2];
     // grow (never shrink) the panel's scale to keep its curve and handles in view
@@ -129,7 +132,7 @@ function draw() {
       c.beginPath(); c.arc(q[0], q[1], 9, 0, 2 * Math.PI); c.fill(); c.stroke();
     }
   }
-  wide.frame({ xlabel: "x" });
+  wide.frame({ xlabel: "x", ylabel: "y" });
   wide.clip(() => {
     wide.dots(Fits1D.xs, y, { r: 4.5, color: "#555" });
     wide.curve(FX, Fits1D.logisticSum(Array.from(p), base, FX), { color: C.accent, width: 4 });
@@ -141,6 +144,7 @@ const bar = Stage.controls();
 Stage.button("randomize", () => {
   stop();
   p = Float64Array.from(Fits1D.randomStart(u));
+  refitBase();
   history.clear();
   record();
 }, bar);
@@ -151,16 +155,18 @@ document.addEventListener("keydown", (e) => { if (e.key === " ") { e.preventDefa
 
 Stage.loop(() => {
   if (running) {
-    for (let i = 0, n = perFrame(step); i < n && step < STEPS; i++, step++) {
+    // keeps going until the stop button is pressed
+    for (let i = 0, n = perFrame(step); i < n; i++, step++) {
       history.push(Fits1D.fitStep(p, y, opt, step));
+      refitBase();
     }
-    readout.set(history.a[history.length - 1].toFixed(1));
+    readout.set(history.a[history.length - 1].toFixed(3));
     history.draw();
-    if (step >= STEPS) stop();
   }
   draw();
 });
 
+resetLogistics();   // only on page load: "new data" keeps the logistics as they are
 newData();
 Stage.nav("2-fourier-image.html", "4-adaptive-image.html");
 window.demo = { fit, newData, get p() { return p; }, get loss() { return lossNow(); } };

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="data:,">
 <title>Demo 2.4: compressing an image with adaptive functions</title>
 <link rel="stylesheet" href="../common/stage.css">
 </head>
@@ -94,14 +95,14 @@ const bar = Stage.controls();
 const runButton = Stage.button("optimize", run, bar, { cls: "primary" });
 Stage.button("show difference", () => ImageDemo.showDifference(img, fit), bar);
 Stage.el("div", { style: { width: "30px" } }, bar);
-Stage.button("reset", () => { stop(); init(); readout.set(history.a[0].toFixed(1)); }, bar);
+Stage.button("reset", () => { stop(); init(); readout.set(history.a[0].toFixed(3)); }, bar);
 document.addEventListener("keydown", (e) => { if (e.key === " ") { e.preventDefault(); run(); } });
 
 ImageDemo.loadImage(TEST_IMAGE.src).then((a) => {
   img = a;
   target = tf.tensor(Float32Array.from(img), [N * N]);
   init();
-  readout.set(history.a[0].toFixed(1));
+  readout.set(history.a[0].toFixed(3));
   readout.setSub((6 * CFG.M + 1) + " numbers");
   Stage.loop(() => {
     if (running) {
@@ -116,7 +117,7 @@ ImageDemo.loadImage(TEST_IMAGE.src).then((a) => {
         step++;
       }
       render();
-      readout.set(history.a[history.length - 1].toFixed(1));
+      readout.set(history.a[history.length - 1].toFixed(3));
       history.draw();
       if (step >= CFG.steps) stop();
     }

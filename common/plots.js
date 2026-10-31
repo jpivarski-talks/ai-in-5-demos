@@ -32,13 +32,12 @@
       const r = opts.rect || Stage.L.readout;
       this.box = Stage.el("div");
       Stage.place(this.box, r);
-      this.lab = Stage.el("div", { text: opts.label || "" }, this.box);
-      Object.assign(this.lab.style, { fontSize: "26px", color: C.grey, marginTop: "18px", textAlign: "right" });
+      // (no caption: the history plot's axis label already says what the number is)
       this.val = Stage.el("div", { text: "" }, this.box);
-      this.size = opts.size || 104;
+      this.size = opts.size || 92;
       Object.assign(this.val.style, {
-        fontFamily: C.mono, fontSize: this.size + "px", textAlign: "right", whiteSpace: "nowrap",
-        color: C.ink, lineHeight: "1.15", fontVariantNumeric: "tabular-nums",
+        fontFamily: C.font, fontSize: this.size + "px", fontWeight: "bold", textAlign: "right", whiteSpace: "nowrap",
+        color: C.ink, lineHeight: "1.15", fontVariantNumeric: "tabular-nums", marginTop: "24px",
       });
       this.sub = Stage.el("div", { text: "" }, this.box);
       Object.assign(this.sub.style, { fontSize: "22px", color: C.grey, textAlign: "right", marginTop: "4px" });
@@ -56,9 +55,8 @@
       this.val.style.color = color || C.ink;
       // shrink long values to fit
       const n = Math.max(1, text.length + (unit ? 0.6 * unit.length + 0.3 : 0));
-      this.val.style.fontSize = Math.min(this.size, Math.floor(this.w / (0.62 * n))) + "px";
+      this.val.style.fontSize = Math.min(this.size, Math.floor(this.w / (0.6 * n))) + "px";
     }
-    setLabel(t) { this.lab.textContent = t; }
     setSub(t) { this.sub.textContent = t; }
   }
 

@@ -9,8 +9,8 @@
   const L = {
     main: { x: 20, y: 20, w: 1060, h: 780 },
     controls: { x: 20, y: 815, w: 1060, h: 70 },
-    readout: { x: 1110, y: 20, w: 470, h: 250 },
-    history: { x: 1110, y: 290, w: 470, h: 590 },
+    readout: { x: 1110, y: 20, w: 470, h: 180 },
+    history: { x: 1110, y: 210, w: 470, h: 620 },   // ends above the page-navigation arrows
   };
 
   const COLORS = {

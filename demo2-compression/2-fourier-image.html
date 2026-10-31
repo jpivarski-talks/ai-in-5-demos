@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="data:,">
 <title>Demo 2.2: compressing an image with templates</title>
 <link rel="stylesheet" href="../common/stage.css">
 </head>
@@ -69,7 +70,7 @@ function record() {
   const L = ImageDemo.sse(img, fit);
   history.push(L);
   history.draw();
-  readout.set(L.toFixed(1));
+  readout.set(L.toFixed(3));
   readout.setSub(count + (count === 1 ? " number" : " numbers"));
 }
 

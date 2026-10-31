@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="data:,">
 <title>Demo 4.1: word embedding</title>
 <link rel="stylesheet" href="../common/stage.css">
 <style>
@@ -26,7 +27,7 @@ Stage.place(input, { x: 20, y: 20, w: 420, h: null });
 const status = Stage.label("loading…", { x: 470, y: 36, w: 400 });
 const vecBox = Stage.el("div", { id: "vec" });
 Stage.place(vecBox, { x: 20, y: 100, w: 1560, h: 150 });
-const panel = new Stage.Panel({ x: 20, y: 270, w: 1560, h: 610 });
+const panel = new Stage.Panel({ x: 20, y: 270, w: 1560, h: 585 });   // ends above the page-navigation arrows
 
 let tr = null, view = null;
 

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="data:,">
 <title>Demo 2.1: fitting with templates</title>
 <link rel="stylesheet" href="../common/stage.css">
 </head>
@@ -17,7 +18,7 @@
 const K = 8;
 const C = Stage.COLORS;
 const panel = new Stage.Panel(Stage.L.main);
-const ax = new Plots.Axes(panel, { x: 30, y: 10, w: 1020, h: 730 }, [-0.02, 1.02], [-3, 3]);
+const ax = new Plots.Axes(panel, { x: 30, y: 10, w: 1020, h: 680 }, [-0.02, 1.02], [-3, 3]);
 const readout = new Plots.Readout({ label: "loss" });
 const history = new Plots.History({ mode: "line", xSpan: K, yLabel: "loss", xLabel: "templates" });
 const u = Optim.rng();
@@ -33,13 +34,20 @@ function newData() {
   const pad = (hi - lo) * 0.15;
   ax.ylim = [lo - pad, hi + pad];
   included = 0; shown = 0; anim = null;
-  buttons.forEach((b) => { b.disabled = false; });
+  buttons.forEach((b, k) => { b.disabled = false; b.textContent = templateLabel(k); });
   history.clear();
   history.push(lossAt(0));
   history.draw();
-  readout.set(lossAt(0).toFixed(1));
+  readout.set(lossAt(0).toFixed(3));
 }
 function lossAt(n) { return Fits1D.sse(y, Fits1D.cosineCurve(fit.mean, fit.amps, n)); }
+
+// button text: the template's formula, A cos(k x), taking x from 0 to pi across the plot
+function templateLabel(k) {
+  const a = fit.amps[k];
+  const A = Math.abs(a).toFixed(3);
+  return (a < 0 ? "\u2212" : "") + A + " cos(" + (k === 0 ? "" : k + 1) + "x)";
+}
 
 // bring template k down from above, then fold it into the fit
 function add(k) {
@@ -48,7 +56,7 @@ function add(k) {
   anim = { k, t: 0 };
 }
 
-const DESCEND = 0.9;
+const DESCEND = 0.9, HOLD = 0.4;   // seconds to come down, then to pause in the middle
 function draw() {
   const c = panel.clear();
   ax.frame({ xlabel: "x", ylabel: "y" });
@@ -65,12 +73,18 @@ function draw() {
   });
 }
 
-const bar = Stage.controls();
+// two rows of four buttons, since each one shows its formula
+const bar = Stage.controls({ x: 20, y: 755, w: 1060, h: 130 });
+Object.assign(bar.style, { flexDirection: "column", alignItems: "flex-start", gap: "10px" });
+const rows = [0, 1].map(() => Stage.el("div", { style: { display: "flex", gap: "12px", alignItems: "center" } }, bar));
 const buttons = [];
-for (let k = 0; k < K; k++) buttons.push(Stage.button(String(k + 1), () => add(k), bar, { cls: "small" }));
-buttons.forEach((b) => { b.style.fontSize = "24px"; b.style.minWidth = "54px"; });
-Stage.el("div", { style: { width: "30px" } }, bar);
-Stage.button("new data", newData, bar);
+for (let k = 0; k < K; k++) {
+  const b = Stage.button("", () => add(k), rows[k < 4 ? 0 : 1]);
+  Object.assign(b.style, { fontSize: "21px", width: "205px", padding: "6px 4px", whiteSpace: "nowrap" });
+  buttons.push(b);
+}
+const newButton = Stage.button("new data", newData, rows[1]);
+newButton.style.marginLeft = "40px";
 document.addEventListener("keydown", (e) => {
   if (e.key === " ") { e.preventDefault(); add(included); }
   if (e.key >= "1" && e.key <= "8") add(+e.key - 1);
@@ -79,14 +93,14 @@ document.addEventListener("keydown", (e) => {
 Stage.loop((dt) => {
   if (anim) {
     anim.t += dt;
-    // once the template lands in the middle, it disappears and the fit snaps to include it
-    if (anim.t >= DESCEND) {
+    // once the template lands in the middle, it pauses, then disappears and the fit snaps to include it
+    if (anim.t >= DESCEND + HOLD) {
       included++;
       shown = included;
       anim = null;
       history.push(lossAt(included));
       history.draw();
-      readout.set(lossAt(included).toFixed(1));
+      readout.set(lossAt(included).toFixed(3));
     }
   }
   draw();

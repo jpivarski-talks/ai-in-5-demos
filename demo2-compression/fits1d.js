@@ -102,9 +102,10 @@
     return best;
   }
 
-  // page 3: every logistic starts with the same shape; "randomize" spreads them out
+  // page 3: every logistic starts with the same shape, at zero height (switched off),
+  // so they can be turned on one at a time by hand; "randomize" spreads them out
   const NLOG = 5;
-  const START = [].concat(...Array.from({ length: NLOG }, () => [0.5, Math.log(0.07), 0.6]));
+  const START = [].concat(...Array.from({ length: NLOG }, () => [0.5, Math.log(0.07), 0]));
   function randomStart(u) {
     const p = [];
     for (let k = 0; k < NLOG; k++) {

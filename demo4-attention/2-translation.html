@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="data:,">
 <title>Demo 4.2: attention</title>
 <link rel="stylesheet" href="../common/stage.css">
 </head>
@@ -23,7 +24,7 @@ const inStyle = getComputedStyle(input);
 for (const k of ["fontFamily", "fontSize", "fontWeight", "letterSpacing", "paddingTop", "paddingLeft", "paddingRight", "paddingBottom", "borderLeftWidth", "boxSizing"]) out.style[k] = inStyle[k];
 Object.assign(out.style, { color: C.accent, borderStyle: "solid", borderColor: "transparent", borderWidth: inStyle.borderLeftWidth, whiteSpace: "pre", overflow: "hidden" });
 out.textContent = "loading…";
-const panel = new Stage.Panel({ x: 20, y: 160, w: 1560, h: 725 });
+const panel = new Stage.Panel({ x: 20, y: 160, w: 1560, h: 695 });   // ends above the page-navigation arrows
 
 let tr = null, res = null, shown = 0;
 
