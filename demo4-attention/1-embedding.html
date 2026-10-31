@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Demo 4.1: word embedding</title>
+<link rel="stylesheet" href="../common/stage.css">
+<style>
+  #vec { position: absolute; font-family: var(--mono); font-size: 19px; color: #555;
+         display: grid; grid-template-columns: repeat(20, 1fr); row-gap: 4px; text-align: right; }
+  #vec span.neg { color: var(--orange); }
+  #vec span.pos { color: var(--blue); }
+  .shake { animation: shake 0.35s; }
+  @keyframes shake { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/stage.js"></script>
+<script src="../common/plots.js"></script>
+<script src="seq2seq.js"></script>
+<script>
+"use strict";
+const C = Stage.COLORS;
+const input = Stage.el("input", { class: "text", type: "text", placeholder: "word", spellcheck: "false", autocomplete: "off" });
+Stage.place(input, { x: 20, y: 20, w: 420, h: null });
+const status = Stage.label("loading…", { x: 470, y: 36, w: 400 });
+const vecBox = Stage.el("div", { id: "vec" });
+Stage.place(vecBox, { x: 20, y: 100, w: 1560, h: 150 });
+const panel = new Stage.Panel({ x: 20, y: 270, w: 1560, h: 610 });
+
+let tr = null, view = null;
+
+function fmt(v) { return (v >= 0 ? " " : "−") + Math.abs(v).toFixed(2); }
+
+function showVector(v) {
+  vecBox.innerHTML = "";
+  for (const x of v) {
+    const s = document.createElement("span");
+    s.textContent = fmt(x);
+    s.className = x < 0 ? "neg" : "pos";
+    s.style.opacity = String(0.45 + 0.55 * Math.min(1, Math.abs(x) / 0.8));
+    vecBox.appendChild(s);
+  }
+}
+
+// top two principal directions of a handful of vectors (power iteration on the Gram matrix)
+function pca2(vecs) {
+  const n = vecs.length, d = vecs[0].length;
+  const mean = new Float64Array(d);
+  for (const v of vecs) for (let j = 0; j < d; j++) mean[j] += v[j] / n;
+  const X = vecs.map((v) => Float64Array.from(v, (x, j) => x - mean[j]));
+  const G = X.map((a) => X.map((b) => a.reduce((s, x, j) => s + x * b[j], 0)));
+  const comps = [];
+  for (let c = 0; c < 2; c++) {
+    let e = Float64Array.from({ length: n }, (_, i) => Math.sin(i + 1 + c));
+    let lam = 0;
+    for (let it = 0; it < 300; it++) {
+      const f = new Float64Array(n);
+      for (let i = 0; i < n; i++) for (let k = 0; k < n; k++) f[i] += G[i][k] * e[k];
+      for (const p of comps) { const dot = f.reduce((s, x, i) => s + x * p.e[i], 0); for (let i = 0; i < n; i++) f[i] -= dot * p.e[i]; }
+      lam = Math.hypot(...f);
+      e = f.map((x) => x / (lam || 1));
+    }
+    comps.push({ e, lam });
+  }
+  // coordinates of each vector along the two components
+  return X.map((_, i) => [comps[0].e[i] * Math.sqrt(comps[0].lam), comps[1].e[i] * Math.sqrt(comps[1].lam)]);
+}
+
+function lookup(word) {
+  word = word.trim().toLowerCase();
+  const v = tr.vector(word);
+  if (!v) { input.classList.remove("shake"); void input.offsetWidth; input.classList.add("shake"); return; }
+  showVector(v);
+  const nb = tr.neighbors(word, 15);
+  const pts = pca2([v, ...nb.map((n) => n.vec)]);
+  // put the query word at the center
+  const c0 = pts[0];
+  view = { words: [word, ...nb.map((n) => n.word)], pts: pts.map((p) => [p[0] - c0[0], p[1] - c0[1]]), t: 0 };
+}
+
+function draw(dt) {
+  const c = panel.clear();
+  c.strokeStyle = "#ddd"; c.lineWidth = 1.5; c.strokeRect(0.75, 0.75, panel.w - 1.5, panel.h - 1.5);
+  if (!view) return;
+  view.t = Math.min(1, view.t + dt * 2.5);
+  const e = view.t * view.t * (3 - 2 * view.t);
+  let m = 1e-6;
+  for (const p of view.pts) m = Math.max(m, Math.abs(p[0]) / 680, Math.abs(p[1]) / 250);
+  const X = (x) => panel.w / 2 + x / m * e, Y = (y) => panel.h / 2 - y / m * e;
+  // place labels beside their dots, nudging them apart vertically where they collide
+  c.textBaseline = "middle";
+  const labels = view.pts.map((p, i) => {
+    c.font = i === 0 ? `bold 34px ${C.font}` : `26px ${C.font}`;
+    const w = c.measureText(view.words[i]).width, left = p[0] < 0 && i > 0;
+    const x = i === 0 ? X(0) - w / 2 : left ? X(p[0]) - 12 - w : X(p[0]) + 12;
+    return { i, x, w, h: i === 0 ? 40 : 30, y: i === 0 ? Y(0) - 32 : Y(p[1]), y0: Y(p[1]) };
+  });
+  for (let it = 0; it < 60; it++) {
+    for (const a of labels) for (const b of labels) {
+      if (a === b || a.x > b.x + b.w + 6 || b.x > a.x + a.w + 6) continue;
+      const need = (a.h + b.h) / 2 - Math.abs(a.y - b.y);
+      if (need > 0) { const d = a.y < b.y || (a.y === b.y && a.i < b.i) ? -1 : 1; a.y += d * need * 0.25; b.y -= d * need * 0.25; }
+    }
+  }
+  for (const L of labels) {
+    const p = view.pts[L.i];
+    if (L.i > 0) {
+      c.fillStyle = C.grey;
+      c.beginPath(); c.arc(X(p[0]), Y(p[1]), 6, 0, 2 * Math.PI); c.fill();
+      if (Math.abs(L.y - L.y0) > 8) {
+        c.strokeStyle = "#ccc"; c.lineWidth = 1;
+        const ex = p[0] < 0 ? L.x + L.w + 2 : L.x - 2;
+        c.beginPath(); c.moveTo(X(p[0]), Y(p[1])); c.lineTo(ex, L.y); c.stroke();
+      }
+    }
+  }
+  for (const L of labels) {
+    c.globalAlpha = L.i === 0 ? 1 : e;
+    c.font = L.i === 0 ? `bold 34px ${C.font}` : `26px ${C.font}`;
+    c.fillStyle = L.i === 0 ? C.accent : C.ink;
+    c.textAlign = "left";
+    c.fillText(view.words[L.i], L.x, L.y);
+  }
+  c.globalAlpha = 1;
+  c.fillStyle = C.accent;
+  c.beginPath(); c.arc(X(0), Y(0), 10, 0, 2 * Math.PI); c.fill();
+}
+
+input.addEventListener("keydown", (e) => { if (e.key === "Enter" && tr) lookup(input.value); });
+Seq2Seq.Translator.load("model/").then((t) => { tr = t; status.remove(); input.focus(); });
+Stage.loop(draw);
+Stage.nav("../demo3-generalization/3-spirals.html", "2-translation.html");
+window.demo = { lookup, get tr() { return tr; } };
+</script>
+</body>
+</html>

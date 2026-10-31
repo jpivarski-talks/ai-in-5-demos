@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Demo 2.4: compressing an image with adaptive functions</title>
+<link rel="stylesheet" href="../common/stage.css">
+</head>
+<body>
+<div id="stage"></div>
+<script src="../lib/tf.min.js"></script>
+<script src="../common/stage.js"></script>
+<script src="../common/plots.js"></script>
+<script src="../common/optim.js"></script>
+<script src="../common/image.js"></script>
+<script src="image-common.js"></script>
+<script>
+"use strict";
+// f(x, y) = A tanh(s u) exp(-v^2 / 2 l^2),  u, v = coordinates rotated by theta around (x0, y0)
+// with s = exp(rho), l = exp(lambda); the approximation is a constant plus M of these
+const CFG = { M: 100, steps: 1200, lr: 0.03, s0: 8, l0: 0.2, frameMs: 30 };
+const { N, LEFT, RIGHT } = ImageDemo;
+const panel = new Stage.Panel(Stage.L.main);
+const readout = new Plots.Readout({ label: "loss" });
+const history = new Plots.History({ mode: "line", xSpan: CFG.steps, yLabel: "loss", xLabel: "iteration" });
+ImageDemo.caption(LEFT, "original");
+ImageDemo.caption(RIGHT, "approximation");
+const u = Optim.rng();
+
+// pixel coordinates in [-1, 1] (y up)
+const xs = new Float32Array(N * N), ys = new Float32Array(N * N);
+for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+  xs[j * N + i] = (i + 0.5) / N * 2 - 1;
+  ys[j * N + i] = 1 - (j + 0.5) / N * 2;
+}
+const X = tf.tensor(xs, [1, N * N]), Y = tf.tensor(ys, [1, N * N]);
+
+let img, target, P = null, bias = null, opt = null, step = 0, running = false, fit = null;
+
+function init() {
+  if (P) for (const v of Object.values(P)) v.dispose();
+  if (bias) bias.dispose();
+  if (opt) opt.dispose();
+  const M = CFG.M, g = Math.ceil(Math.sqrt(M)), rows = Math.ceil(M / g);
+  const a = (f) => tf.variable(tf.tensor(Float32Array.from({ length: M }, (_, k) => f(k)), [M, 1]));
+  // centers spread uniformly over the image (a jittered grid)
+  P = {
+    x0: a((k) => ((k % g) + 0.5 + 0.5 * (u() - 0.5)) / g * 2 - 1),
+    y0: a((k) => (Math.floor(k / g) + 0.5 + 0.5 * (u() - 0.5)) / rows * 2 - 1),
+    th: a(() => 2 * Math.PI * u()),
+    rho: a(() => Math.log(CFG.s0)),
+    lam: a(() => Math.log(CFG.l0)),
+    A: a(() => 0.01 * u.normal()),
+  };
+  let mean = 0;
+  for (const v of img) mean += v / img.length;
+  bias = tf.variable(tf.scalar(mean));
+  opt = tf.train.adam(CFG.lr);
+  step = 0;
+  history.clear();
+  render();
+  history.push(loss());
+  history.draw();
+}
+
+function model() {
+  const dx = tf.sub(X, P.x0), dy = tf.sub(Y, P.y0);
+  const c = tf.cos(P.th), s = tf.sin(P.th);
+  const uu = tf.add(tf.mul(dx, c), tf.mul(dy, s));
+  const vv = tf.sub(tf.mul(dy, c), tf.mul(dx, s));
+  const edge = tf.tanh(tf.mul(tf.exp(P.rho), uu));
+  const ridge = tf.exp(tf.div(tf.neg(tf.square(vv)), tf.mul(2, tf.exp(tf.mul(2, P.lam)))));
+  return tf.add(bias, tf.sum(tf.mul(P.A, tf.mul(edge, ridge)), 0));
+}
+function lossFn() { return tf.sum(tf.square(tf.sub(model(), target))); }
+function loss() { return tf.tidy(() => lossFn().dataSync()[0]); }
+function render() { fit = tf.tidy(() => Float64Array.from(model().dataSync())); }
+
+function stop() { running = false; runButton.textContent = "run"; runButton.classList.remove("on"); }
+function run() {
+  if (running) { stop(); return; }
+  if (step >= CFG.steps) return;
+  running = true;
+  runButton.textContent = "stop";
+  runButton.classList.add("on");
+}
+
+function draw() {
+  const c = panel.clear();
+  ImageDemo.drawGrey(c, LEFT, img);
+  if (fit) ImageDemo.drawGrey(c, RIGHT, fit);
+}
+
+const bar = Stage.controls();
+const runButton = Stage.button("run", run, bar, { cls: "primary" });
+Stage.button("difference", () => ImageDemo.showDifference(img, fit), bar);
+Stage.el("div", { style: { width: "30px" } }, bar);
+Stage.button("reset", () => { stop(); init(); readout.set(history.a[0].toFixed(1)); }, bar);
+document.addEventListener("keydown", (e) => { if (e.key === " ") { e.preventDefault(); run(); } });
+
+ImageDemo.loadImage(TEST_IMAGE.src).then((a) => {
+  img = a;
+  target = tf.tensor(Float32Array.from(img), [N * N]);
+  init();
+  readout.set(history.a[0].toFixed(1));
+  readout.setSub((6 * CFG.M + 1) + " numbers");
+  Stage.loop(() => {
+    if (running) {
+      // as many steps as fit in the frame budget (faster GPUs show faster progress)
+      const t0 = performance.now();
+      while (step < CFG.steps && (performance.now() - t0 < CFG.frameMs)) {
+        // learning rate eases off toward the end (cosine schedule)
+        opt.learningRate = CFG.lr * 0.5 * (1 + Math.cos(Math.PI * step / CFG.steps));
+        const L = opt.minimize(lossFn, true);
+        history.push(L.dataSync()[0]);
+        L.dispose();
+        step++;
+      }
+      render();
+      readout.set(history.a[history.length - 1].toFixed(1));
+      history.draw();
+      if (step >= CFG.steps) stop();
+    }
+    draw();
+  });
+});
+
+Stage.nav("3-logistic-1d.html", "../demo3-generalization/1-overfit.html");
+window.demo = { CFG, run, init, get step() { return step; }, get loss() { return history.a[history.length - 1]; } };
+</script>
+</body>
+</html>

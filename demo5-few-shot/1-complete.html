@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Demo 5: few-shot completion</title>
+<link rel="stylesheet" href="../common/stage.css">
+<style>
+  #text {
+    position: absolute; box-sizing: border-box; padding: 22px 26px;
+    font-family: var(--font); font-size: 28px; line-height: 1.45; color: var(--ink);
+    border: 1.5px solid #bbb; border-radius: 10px; outline: none;
+    white-space: pre-wrap; overflow-y: auto; user-select: text; -webkit-user-select: text;
+  }
+  #text:focus { border-color: var(--accent); }
+  #text .completion { color: var(--accent); }
+  #side { position: absolute; display: flex; flex-direction: column; gap: 10px; }
+  #side .btn { text-align: left; }
+  .settings label { display: block; font-size: 20px; color: #555; margin: 14px 0 4px; }
+  .settings input { width: 100%; box-sizing: border-box; font-size: 20px; padding: 6px 10px; }
+  #err { position: absolute; font-size: 20px; color: #c0392b; }
+  #gear { position: absolute; font-size: 30px; color: #bbb; cursor: pointer; }
+  #gear:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/stage.js"></script>
+<script src="presets.js"></script>
+<script>
+"use strict";
+const DEFAULTS = { endpoint: "http://localhost:8080", model: "", key: "", temperature: "0", maxTokens: "60" };
+const cfg = Object.assign({}, DEFAULTS, JSON.parse(localStorage.getItem("demo5-settings") || "{}"));
+// allow ?endpoint=... in the URL as well
+const q = new URLSearchParams(location.search);
+if (q.get("endpoint")) cfg.endpoint = q.get("endpoint");
+
+const text = Stage.el("div", { id: "text", contenteditable: "plaintext-only", spellcheck: "false" });
+Stage.place(text, { x: 20, y: 20, w: 1250, h: 860 });
+const side = Stage.el("div", { id: "side" });
+Stage.place(side, { x: 1300, y: 20, w: 280, h: 700 });
+const err = Stage.el("div", { id: "err" });
+Stage.place(err, { x: 1300, y: 740, w: 280, h: 60 });
+const go = Stage.button("complete", (e) => complete(e.shiftKey), null, { cls: "primary" });
+Stage.place(go, { x: 1300, y: 812, w: 210, h: 64 });
+go.style.fontSize = "26px";
+const gear = Stage.el("div", { id: "gear", html: "&#9881;", title: "settings" });
+Stage.place(gear, { x: 1535, y: 822, w: 40, h: 40 });
+
+let current = PRESETS[0], abort = null;
+
+for (const p of PRESETS) {
+  Stage.button(p.label, () => { stop(); current = p; setText(p.prompt); }, side);
+}
+function setText(s) { text.textContent = s; err.textContent = ""; placeCaret(); }
+function placeCaret() {
+  const r = document.createRange(); r.selectNodeContents(text); r.collapse(false);
+  const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+  text.scrollTop = text.scrollHeight;
+}
+
+function stop() { if (abort) abort.abort(); }
+
+// stream a completion of the whole text box from an OpenAI-compatible /v1/completions endpoint
+async function complete(more) {
+  if (abort) { stop(); return; }
+  err.textContent = "";
+  const prompt = text.textContent;
+  const span = document.createElement("span");
+  span.className = "completion";
+  text.appendChild(span);
+  abort = new AbortController();
+  go.textContent = "stop";
+  go.classList.add("on");
+  const body = { prompt, max_tokens: more ? 250 : +cfg.maxTokens, temperature: +cfg.temperature, stream: true };
+  if (!more) body.stop = current && current.stop ? current.stop : ["\n"];
+  if (cfg.model) body.model = cfg.model;
+  const headers = { "Content-Type": "application/json" };
+  if (cfg.key) headers.Authorization = "Bearer " + cfg.key;
+  try {
+    const res = await fetch(cfg.endpoint.replace(/\/$/, "") + "/v1/completions", { method: "POST", headers, body: JSON.stringify(body), signal: abort.signal });
+    if (!res.ok) throw new Error(res.status + " " + (await res.text()).slice(0, 120));
+    const reader = res.body.getReader(), dec = new TextDecoder();
+    let buf = "";
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      let k;
+      while ((k = buf.indexOf("\n")) >= 0) {
+        const line = buf.slice(0, k).trim();
+        buf = buf.slice(k + 1);
+        if (!line.startsWith("data:")) continue;
+        const data = line.slice(5).trim();
+        if (data === "[DONE]") continue;
+        const j = JSON.parse(data);
+        const t = j.choices && j.choices[0] ? (j.choices[0].text || "") : (j.content || "");
+        span.textContent += t;
+        text.scrollTop = text.scrollHeight;
+      }
+    }
+  } catch (e) {
+    if (e.name !== "AbortError") err.textContent = "can't reach the model (" + e.message + ")";
+  } finally {
+    abort = null;
+    go.textContent = "complete";
+    go.classList.remove("on");
+    if (!span.textContent) span.remove();
+    placeCaret();
+  }
+}
+
+// settings: where the base model lives
+gear.addEventListener("click", () => {
+  const pop = Stage.popup({ x: 450, y: 170, w: 700, h: 520 });
+  const box = Stage.el("div", { class: "settings" }, pop.box);
+  Object.assign(box.style, { padding: "30px 40px" });
+  const fields = [["endpoint", "endpoint (OpenAI-compatible, without /v1)"], ["model", "model (blank for llama.cpp)"],
+    ["key", "API key (stored only in this browser)"], ["temperature", "temperature"], ["maxTokens", "max tokens"]];
+  const inputs = {};
+  for (const [k, lab] of fields) {
+    Stage.el("label", { text: lab }, box);
+    inputs[k] = Stage.el("input", { type: k === "key" ? "password" : "text", value: cfg[k] }, box);
+  }
+  const save = Stage.button("save", () => {
+    for (const k of Object.keys(inputs)) cfg[k] = inputs[k].value.trim();
+    localStorage.setItem("demo5-settings", JSON.stringify(cfg));
+    pop.close();
+  }, box, { cls: "primary" });
+  save.style.marginTop = "24px";
+});
+
+text.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); complete(e.shiftKey); }
+  if (e.key === "Escape") stop();
+});
+
+setText(PRESETS[0].prompt);
+Stage.nav("../demo4-attention/2-translation.html", null);
+window.demo = { complete, setText, cfg };
+</script>
+</body>
+</html>

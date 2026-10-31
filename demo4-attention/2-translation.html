@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Demo 4.2: attention</title>
+<link rel="stylesheet" href="../common/stage.css">
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/stage.js"></script>
+<script src="../common/plots.js"></script>
+<script src="seq2seq.js"></script>
+<script>
+"use strict";
+const C = Stage.COLORS;
+const input = Stage.el("input", { class: "text", type: "text", placeholder: "English sentence", spellcheck: "false", autocomplete: "off" });
+Stage.place(input, { x: 20, y: 20, w: 1530, h: null });
+const out = Stage.el("div");
+Stage.place(out, { x: 20, y: 96, w: 1560, h: 60 });
+Object.assign(out.style, { fontSize: "38px", color: C.accent, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" });
+out.textContent = "loading…";
+const panel = new Stage.Panel({ x: 20, y: 170, w: 1560, h: 715 });
+
+let tr = null, res = null, shown = 0;
+
+function translate() {
+  res = tr.translate(input.value);
+  out.textContent = Seq2Seq.detokenizeFr(res.tgt);
+  shown = 0;
+}
+
+// attention matrix in the style of Bahdanau et al. (2014), Figure 3:
+// English words across the top, French words down the side, brightness = weight
+function draw(dt) {
+  const c = panel.clear();
+  if (!res || res.tgt.length === 0) return;
+  shown = Math.min(res.tgt.length, shown + dt * 12);   // rows appear one after another
+  const ns = res.src.length, nt = res.tgt.length;
+  c.font = `26px ${C.font}`;
+  const wl = Math.max(...res.tgt.map((t) => c.measureText(t).width)) + 18;
+  const wt = Math.max(...res.src.map((t) => c.measureText(t).width)) + 18;
+  const cell = Math.min(60, (panel.w - wl - 40) / ns, (panel.h - Math.min(wt, 200) - 10) / nt);
+  const W = cell * ns, H = cell * nt;
+  const x0 = Math.round((panel.w - wl - W) / 2 + wl), y0 = Math.round(Math.min(wt, 200) + 8);
+  c.fillStyle = "#000";
+  c.fillRect(x0, y0, W, H);
+  for (let i = 0; i < nt; i++) {
+    const a = Math.max(0, Math.min(1, shown - i));
+    if (a <= 0) break;
+    for (let j = 0; j < ns; j++) {
+      const v = Math.round(255 * res.att[i][j]);
+      c.fillStyle = `rgba(${v},${v},${v},${a})`;
+      c.fillRect(x0 + j * cell, y0 + i * cell, cell + 0.5, cell + 0.5);
+    }
+  }
+  c.fillStyle = C.ink;
+  c.textBaseline = "middle";
+  c.textAlign = "right";
+  for (let i = 0; i < nt; i++) c.fillText(res.tgt[i], x0 - 10, y0 + (i + 0.5) * cell);
+  c.textAlign = "left";
+  for (let j = 0; j < ns; j++) {
+    c.save();
+    c.translate(x0 + (j + 0.5) * cell, y0 - 10);
+    c.rotate(-Math.PI / 2);
+    c.fillStyle = res.unknown.includes(res.src[j]) ? C.grey : C.ink;
+    c.fillText(res.src[j], 0, 0);
+    c.restore();
+  }
+}
+
+input.addEventListener("keydown", (e) => { if (e.key === "Enter" && tr) translate(); });
+Seq2Seq.Translator.load("model/").then((t) => { tr = t; out.textContent = ""; input.focus(); });
+Stage.loop(draw);
+Stage.nav("1-embedding.html", "../demo5-few-shot/1-complete.html");
+window.demo = { get tr() { return tr; }, go: (s) => { input.value = s; translate(); }, get res() { return res; } };
+</script>
+</body>
+</html>

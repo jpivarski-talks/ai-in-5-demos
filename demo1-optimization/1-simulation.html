@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Demo 1.1: sliding ball</title>
+<link rel="stylesheet" href="../common/stage.css">
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/stage.js"></script>
+<script src="../common/plots.js"></script>
+<script src="../common/optim.js"></script>
+<script src="brachistochrone.js"></script>
+<script src="view.js"></script>
+<script>
+"use strict";
+const view = new Demo1.SlideView();
+view.draggable = true;
+const readout = new Plots.Readout({ label: "time" });
+const history = new Plots.History({ mode: "bars", slots: 10, yMax: Demo1.T_MAX, yLabel: "time (s)", xLabel: "trial" });
+
+let sim = null, running = false;
+
+function reset() {
+  sim = new Brach.Sim(view.curve);
+  running = false;
+  view.ball = sim.ball();
+  readout.set(Demo1.fmtTime(0), null, "s");
+  goButton.disabled = false;
+}
+function preset(name) {
+  view.setHeights(Brach.PRESETS[name]);
+  reset();
+}
+function release() {
+  if (running) return;
+  if (sim.t > 0) reset();
+  running = true;
+  goButton.disabled = true;
+}
+
+const bar = Stage.controls();
+for (const name of Object.keys(Brach.PRESETS)) Stage.button(name, () => preset(name), bar);
+Stage.el("div", { style: { width: "30px" } }, bar);
+const goButton = Stage.button("release", release, bar, { cls: "primary" });
+view.ondrag = reset;
+document.addEventListener("keydown", (e) => { if (e.key === " ") { e.preventDefault(); release(); } });
+
+Stage.loop((dt) => {
+  if (running) {
+    const wasDone = sim.done;
+    sim.step(dt);
+    view.ball = sim.ball();
+    if (sim.done && !wasDone) {
+      readout.set(Demo1.fmtTime(sim.finishTime), Stage.COLORS.accent, "s");
+      history.push(sim.finishTime);
+      history.draw();
+    } else if (!sim.done) {
+      readout.set(Demo1.fmtTime(sim.t), null, "s");
+    }
+    // stop once the ball has flown out of view
+    if (sim.done && (view.ball.x > Brach.Lx + 0.3 || view.ball.y < -1.6)) { running = false; goButton.disabled = false; }
+    if (sim.t > 30) { running = false; goButton.disabled = false; }
+  }
+  view.draw();
+});
+
+preset("linear");
+Stage.nav(null, "2-random.html");
+window.demo = { view, history, get sim() { return sim; }, preset, release };
+</script>
+</body>
+</html>

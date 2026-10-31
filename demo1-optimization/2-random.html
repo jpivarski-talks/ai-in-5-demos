@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Demo 1.2: random slides</title>
+<link rel="stylesheet" href="../common/stage.css">
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/stage.js"></script>
+<script src="../common/plots.js"></script>
+<script src="../common/optim.js"></script>
+<script src="brachistochrone.js"></script>
+<script src="view.js"></script>
+<script>
+"use strict";
+const view = new Demo1.SlideView();
+const readout = new Plots.Readout({ label: "time" });
+const history = new Plots.History({ mode: "bars", slots: 30, yMax: Demo1.T_MAX, yLabel: "time (s)", xLabel: "trial" });
+const u = Optim.rng();
+
+readout.set("–.–––", Stage.COLORS.grey, "s");
+
+function random() {
+  view.setHeights(Brach.randomShape(u));
+  const T = Brach.travelTime(view.heights, view.curve);
+  readout.set(Demo1.fmtTime(T), Stage.COLORS.accent, "s");
+  history.push(T);
+  history.draw();
+  view.draw();
+}
+
+const bar = Stage.controls();
+Stage.button("random", random, bar, { cls: "primary" });
+document.addEventListener("keydown", (e) => { if (e.key === " ") { e.preventDefault(); random(); } });
+
+view.draw();
+Stage.nav("1-simulation.html", "3-optimize.html");
+window.demo = { view, history, random };
+</script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Demo 2.3: adaptive functions</title>
+<link rel="stylesheet" href="../common/stage.css">
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/stage.js"></script>
+<script src="../common/plots.js"></script>
+<script src="../common/optim.js"></script>
+<script src="fits1d.js"></script>
+<script src="data1d.js"></script>
+<script>
+"use strict";
+const NL = 3, STEPS = Fits1D.FIT.steps;
+// slow at first, where the interesting motion happens
+const perFrame = (step) => (step < 200 ? 1 : 6);
+const C = Stage.COLORS;
+const COLORS = [C.orange, "#2ca02c", "#9467bd"];
+const LN9 = Math.log(9);
+const panel = new Stage.Panel(Stage.L.main);
+const readout = new Plots.Readout({ label: "loss" });
+const history = new Plots.History({ mode: "line", xSpan: STEPS, yLabel: "loss", xLabel: "iteration" });
+const u = Optim.rng();
+const FX = Float64Array.from({ length: 300 }, (_, i) => i / 299);
+
+// three narrow panels (one logistic each) and a wide panel with the data and the sum
+const PW = 185, GAP = 18, H = 740;
+const small = [0, 1, 2].map((k) => new Plots.Axes(panel, { x: 10 + k * (PW + GAP), y: 10, w: PW, h: H }, [0, 1], [-1, 1]));
+const wide = new Plots.Axes(panel, { x: 10 + 3 * (PW + GAP) + 12, y: 10, w: 1060 - (10 + 3 * (PW + GAP) + 12) - 10, h: H }, [-0.02, 1.02], [-1, 1]);
+
+let y, p, opt = null, step = 0, running = false, drag = null;
+
+function resetLogistics() {
+  // parameters per logistic: [x0, log(width), A]
+  p = Float64Array.from(Fits1D.START);
+}
+function newData() {
+  stop();
+  y = Data1D.make(u);
+  let lo = Infinity, hi = -Infinity;
+  for (const v of y) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+  const pad = (hi - lo) * 0.12;
+  wide.ylim = [lo - pad, hi + pad];
+  const half = (hi - lo) / 2 + pad;
+  for (const a of small) a.ylim = [-1.3 * half, 1.3 * half];
+  resetLogistics();
+  history.clear();
+  record();
+}
+function lossNow() { return Fits1D.logisticGrad(p, y).loss; }
+function record() {
+  const L = lossNow();
+  history.push(L);
+  history.draw();
+  readout.set(L.toFixed(1));
+}
+
+function stop() { running = false; fitButton.textContent = "fit"; fitButton.classList.remove("on"); }
+function fit() {
+  if (running) { stop(); return; }
+  opt = new Optim.Adam(p.length, Fits1D.FIT.lr);
+  step = 0;
+  running = true;
+  fitButton.textContent = "stop";
+  fitButton.classList.add("on");
+}
+
+// ---- handles: midpoint (shift), right end (height), 90% point (width)
+function handles(k) {
+  const x0 = p[3 * k], w = Math.exp(p[3 * k + 1]), A = p[3 * k + 2], ax = small[k];
+  return {
+    mid: [ax.X(x0), ax.Y(A / 2)],
+    end: [ax.X(1), ax.Y(Fits1D.logistic(1, x0, w, A))],
+    wid: [ax.X(Math.min(1, x0 + w * LN9)), ax.Y(Fits1D.logistic(Math.min(1, x0 + w * LN9), x0, w, A))],
+  };
+}
+panel.canvas.addEventListener("pointerdown", (e) => {
+  const m = panel.pos(e);
+  let best = null, bd = 26;
+  for (let k = 0; k < NL; k++) {
+    for (const [name, q] of Object.entries(handles(k))) {
+      const d = Math.hypot(q[0] - m.x, q[1] - m.y);
+      if (d < bd) { bd = d; best = { k, name }; }
+    }
+  }
+  if (best) { drag = best; stop(); panel.canvas.setPointerCapture(e.pointerId); }
+});
+panel.canvas.addEventListener("pointermove", (e) => {
+  const m = panel.pos(e);
+  if (!drag) {
+    let over = false;
+    for (let k = 0; k < NL; k++) for (const q of Object.values(handles(k))) if (Math.hypot(q[0] - m.x, q[1] - m.y) < 26) over = true;
+    panel.canvas.style.cursor = over ? "grab" : "default";
+    return;
+  }
+  const k = drag.k, ax = small[k];
+  const x = Optim.clamp(ax.invX(m.x), 0, 1), yy = ax.invY(m.y);
+  const x0 = p[3 * k], w = Math.exp(p[3 * k + 1]);
+  if (drag.name === "mid") p[3 * k] = x;
+  else if (drag.name === "end") p[3 * k + 2] = yy / (1 / (1 + Math.exp(-(1 - x0) / w)));
+  else if (drag.name === "wid") p[3 * k + 1] = Math.log(Math.max(0.004, (x - x0) / LN9));
+  Fits1D.keepInView(p);
+  history.clear();
+  record();
+});
+window.addEventListener("pointerup", () => { drag = null; });
+
+function draw() {
+  const c = panel.clear();
+  const base = Fits1D.bestConst(p, y);
+  for (let k = 0; k < NL; k++) {
+    const ax = small[k], x0 = p[3 * k], w = Math.exp(p[3 * k + 1]), A = p[3 * k + 2];
+    ax.frame();
+    ax.clip(() => {
+      c.strokeStyle = "#eee"; c.lineWidth = 1.5;
+      c.beginPath(); c.moveTo(ax.X(0), ax.Y(0)); c.lineTo(ax.X(1), ax.Y(0)); c.stroke();
+      ax.curve(FX, Array.from(FX, (x) => Fits1D.logistic(x, x0, w, A)), { color: COLORS[k], width: 4 });
+    });
+    const h = handles(k);
+    for (const q of Object.values(h)) {
+      c.fillStyle = "#fff"; c.strokeStyle = COLORS[k]; c.lineWidth = 3;
+      c.beginPath(); c.arc(q[0], q[1], 9, 0, 2 * Math.PI); c.fill(); c.stroke();
+    }
+  }
+  wide.frame({ xlabel: "x" });
+  wide.clip(() => {
+    wide.dots(Fits1D.xs, y, { r: 4.5, color: "#555" });
+    wide.curve(FX, Fits1D.logisticSum(Array.from(p), base, FX), { color: C.accent, width: 4 });
+  });
+}
+
+const bar = Stage.controls();
+const fitButton = Stage.button("fit", fit, bar, { cls: "primary" });
+Stage.el("div", { style: { width: "30px" } }, bar);
+Stage.button("new data", newData, bar);
+document.addEventListener("keydown", (e) => { if (e.key === " ") { e.preventDefault(); fit(); } });
+
+Stage.loop(() => {
+  if (running) {
+    for (let i = 0, n = perFrame(step); i < n && step < STEPS; i++, step++) {
+      history.push(Fits1D.fitStep(p, y, opt, step));
+    }
+    readout.set(history.a[history.length - 1].toFixed(1));
+    history.draw();
+    if (step >= STEPS) stop();
+  }
+  draw();
+});
+
+newData();
+Stage.nav("2-fourier-image.html", "4-adaptive-image.html");
+window.demo = { fit, newData, get p() { return p; }, get loss() { return lossNow(); } };
+</script>
+</body>
+</html>

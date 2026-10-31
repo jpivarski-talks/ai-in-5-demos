@@ -1,0 +1,163 @@
+{
+ "dtype": "float16",
+ "tensors": {
+  "emb_en.weight": {
+   "shape": [
+    11476,
+    100
+   ],
+   "offset": 0
+  },
+  "encoder.weight_ih_l0": {
+   "shape": [
+    768,
+    100
+   ],
+   "offset": 1147600
+  },
+  "encoder.weight_hh_l0": {
+   "shape": [
+    768,
+    256
+   ],
+   "offset": 1224400
+  },
+  "encoder.bias_ih_l0": {
+   "shape": [
+    768
+   ],
+   "offset": 1421008
+  },
+  "encoder.bias_hh_l0": {
+   "shape": [
+    768
+   ],
+   "offset": 1421776
+  },
+  "encoder.weight_ih_l0_reverse": {
+   "shape": [
+    768,
+    100
+   ],
+   "offset": 1422544
+  },
+  "encoder.weight_hh_l0_reverse": {
+   "shape": [
+    768,
+    256
+   ],
+   "offset": 1499344
+  },
+  "encoder.bias_ih_l0_reverse": {
+   "shape": [
+    768
+   ],
+   "offset": 1695952
+  },
+  "encoder.bias_hh_l0_reverse": {
+   "shape": [
+    768
+   ],
+   "offset": 1696720
+  },
+  "init_h.weight": {
+   "shape": [
+    256,
+    256
+   ],
+   "offset": 1697488
+  },
+  "init_h.bias": {
+   "shape": [
+    256
+   ],
+   "offset": 1763024
+  },
+  "emb_fr.weight": {
+   "shape": [
+    14399,
+    128
+   ],
+   "offset": 1763280
+  },
+  "decoder.weight_ih": {
+   "shape": [
+    768,
+    640
+   ],
+   "offset": 3606352
+  },
+  "decoder.weight_hh": {
+   "shape": [
+    768,
+    256
+   ],
+   "offset": 4097872
+  },
+  "decoder.bias_ih": {
+   "shape": [
+    768
+   ],
+   "offset": 4294480
+  },
+  "decoder.bias_hh": {
+   "shape": [
+    768
+   ],
+   "offset": 4295248
+  },
+  "att_W.weight": {
+   "shape": [
+    256,
+    256
+   ],
+   "offset": 4296016
+  },
+  "att_U.weight": {
+   "shape": [
+    256,
+    512
+   ],
+   "offset": 4361552
+  },
+  "att_U.bias": {
+   "shape": [
+    256
+   ],
+   "offset": 4492624
+  },
+  "att_v.weight": {
+   "shape": [
+    1,
+    256
+   ],
+   "offset": 4492880
+  },
+  "pre_out.weight": {
+   "shape": [
+    256,
+    896
+   ],
+   "offset": 4493136
+  },
+  "pre_out.bias": {
+   "shape": [
+    256
+   ],
+   "offset": 4722512
+  },
+  "out.weight": {
+   "shape": [
+    14399,
+    256
+   ],
+   "offset": 4722768
+  },
+  "out.bias": {
+   "shape": [
+    14399
+   ],
+   "offset": 8408912
+  }
+ }
+}

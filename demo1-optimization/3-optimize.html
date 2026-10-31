@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Demo 1.3: optimizing the slide</title>
+<link rel="stylesheet" href="../common/stage.css">
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/stage.js"></script>
+<script src="../common/plots.js"></script>
+<script src="../common/optim.js"></script>
+<script src="brachistochrone.js"></script>
+<script src="view.js"></script>
+<script>
+"use strict";
+const view = new Demo1.SlideView();
+const readout = new Plots.Readout({ label: "time" });
+const history = new Plots.History({ mode: "line", xSpan: 500, yMax: Demo1.T_MAX, yLabel: "time (s)", xLabel: "iteration" });
+const u = Optim.rng();
+const PER_FRAME = 10, MAX_ITER = 4000;
+
+readout.set("–.–––", Stage.COLORS.grey, "s");
+
+// (1+1) evolution strategy: perturb the 15 heights at random, keep the change if
+// the ball gets there faster, and adapt the step size (the "1/5 success rule")
+let x = null, T = Infinity, sigma = 0, iter = 0, running = false;
+
+function start() {
+  x = Brach.randomShape(u);
+  T = Brach.travelTime(x);
+  sigma = 0.06;
+  iter = 0;
+  running = true;
+  history.clear();
+  history.push(T);
+  view.setHeights(x);
+}
+
+function step() {
+  const y = x.map((v) => Optim.clamp(v + sigma * u.normal(), Brach.Y_MIN, -0.002));
+  const Ty = Brach.travelTime(y);
+  if (Ty < T) { x = y; T = Ty; sigma *= Math.exp(0.2); } else sigma *= Math.exp(-0.05);
+  iter++;
+  history.push(T);
+  return y;
+}
+
+const bar = Stage.controls();
+Stage.button("random + optimize", start, bar, { cls: "primary" });
+Stage.el("div", { style: { width: "30px" } }, bar);
+const cycButton = Stage.button("cycloid", () => {
+  view.showCycloid = !view.showCycloid;
+  cycButton.classList.toggle("on", view.showCycloid);
+}, bar);
+document.addEventListener("keydown", (e) => { if (e.key === " ") { e.preventDefault(); start(); } });
+
+Stage.loop(() => {
+  if (running) {
+    let y = null;
+    for (let k = 0; k < PER_FRAME; k++) y = step();
+    view.setHeights(x);
+    view.ghost = y;
+    readout.set(Demo1.fmtTime(T), Stage.COLORS.accent, "s");
+    if (iter >= MAX_ITER || (iter > 1500 && sigma < 2e-4)) { running = false; view.ghost = null; }
+    history.draw();
+  }
+  view.draw();
+});
+
+view.draw();
+Stage.nav("2-random.html", "../demo2-compression/1-fourier-1d.html");
+window.demo = { view, history, start, get T() { return T; }, get iter() { return iter; } };
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Demo 3.1: overfitting</title>
+<link rel="stylesheet" href="../common/stage.css">
+</head>
+<body>
+<div id="stage"></div>
+<script src="../lib/tf.min.js"></script>
+<script src="../common/stage.js"></script>
+<script src="../common/plots.js"></script>
+<script src="../common/optim.js"></script>
+<script src="nn-common.js"></script>
+<script>
+"use strict";
+const CFG = { n: 80, nTest: 2000, hidden: 1000, w1: 5, b1: 5, lr: 0.01, perFrame: 8, G: 120 };
+const u = Optim.rng();
+const S = 780, R = { x: 20 + (1060 - S) / 2, y: 20, w: S, h: S };
+const panel = new Stage.Panel(R);
+const ax = new Plots.Axes(panel, { x: 0, y: 0, w: S, h: S }, [-1.4, 1.4], [-1.4, 1.4]);
+const readout = new Plots.Readout({ label: "loss" });
+const history = new Plots.History({ mode: "line", xSpan: 300, yLabel: "loss", xLabel: "iteration" });
+legend();
+
+const gridT = NN.grid(CFG.G, -1.4, 1.4);
+let data, X, Y, test = NN.xor(CFG.nTest, Optim.rng(12345)), Xt = tf.tensor(test.xs), Yt = tf.tensor(test.ys, [CFG.nTest, 1]);
+let model = null, opt = null, running = false, probs = null;
+
+function newModel() {
+  if (model) model.dispose();
+  const H = CFG.hidden;
+  const b1 = new Float32Array(H).map(() => CFG.b1 * (2 * u() - 1));
+  model = new NN.MLP([
+    { W: NN.randn([2, H], CFG.w1, u), b: tf.tensor(b1), act: "relu" },
+    { W: NN.randn([H, 1], 0.1 / (Math.sqrt(H) * CFG.w1), u), b: tf.zeros([1]), act: "sigmoid" },
+  ]);
+}
+function newData() {
+  data = NN.xor(CFG.n, u);
+  if (X) { X.dispose(); Y.dispose(); }
+  X = tf.tensor(data.xs);
+  Y = tf.tensor(data.ys, [CFG.n, 1]);
+}
+function losses() {
+  return tf.tidy(() => [NN.bce(model.forward(X), Y).dataSync()[0], NN.bce(model.forward(Xt), Yt).dataSync()[0]]);
+}
+function refresh() {
+  probs = tf.tidy(() => model.forward(gridT).dataSync());
+  const [a] = losses();
+  readout.set(a.toFixed(3));
+}
+function stop() { running = false; trainButton.textContent = "train"; trainButton.classList.remove("on"); }
+function train() {
+  if (running) { stop(); return; }
+  if (opt) opt.dispose();
+  opt = tf.train.adam(CFG.lr);
+  history.clear();
+  history.push(...losses());
+  running = true;
+  trainButton.textContent = "stop";
+  trainButton.classList.add("on");
+}
+
+function legend() {
+  const r = Stage.L.history;
+  const d = Stage.el("div");
+  Stage.place(d, { x: r.x + 90, y: r.y - 6, w: r.w - 100, h: 26 });
+  d.innerHTML = '<span style="display:inline-block;width:34px;border-top:3px solid var(--accent);vertical-align:middle"></span>' +
+    '<span style="font-size:18px;color:#555;margin:0 22px 0 8px">in-sample</span>' +
+    '<span style="display:inline-block;width:34px;border-top:3px dotted #888;vertical-align:middle"></span>' +
+    '<span style="font-size:18px;color:#555;margin-left:8px">out-of-sample</span>';
+}
+
+function draw() {
+  const c = panel.clear();
+  if (probs) NN.paintRegions(c, ax.r, probs, CFG.G, 1);
+  NN.drawPoints(ax, data.xs, data.ys, { r: 7, lw: 2 });
+  c.strokeStyle = "#bbb"; c.lineWidth = 1.5; c.strokeRect(0.75, 0.75, S - 1.5, S - 1.5);
+}
+
+const bar = Stage.controls();
+Stage.button("resample data", () => { newData(); refresh(); }, bar);
+Stage.button("reset model", () => { stop(); newModel(); history.clear(); refresh(); }, bar);
+const trainButton = Stage.button("train", train, bar, { cls: "primary" });
+
+newData();
+newModel();
+refresh();
+let frame = 0;
+Stage.loop(() => {
+  if (running) {
+    for (let k = 0; k < CFG.perFrame; k++) {
+      opt.minimize(() => NN.bce(model.forward(X), Y));
+      history.push(...losses());
+    }
+    if (frame++ % 2 === 0) refresh();
+    else readout.set(history.a[history.length - 1].toFixed(3));
+    history.draw();
+  }
+  draw();
+});
+
+Stage.nav("../demo2-compression/4-adaptive-image.html", "2-circle.html");
+window.demo = { CFG, get model() { return model; }, history, train, newModel, newData, refresh, losses };
+</script>
+</body>
+</html>

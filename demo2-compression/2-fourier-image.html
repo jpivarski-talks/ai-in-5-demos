@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Demo 2.2: compressing an image with templates</title>
+<link rel="stylesheet" href="../common/stage.css">
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/stage.js"></script>
+<script src="../common/plots.js"></script>
+<script src="../common/optim.js"></script>
+<script src="../common/image.js"></script>
+<script src="image-common.js"></script>
+<script>
+"use strict";
+const { N, LEFT, RIGHT } = ImageDemo;
+const MANUAL = 10;      // clicks before it starts advancing by itself
+const AUTO_TO = 43;     // stop auto-advancing after this many frequency levels
+const AUTO_DT = 0.15;   // seconds per level while auto-advancing
+const panel = new Stage.Panel(Stage.L.main);
+const readout = new Plots.Readout({ label: "loss" });
+const history = new Plots.History({ mode: "line", xSpan: AUTO_TO, yLabel: "loss", xLabel: "step" });
+ImageDemo.caption(LEFT, "original");
+ImageDemo.caption(RIGHT, "approximation");
+
+// 1D cosine templates (orthonormal DCT-II): B[u][x]
+const B = [];
+for (let u = 0; u < N; u++) {
+  const a = Math.sqrt((u === 0 ? 1 : 2) / N);
+  B.push(Float64Array.from({ length: N }, (_, x) => a * Math.cos(Math.PI * (2 * x + 1) * u / (2 * N))));
+}
+
+let img, coef, fit, level = 0, count = 1, auto = false, autoT = 0;
+
+function transform() {
+  // coef = B img B^T, done separably
+  const tmp = new Float64Array(N * N);
+  coef = new Float64Array(N * N);
+  for (let u = 0; u < N; u++) for (let x = 0; x < N; x++) {
+    let s = 0;
+    for (let y = 0; y < N; y++) s += B[u][y] * img[y * N + x];
+    tmp[u * N + x] = s;
+  }
+  for (let u = 0; u < N; u++) for (let v = 0; v < N; v++) {
+    let s = 0;
+    for (let x = 0; x < N; x++) s += tmp[u * N + x] * B[v][x];
+    coef[u * N + v] = s;
+  }
+}
+
+// each step adds one frequency level: every template whose vertical and
+// horizontal wave numbers add up to that level (one diagonal of the JPEG zigzag)
+function addTemplate(u, v) {
+  const c = coef[u * N + v], bu = B[u], bv = B[v];
+  for (let y = 0; y < N; y++) {
+    const cy = c * bu[y];
+    for (let x = 0; x < N; x++) fit[y * N + x] += cy * bv[x];
+  }
+  count++;
+}
+function addLevel() {
+  if (level >= 2 * N - 2) return;
+  level++;
+  for (let u = 0; u <= level; u++) { const v = level - u; if (u < N && v < N) addTemplate(u, v); }
+  record();
+}
+function record() {
+  const L = ImageDemo.sse(img, fit);
+  history.push(L);
+  history.draw();
+  readout.set(L.toFixed(1));
+  readout.setSub(count + (count === 1 ? " number" : " numbers"));
+}
+
+function reset() {
+  auto = false;
+  level = 0;
+  count = 1;
+  fit = new Float64Array(N * N).fill(coef[0] * B[0][0] * B[0][0]);
+  history.clear();
+  record();
+}
+function click() {
+  if (auto) return;
+  addLevel();
+  if (level === MANUAL) { auto = true; autoT = 0; }
+}
+
+function draw() {
+  const c = panel.clear();
+  ImageDemo.drawGrey(c, LEFT, img);
+  ImageDemo.drawGrey(c, RIGHT, fit);
+}
+
+const bar = Stage.controls();
+Stage.button("add templates", click, bar, { cls: "primary" });
+Stage.button("difference", () => ImageDemo.showDifference(img, fit), bar);
+Stage.el("div", { style: { width: "30px" } }, bar);
+Stage.button("reset", reset, bar);
+document.addEventListener("keydown", (e) => { if (e.key === " ") { e.preventDefault(); click(); } });
+
+ImageDemo.loadImage(TEST_IMAGE.src).then((a) => {
+  img = a;
+  transform();
+  reset();
+  Stage.loop((dt) => {
+    if (auto) {
+      autoT += dt;
+      while (autoT > AUTO_DT && auto) {
+        autoT -= AUTO_DT;
+        addLevel();
+        if (level >= AUTO_TO) auto = false;
+      }
+    }
+    draw();
+  });
+});
+
+Stage.nav("1-fourier-1d.html", "3-logistic-1d.html");
+window.demo = { click, reset, get level() { return level; }, get count() { return count; }, get loss() { return ImageDemo.sse(img, fit); } };
+</script>
+</body>
+</html>

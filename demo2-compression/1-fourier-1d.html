@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Demo 2.1: fitting with templates</title>
+<link rel="stylesheet" href="../common/stage.css">
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/stage.js"></script>
+<script src="../common/plots.js"></script>
+<script src="../common/optim.js"></script>
+<script src="fits1d.js"></script>
+<script src="data1d.js"></script>
+<script>
+"use strict";
+const K = 8;
+const C = Stage.COLORS;
+const panel = new Stage.Panel(Stage.L.main);
+const ax = new Plots.Axes(panel, { x: 30, y: 10, w: 1020, h: 730 }, [-0.02, 1.02], [-3, 3]);
+const readout = new Plots.Readout({ label: "loss" });
+const history = new Plots.History({ mode: "line", xSpan: K, yLabel: "loss", xLabel: "templates" });
+const u = Optim.rng();
+const FX = Float64Array.from({ length: 400 }, (_, i) => i / 399);
+
+let y, fit, included = 0, anim = null, shown = 0;
+
+function newData() {
+  y = Data1D.make(u);
+  fit = Fits1D.cosineFit(y, K);
+  let lo = Infinity, hi = -Infinity;
+  for (const v of y) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+  const pad = (hi - lo) * 0.15;
+  ax.ylim = [lo - pad, hi + pad];
+  included = 0; shown = 0; anim = null;
+  buttons.forEach((b) => { b.disabled = false; });
+  history.clear();
+  history.push(lossAt(0));
+  history.draw();
+  readout.set(lossAt(0).toFixed(1));
+}
+function lossAt(n) { return Fits1D.sse(y, Fits1D.cosineCurve(fit.mean, fit.amps, n)); }
+
+// bring template k down from above, then fold it into the fit
+function add(k) {
+  if (anim || k !== included) return;
+  buttons[k].disabled = true;
+  anim = { k, t: 0 };
+}
+
+const DESCEND = 0.9, FOLD = 0.6;
+function draw() {
+  const c = panel.clear();
+  ax.frame({ xlabel: "x", ylabel: "y" });
+  const mid = (ax.ylim[0] + ax.ylim[1]) / 2, span = ax.ylim[1] - ax.ylim[0];
+  ax.clip(() => {
+    ax.dots(Fits1D.xs, y, { r: 5, color: "#555" });
+    ax.curve(FX, Fits1D.cosineCurve(fit.mean, fit.amps, shown, FX), { color: C.accent, width: 4 });
+    if (anim) {
+      const k = anim.k, a = fit.amps[k];
+      let off, alpha = 1;
+      if (anim.t < DESCEND) off = mid + span * (1 - Optim.smooth(anim.t / DESCEND));
+      else { off = mid; alpha = 1 - (anim.t - DESCEND) / FOLD; }
+      const tY = Array.from(FX, (x) => off + a * Math.cos((k + 1) * Math.PI * x));
+      ax.curve(FX, tY, { color: C.orange, width: 4, alpha });
+    }
+  });
+}
+
+const bar = Stage.controls();
+const buttons = [];
+for (let k = 0; k < K; k++) buttons.push(Stage.button(String(k + 1), () => add(k), bar, { cls: "small" }));
+buttons.forEach((b) => { b.style.fontSize = "24px"; b.style.minWidth = "54px"; });
+Stage.el("div", { style: { width: "30px" } }, bar);
+Stage.button("new data", newData, bar);
+document.addEventListener("keydown", (e) => {
+  if (e.key === " ") { e.preventDefault(); add(included); }
+  if (e.key >= "1" && e.key <= "8") add(+e.key - 1);
+});
+
+Stage.loop((dt) => {
+  if (anim) {
+    anim.t += dt;
+    if (anim.t > DESCEND) shown = included + Optim.smooth(Math.min(1, (anim.t - DESCEND) / FOLD));
+    if (anim.t >= DESCEND + FOLD) {
+      included++;
+      shown = included;
+      anim = null;
+      history.push(lossAt(included));
+      history.draw();
+      readout.set(lossAt(included).toFixed(1));
+    }
+  }
+  draw();
+});
+
+newData();
+Stage.nav("../demo1-optimization/3-optimize.html", "2-fourier-image.html");
+window.demo = { add, newData, get fit() { return fit; }, get y() { return y; } };
+</script>
+</body>
+</html>
