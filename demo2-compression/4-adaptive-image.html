@@ -24,9 +24,10 @@
 // Optimized with Adam. Every so often, the functions doing the least are moved to
 // where the leftover error is largest ("respawning").
 const CFG = {
-  M: 200, edges: 20,            // 20 edge functions and 180 blobs (edges up to ~20% fit this image as well as pure blobs)
+  M: 333, edges: 33,            // 6 x 333 + 1 = 1999 numbers: 33 edge functions and 300 blobs
+                                // (edges up to ~20% fit this image as well as pure blobs)
   lr: 0.03, ease: 800, floor: 0.05,   // learning rate eases down over 800 steps, then stays at 5%
-  respawnEvery: 25, respawnN: 10, respawnUntil: 640,
+  respawnEvery: 25, respawnN: 16, respawnUntil: 640,
   frameMs: 30,
 };
 const { N, LEFT, RIGHT } = ImageDemo;

@@ -17,11 +17,12 @@
 "use strict";
 const { N, LEFT, RIGHT } = ImageDemo;
 const MANUAL = 10;      // clicks before it starts advancing by itself
-const AUTO_TO = 62;     // stop auto-advancing after this many frequency levels (2016 numbers)
+const AUTO_COUNT = 2000;  // stop auto-advancing at this many numbers (partway through level 62)
+const LEVELS = 62;        // frequency levels that takes, for the plot's initial x range
 const AUTO_DT = 0.12;   // seconds per level while auto-advancing
 const panel = new Stage.Panel(Stage.L.main);
 const readout = new Plots.Readout({ label: "loss" });
-const history = new Plots.History({ mode: "line", xSpan: AUTO_TO, yLabel: "loss", xLabel: "step" });
+const history = new Plots.History({ mode: "line", xSpan: LEVELS, yLabel: "loss", xLabel: "step" });
 ImageDemo.caption(LEFT, "original");
 ImageDemo.caption(RIGHT, "approximation");
 
@@ -60,10 +61,18 @@ function addTemplate(u, v) {
   }
   count++;
 }
-function addLevel() {
-  if (level >= 2 * N - 2) return;
-  level++;
-  for (let u = 0; u <= level; u++) { const v = level - u; if (u < N && v < N) addTemplate(u, v); }
+// templates in frequency level L, and how many of the current level are already in
+const levelTemplates = (L) => { const t = []; for (let u = Math.max(0, L - N + 1); u <= Math.min(L, N - 1); u++) t.push([u, L - u]); return t; };
+let filled = 1;
+// finish the current level (or start the next one), stopping early if `cap` numbers are reached
+function addLevel(cap) {
+  if (filled >= levelTemplates(level).length) {
+    if (level >= 2 * N - 2) return;
+    level++;
+    filled = 0;
+  }
+  const T = levelTemplates(level);
+  while (filled < T.length && !(count >= (cap || Infinity))) { addTemplate(...T[filled]); filled++; }
   record();
 }
 function record() {
@@ -77,6 +86,7 @@ function record() {
 function reset() {
   auto = false;
   level = 0;
+  filled = 1;
   count = 1;
   fit = new Float64Array(N * N).fill(coef[0] * B[0][0] * B[0][0]);
   history.clear();
@@ -110,8 +120,8 @@ ImageDemo.loadImage(TEST_IMAGE.src).then((a) => {
       autoT += dt;
       while (autoT > AUTO_DT && auto) {
         autoT -= AUTO_DT;
-        addLevel();
-        if (level >= AUTO_TO) auto = false;
+        addLevel(AUTO_COUNT);
+        if (count >= AUTO_COUNT) auto = false;
       }
     }
     draw();
