@@ -130,18 +130,26 @@
     }
     // k nearest words by cosine similarity (skipping punctuation and special tokens)
     neighbors(word, k) {
+      return this.nearest(this.vector(word), k, [word]);
+    }
+    // k words whose vectors point most nearly in the direction of vec (cosine similarity),
+    // skipping punctuation, special tokens, and the words in `exclude`
+    nearest(vec, k, exclude) {
       const E = this.T["emb_en.weight"].data, d = this.dimEn, n = this.en.length;
       if (!this.norms) {
         this.norms = new Float32Array(n);
         for (let i = 0; i < n; i++) { let s = 0; for (let j = 0; j < d; j++) s += E[i * d + j] ** 2; this.norms[i] = Math.sqrt(s) || 1; }
       }
-      const q = this.enIndex.get(word);
+      const skip = new Set((exclude || []).map((w) => this.enIndex.get(w)));
+      let qn = 0;
+      for (let j = 0; j < d; j++) qn += vec[j] * vec[j];
+      qn = Math.sqrt(qn) || 1;
       const out = [];
       for (let i = 4; i < n; i++) {
-        if (i === q || !/^[a-z][a-z-]*$/.test(this.en[i])) continue;
+        if (skip.has(i) || !/^[a-z][a-z-]*$/.test(this.en[i])) continue;
         let s = 0;
-        for (let j = 0; j < d; j++) s += E[q * d + j] * E[i * d + j];
-        out.push([s / (this.norms[q] * this.norms[i]), i]);
+        for (let j = 0; j < d; j++) s += vec[j] * E[i * d + j];
+        out.push([s / (qn * this.norms[i]), i]);
       }
       out.sort((a, b) => b[0] - a[0]);
       return out.slice(0, k).map(([s, i]) => ({ word: this.en[i], sim: s, vec: E.slice(i * d, (i + 1) * d) }));

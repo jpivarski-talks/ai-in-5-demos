@@ -22,9 +22,9 @@
 <script>
 "use strict";
 const C = Stage.COLORS;
-const input = Stage.el("input", { class: "text", type: "text", placeholder: "word", spellcheck: "false", autocomplete: "off" });
-Stage.place(input, { x: 20, y: 20, w: 420, h: null });
-const status = Stage.label("loading…", { x: 470, y: 36, w: 400 });
+const input = Stage.el("input", { class: "text", type: "text", placeholder: "loading…", spellcheck: "false", autocomplete: "off" });
+// as wide as the plot below (the box's padding and border add 31 px to its width)
+Stage.place(input, { x: 20, y: 20, w: 1560 - 31, h: null });
 const vecBox = Stage.el("div", { id: "vec" });
 Stage.place(vecBox, { x: 20, y: 100, w: 1560, h: 150 });
 const panel = new Stage.Panel({ x: 20, y: 270, w: 1560, h: 585 });   // ends above the page-navigation arrows
@@ -44,95 +44,341 @@ function showVector(v) {
   }
 }
 
-// top two principal directions of a handful of vectors (power iteration on the Gram matrix)
+// top two principal directions of a handful of vectors (power iteration on their Gram matrix),
+// returned as a function that projects any vector onto that plane
 function pca2(vecs) {
   const n = vecs.length, d = vecs[0].length;
   const mean = new Float64Array(d);
   for (const v of vecs) for (let j = 0; j < d; j++) mean[j] += v[j] / n;
   const X = vecs.map((v) => Float64Array.from(v, (x, j) => x - mean[j]));
   const G = X.map((a) => X.map((b) => a.reduce((s, x, j) => s + x * b[j], 0)));
-  const comps = [];
+  const dirs = [], comps = [];
   for (let c = 0; c < 2; c++) {
     let e = Float64Array.from({ length: n }, (_, i) => Math.sin(i + 1 + c));
     let lam = 0;
     for (let it = 0; it < 300; it++) {
       const f = new Float64Array(n);
       for (let i = 0; i < n; i++) for (let k = 0; k < n; k++) f[i] += G[i][k] * e[k];
-      for (const p of comps) { const dot = f.reduce((s, x, i) => s + x * p.e[i], 0); for (let i = 0; i < n; i++) f[i] -= dot * p.e[i]; }
+      for (const p of comps) { const dot = f.reduce((s, x, i) => s + x * p[i], 0); for (let i = 0; i < n; i++) f[i] -= dot * p[i]; }
       lam = Math.hypot(...f);
       e = f.map((x) => x / (lam || 1));
     }
-    comps.push({ e, lam });
+    comps.push(e);
+    // the same direction in the 100-dimensional space: a unit vector
+    const dir = new Float64Array(d);
+    for (let i = 0; i < n; i++) for (let j = 0; j < d; j++) dir[j] += e[i] * X[i][j];
+    const len = Math.hypot(...dir) || 1;
+    dirs.push(dir.map((x) => x / len));
   }
-  // coordinates of each vector along the two components
-  return X.map((_, i) => [comps[0].e[i] * Math.sqrt(comps[0].lam), comps[1].e[i] * Math.sqrt(comps[1].lam)]);
+  return (v) => dirs.map((dir) => { let s = 0; for (let j = 0; j < d; j++) s += (v[j] - mean[j]) * dir[j]; return s; });
 }
 
-function lookup(word) {
-  word = word.trim().toLowerCase();
-  const v = tr.vector(word);
-  if (!v) { input.classList.remove("shake"); void input.offsetWidth; input.classList.add("shake"); return; }
+// "king − man + woman" -> [{word: "king", sign: 1}, {word: "man", sign: -1}, {word: "woman", sign: 1}]
+// "+", "−" (or en/em dashes), and "-" are operators, except that a hyphenated word in
+// the vocabulary (like "x-ray") stays one word. Returns null if the expression is malformed.
+function parse(text) {
+  const s = text.toLowerCase().replace(/[\u2212\u2013\u2014]/g, "\u2212");
+  // operators and the text between them; ASCII "-" inside a piece is an operator unless the piece is a known word
+  const items = [];
+  for (const piece of s.match(/[+\u2212]|[^+\u2212]+/g) || []) {
+    if (piece === "+" || piece === "\u2212" || tr.enIndex.has(piece.trim())) items.push(piece.trim());
+    else items.push(...piece.split(/(-)/).map((x) => x.trim()));
+  }
+  const terms = [];
+  let sign = 1;
+  for (const it of items) {
+    if (it === "+") continue;
+    if (it === "\u2212" || it === "-") { sign = -sign; continue; }
+    if (it === "") continue;
+    if (/\s/.test(it)) return null;   // two words with no operator between them
+    terms.push({ word: it, sign });
+    sign = 1;
+  }
+  return terms.length ? terms : null;
+}
+
+function shake() { input.classList.remove("shake"); void input.offsetWidth; input.classList.add("shake"); }
+
+// ---- layout: radius-constrained multidimensional scaling (MDS)
+// Each word's distance from the center is its dissimilarity (1 - cosine similarity) to the
+// target, minus a constant: in 100 dimensions nothing is very close (the nearest word is
+// typically at cosine ~0.75), so the empty middle is cut out and the nearest word sits just
+// beside the center. Only the angles are optimized, so that 2D distances between words match
+// their dissimilarities as well as possible (stress majorization, weighted toward short distances).
+const CANDIDATES = 500;     // nearest words laid out: more than ever fit in the view (at most ~200 do)
+const NEAREST_GAP = 0.03;   // the nearest word's distance from the center (in dissimilarity)
+const ITERATIONS = 80;
+const MAX_CROWDED = 0.15;   // stop zooming out when more than this fraction of labels still collide after nudging
+const HALF_W = 780, HALF_H = 292;   // half the plot, in pixels
+
+function layout(V) {
+  const n = V.length, d = V[0].length;
+  // dissimilarities, as one flat n x n array (unit vectors first, so each entry is one dot product)
+  const U = V.map((v) => { const L = Math.hypot(...v) || 1; return Float64Array.from(v, (x) => x / L); });
+  const D = new Float64Array(n * n), W = new Float64Array(n * n);
+  for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+    const a = U[i], b = U[j];
+    let s = 0;
+    for (let k = 0; k < d; k++) s += a[k] * b[k];
+    const v = Math.max(0, 1 - s);
+    D[i * n + j] = D[j * n + i] = v;
+    W[i * n + j] = W[j * n + i] = 1 / Math.max(v, 0.05);   // weighted toward short distances
+  }
+  // each word's distance from the center
+  let nearest = Infinity;
+  for (let i = 1; i < n; i++) nearest = Math.min(nearest, D[i]);
+  const shift = Math.max(0, nearest - NEAREST_GAP);
+  const R = Float64Array.from({ length: n }, (_, i) => (i === 0 ? 0 : D[i] - shift));
+  // start from the PCA plane of the target and its 15 nearest words
+  const project = pca2(V.slice(0, 16));
+  const o = project(V[0]);
+  let X = new Float64Array(n), Y = new Float64Array(n);
+  for (let i = 1; i < n; i++) {
+    const p = project(V[i]), x = p[0] - o[0], y = p[1] - o[1], L = Math.sqrt(x * x + y * y) || 1e-9;
+    X[i] = x / L * R[i]; Y[i] = y / L * R[i];
+  }
+  const wsum = new Float64Array(n);
+  for (let i = 0; i < n; i++) { let s = 0; for (let j = 0; j < n; j++) if (j !== i) s += W[i * n + j]; wsum[i] = s; }
+  for (let it = 0; it < ITERATIONS; it++) {
+    const NX = new Float64Array(n), NY = new Float64Array(n);
+    for (let i = 1; i < n; i++) {
+      let zx = 0, zy = 0;
+      const xi = X[i], yi = Y[i], row = i * n;
+      for (let j = 0; j < n; j++) {
+        if (j === i) continue;
+        const dx = xi - X[j], dy = yi - Y[j], dij = Math.sqrt(dx * dx + dy * dy) || 1e-9;
+        const w = W[row + j], b = w * D[row + j] / dij;
+        zx += w * X[j] + b * dx;
+        zy += w * Y[j] + b * dy;
+      }
+      // keep the direction, but put the word back at its exact distance from the center
+      const x = zx / wsum[i], y = zy / wsum[i], L = Math.sqrt(x * x + y * y) || 1e-9;
+      NX[i] = x / L * R[i]; NY[i] = y / L * R[i];
+    }
+    X = NX; Y = NY;
+  }
+  let rmax = 0;
+  for (let i = 1; i < n; i++) rmax = Math.max(rmax, R[i]);
+  return { pts: Array.from(X, (x, i) => [x, Y[i]]), rmax };
+}
+
+// label boxes at a given zoom (pixels per unit of dissimilarity), for the visible words
+function labelBoxes(pts, words, k, lineAlpha) {
+  const c = panel.ctx;
+  c.font = `26px ${C.font}`;
+  const boxes = [];
+  pts.forEach((p, i) => {
+    if (words[i] === null) return;
+    const x = HALF_W + p[0] * k, y = HALF_H - p[1] * k;
+    if (x < 6 || x > panel.w - 6 || y < 6 || y > panel.h - 6) return;   // dot outside the view
+    const w = c.measureText(words[i]).width;
+    // on the side away from the center (so the word's own line doesn't cross it), unless that runs off the box
+    let lx = x < HALF_W ? x - 12 - w : x + 12;
+    if (lx < 4) lx = x + 12; else if (lx + w > panel.w - 4) lx = x - 12 - w;
+    const pct = lineAlpha && lineAlpha[i] > 0;   // a percentage goes under the word
+    boxes.push({ i, dx: x, dy: y, x: lx, x0: lx, w, h: pct ? 50 : 30, y: pct ? y + 10 : y, y0: pct ? y + 10 : y, pct });
+  });
+  return boxes;
+}
+const collide = (a, b) => a.x < b.x + b.w + 4 && b.x < a.x + a.w + 4 && Math.abs(a.y - b.y) < (a.h + b.h) / 2;
+
+// zoom out until about TARGET words are in view (or labels get too crowded to sort out),
+// but never so far that words beyond the candidates would come into view
+const TARGET = 40;
+function chooseZoom(pts, words, rmax, lineAlpha, single) {
+  const kMin = Math.hypot(HALF_W, HALF_H) / rmax;
+  let best = null;
+  for (let k = 40000; k >= kMin; k /= 1.06) {
+    const B = relax(labelBoxes(pts, words, k, lineAlpha), lineAlpha, single);
+    if (B.length < 2) continue;
+    const crowded = B.filter((a) => B.some((b) => a !== b && collide(a, b))).length;
+    if (B.length > 8 && crowded > 2 && crowded / B.length > MAX_CROWDED && best !== null) break;
+    best = k;
+    if (B.length >= TARGET) break;
+  }
+  return best === null ? kMin : best;
+}
+
+const ZOOM_OUT = 3;   // how many times more words than the readable-labels zoom would show
+
+function visibleCount(pts, k) {
+  let n = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const x = HALF_W + pts[i][0] * k, y = HALF_H - pts[i][1] * k;
+    if (x > 6 && x < panel.w - 6 && y > 6 && y < panel.h - 6) n++;
+  }
+  return n;
+}
+// zoom out from k until `want` words are in view (but not past where the candidates run out)
+function zoomForCount(pts, want, k, rmax) {
+  const kMin = Math.hypot(HALF_W, HALF_H) / rmax;
+  while (k > kMin && visibleCount(pts, k) < want) k /= 1.02;
+  return Math.max(k, kMin);
+}
+
+// turn the whole layout around the center to fit as many words as possible in the box
+const rotate = (pts, a) => { const c = Math.cos(a), s = Math.sin(a); return pts.map(([x, y]) => [x * c - y * s, x * s + y * c]); };
+function bestRotation(pts, k) {
+  let best = 0, bestCount = -1;
+  for (let step = 0; step < 180; step++) {   // a half turn is enough: the box looks the same upside down
+    const a = Math.PI * step / 180, c = Math.cos(a), s = Math.sin(a);
+    let count = 0;
+    for (let i = 1; i < pts.length; i++) {
+      const x = HALF_W + (pts[i][0] * c - pts[i][1] * s) * k, y = HALF_H - (pts[i][0] * s + pts[i][1] * c) * k;
+      if (x > 6 && x < panel.w - 6 && y > 6 && y < panel.h - 6) count++;
+    }
+    if (count > bestCount) { bestCount = count; best = a; }
+  }
+  return best;
+}
+
+function lookup(text) {
+  const terms = parse(text.trim());
+  if (!terms || terms.some((t) => !tr.vector(t.word))) { shake(); return; }
+  const single = terms.length === 1 && terms[0].sign > 0;
+  // one word: it sits at the center. An expression: the center is the computed vector, which isn't a word.
+  const d = tr.dimEn, v = new Float32Array(d);
+  for (const t of terms) { const w = tr.vector(t.word); for (let j = 0; j < d; j++) v[j] += t.sign * w[j]; }
   showVector(v);
-  const nb = tr.neighbors(word, 15);
-  const pts = pca2([v, ...nb.map((n) => n.vec)]);
-  // put the query word at the center
-  const c0 = pts[0];
-  view = { words: [word, ...nb.map((n) => n.word)], pts: pts.map((p) => [p[0] - c0[0], p[1] - c0[1]]), t: 0 };
+  // the words typed in are left out (for an expression: all of its terms)
+  const nb = tr.nearest(v, CANDIDATES, terms.map((t) => t.word));
+  let { pts, rmax } = layout([v, ...nb.map((n) => n.vec)]);
+  const words = [single ? terms[0].word : null, ...nb.map((n) => n.word)];
+  // lines to the top matches: opaque for the best match, half for the 5th, and invisible at a
+  // threshold (never below the 10th match, so only a few get lines)
+  const sims = [single ? 1 : null, ...nb.map((n) => n.sim)];
+  const top = nb[0].sim, fifth = nb[4].sim, tenth = nb[9].sim;
+  const zero = Math.max(2 * fifth - top, tenth);
+  const lineAlpha = sims.map((c, i) => (i === 0 ? 0 : Math.max(0, Math.min(1, (c - zero) / (top - zero || 1)))));
+  // zoom and rotation depend on each other: settle them before anything is drawn
+  let k = chooseZoom(pts, words, rmax, lineAlpha, single);
+  for (let round = 0; round < 2; round++) {
+    pts = rotate(pts, bestRotation(pts, k));
+    k = chooseZoom(pts, words, rmax, lineAlpha, single);
+  }
+  // then zoom out further, to ZOOM_OUT times as many words, and fit the rotation once more
+  const want = ZOOM_OUT * visibleCount(pts, k);
+  k = zoomForCount(pts, want, k, rmax);
+  pts = rotate(pts, bestRotation(pts, k));
+  k = zoomForCount(pts, want, k * 1.5, rmax);
+  view = { single, words, pts, k, sims, lineAlpha };
+}
+
+// the part of segment S with x in [a, b] (or y in [a, b]): its range in the other coordinate
+function segRange(S, a, b, alongX) {
+  const p0 = alongX ? S.x0 : S.y0, p1 = alongX ? S.x1 : S.y1, q0 = alongX ? S.y0 : S.x0, q1 = alongX ? S.y1 : S.x1;
+  let t0 = 0, t1 = 1;
+  if (p1 === p0) { if (p0 < a || p0 > b) return null; }
+  else {
+    let ta = (a - p0) / (p1 - p0), tb = (b - p0) / (p1 - p0);
+    if (ta > tb) [ta, tb] = [tb, ta];
+    t0 = Math.max(0, ta); t1 = Math.min(1, tb);
+    if (t0 > t1) return null;
+  }
+  const u = q0 + (q1 - q0) * t0, v = q0 + (q1 - q0) * t1;
+  return [Math.min(u, v), Math.max(u, v)];
+}
+// smallest move [dx, dy] that takes label box L off segment S (null if they don't touch)
+function clearOf(L, S) {
+  const pad = 4, bx0 = L.x - pad, bx1 = L.x + L.w + pad, by0 = L.y - L.h / 2 - pad, by1 = L.y + L.h / 2 + pad;
+  const ry = segRange(S, bx0, bx1, true);
+  if (!ry || ry[1] < by0 || ry[0] > by1) return null;
+  const rx = segRange(S, by0, by1, false);
+  const moves = [[0, ry[0] - by1], [0, ry[1] - by0]];
+  if (rx) moves.push([rx[0] - bx1, 0], [rx[1] - bx0, 0]);
+  moves.sort((a, b) => Math.abs(a[0] + a[1]) - Math.abs(b[0] + b[1]));
+  return moves[0];
+}
+
+// move labels off each other, off the similarity lines, and off the center ring
+function relax(labels, lineAlpha, single) {
+  // the similarity lines, which labels also stay off of
+  const lines = labels.filter((L) => lineAlpha[L.i] > 0).map((L) => ({ i: L.i, x0: HALF_W, y0: HALF_H, x1: L.dx, y1: L.dy }));
+  // nudge colliding labels apart (a faint line then joins label and dot)
+  for (let it = 0; it < 80; it++) {
+    for (const L of labels) for (const S of lines) {
+      if (S.i === L.i) continue;
+      const m = clearOf(L, S);
+      if (m) { L.x += 0.5 * m[0]; L.y += 0.5 * m[1]; }
+    }
+    // overlapping labels separate along whichever direction they overlap less
+    for (const a of labels) for (const b of labels) {
+      if (a === b || !collide(a, b)) continue;
+      const oy = (a.h + b.h) / 2 - Math.abs(a.y - b.y);
+      const ox = Math.min(a.x + a.w + 4 - b.x, b.x + b.w + 4 - a.x);
+      if (oy <= ox) {
+        const dir = a.y < b.y || (a.y === b.y && a.i < b.i) ? -1 : 1;
+        a.y += dir * oy * 0.25; b.y -= dir * oy * 0.25;
+      } else {
+        const dir = a.x + a.w / 2 < b.x + b.w / 2 || (a.x === b.x && a.i < b.i) ? -1 : 1;
+        a.x += dir * ox * 0.25; b.x -= dir * ox * 0.25;
+      }
+    }
+    // an expression's ring at the center stays clear of labels
+    if (!single) {
+      const ring = { x: HALF_W - 13, w: 26, y: HALF_H, h: 26 };
+      for (const L of labels) if (collide(L, ring)) L.y += (L.y <= HALF_H ? -1 : 1) * ((L.h + ring.h) / 2 - Math.abs(L.y - ring.y)) * 0.5;
+    }
+    for (const L of labels) {   // stay inside the box
+      L.y = Math.max(L.h / 2 + 2, Math.min(panel.h - L.h / 2 - 2, L.y));
+      L.x = Math.max(4, Math.min(panel.w - 4 - L.w, L.x));
+    }
+  }
+  return labels;
 }
 
 function draw(dt) {
   const c = panel.clear();
   c.strokeStyle = "#ddd"; c.lineWidth = 1.5; c.strokeRect(0.75, 0.75, panel.w - 1.5, panel.h - 1.5);
   if (!view) return;
-  view.t = Math.min(1, view.t + dt * 2.5);
-  const e = view.t * view.t * (3 - 2 * view.t);
-  let m = 1e-6;
-  for (const p of view.pts) m = Math.max(m, Math.abs(p[0]) / 680, Math.abs(p[1]) / 250);
-  const X = (x) => panel.w / 2 + x / m * e, Y = (y) => panel.h / 2 - y / m * e;
-  // place labels beside their dots, nudging them apart vertically where they collide
+  const labels = labelBoxes(view.pts, view.words, view.k, view.lineAlpha);
+  relax(labels, view.lineAlpha, view.single);
+  // lines from the target to its top matches, labeled with cosine similarity
+  c.textAlign = "center";
   c.textBaseline = "middle";
-  const labels = view.pts.map((p, i) => {
-    c.font = i === 0 ? `bold 34px ${C.font}` : `26px ${C.font}`;
-    const w = c.measureText(view.words[i]).width, left = p[0] < 0 && i > 0;
-    const x = i === 0 ? X(0) - w / 2 : left ? X(p[0]) - 12 - w : X(p[0]) + 12;
-    return { i, x, w, h: i === 0 ? 40 : 30, y: i === 0 ? Y(0) - 32 : Y(p[1]), y0: Y(p[1]) };
-  });
-  for (let it = 0; it < 60; it++) {
-    for (const a of labels) for (const b of labels) {
-      if (a === b || a.x > b.x + b.w + 6 || b.x > a.x + a.w + 6) continue;
-      const need = (a.h + b.h) / 2 - Math.abs(a.y - b.y);
-      if (need > 0) { const d = a.y < b.y || (a.y === b.y && a.i < b.i) ? -1 : 1; a.y += d * need * 0.25; b.y -= d * need * 0.25; }
+  c.font = `18px ${C.font}`;
+  for (const L of labels) {
+    const a = view.lineAlpha[L.i];
+    if (!(a > 0)) continue;
+    c.strokeStyle = `rgba(17, 85, 204, ${a})`;
+    c.lineWidth = 2;
+    c.beginPath(); c.moveTo(HALF_W, HALF_H); c.lineTo(L.dx, L.dy); c.stroke();
+  }
+  c.font = `26px ${C.font}`;
+  c.textBaseline = "middle";
+  c.textAlign = "left";
+  for (const L of labels) {
+    if (Math.abs(L.y - L.y0) > 8 || Math.abs(L.x - L.x0) > 8) {
+      c.strokeStyle = "#ccc"; c.lineWidth = 1;
+      const ex = L.x < L.dx ? L.x + L.w + 2 : L.x - 2;
+      c.beginPath(); c.moveTo(L.dx, L.dy); c.lineTo(ex, L.pct ? L.y - 10 : L.y); c.stroke();
     }
   }
   for (const L of labels) {
-    const p = view.pts[L.i];
-    if (L.i > 0) {
-      c.fillStyle = C.grey;
-      c.beginPath(); c.arc(X(p[0]), Y(p[1]), 6, 0, 2 * Math.PI); c.fill();
-      if (Math.abs(L.y - L.y0) > 8) {
-        c.strokeStyle = "#ccc"; c.lineWidth = 1;
-        const ex = p[0] < 0 ? L.x + L.w + 2 : L.x - 2;
-        c.beginPath(); c.moveTo(X(p[0]), Y(p[1])); c.lineTo(ex, L.y); c.stroke();
-      }
+    const center = L.i === 0;
+    c.fillStyle = center ? C.accent : C.grey;
+    c.beginPath(); c.arc(L.dx, L.dy, center ? 10 : 6, 0, 2 * Math.PI); c.fill();
+    c.fillStyle = center ? C.accent : C.ink;
+    c.fillText(view.words[L.i], L.x, L.pct ? L.y - 10 : L.y);
+    if (L.pct) {   // the line's cosine similarity, as faint as the line
+      c.font = `18px ${C.font}`;
+      c.fillStyle = `rgba(17, 85, 204, ${view.lineAlpha[L.i]})`;
+      c.fillText((100 * view.sims[L.i]).toFixed(3) + "%", L.x, L.y + 14);
+      c.font = `26px ${C.font}`;
     }
   }
-  for (const L of labels) {
-    c.globalAlpha = L.i === 0 ? 1 : e;
-    c.font = L.i === 0 ? `bold 34px ${C.font}` : `26px ${C.font}`;
-    c.fillStyle = L.i === 0 ? C.accent : C.ink;
-    c.textAlign = "left";
-    c.fillText(view.words[L.i], L.x, L.y);
+  // an expression's computed point: a ring at the center
+  if (!view.single) {
+    c.strokeStyle = C.accent; c.lineWidth = 3;
+    c.beginPath(); c.arc(HALF_W, HALF_H, 10, 0, 2 * Math.PI); c.stroke();
   }
-  c.globalAlpha = 1;
-  c.fillStyle = C.accent;
-  c.beginPath(); c.arc(X(0), Y(0), 10, 0, 2 * Math.PI); c.fill();
 }
 
 input.addEventListener("keydown", (e) => { if (e.key === "Enter" && tr) lookup(input.value); });
-Seq2Seq.Translator.load("model/").then((t) => { tr = t; status.remove(); input.focus(); });
+Seq2Seq.Translator.load("model/").then((t) => { tr = t; input.placeholder = "word"; input.focus(); });
 Stage.loop(draw);
 Stage.nav("../demo3-generalization/3-spirals.html", "2-translation.html");
-window.demo = { lookup, get tr() { return tr; } };
+window.demo = { lookup, parse, layout, get tr() { return tr; }, get view() { return view; } };
 </script>
 </body>
 </html>

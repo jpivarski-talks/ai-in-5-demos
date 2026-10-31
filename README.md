@@ -28,7 +28,7 @@ or use GitHub Pages (Settings → Pages → deploy from the `main` branch, root 
 | 3.1 `demo3-generalization/1-overfit.html` | 1 hidden layer × 1000 neurons overfitting noisy XOR; loss on this data vs new data | **resample data**, **reset model**, **optimize** |
 | 3.2 `…/2-circle.html` | 2 → 3 → 1 network with live weights; the fit, the hidden layer's 3D space (drag to rotate), and the network | **new start**, **optimize** |
 | 3.3 `…/3-spirals.html` | the gist's 2 → 100 → 2 → 3 network; the fit, the warped (u, v) space of the 2D layer, and the network | **new start**, **optimize** |
-| 4.1 `demo4-attention/1-embedding.html` | type a word + Enter: its 100-d vector and its 15 nearest words (PCA) | text field |
+| 4.1 `demo4-attention/1-embedding.html` | type a word + Enter: its 100-d vector and the nearest words around it. Each word's distance from the center is its dissimilarity (1 − cosine similarity, minus the nearest word's) and the angles come from radius-constrained multidimensional scaling, so the plot is a crop of the whole vocabulary laid out that way, zoomed to about 40 readable words. Or type a sum/difference such as *king − man + woman*: the words' vectors are added (`-` or `−` subtracts) and the plot is centered on the result | text field |
 | 4.2 `…/2-translation.html` | type an English sentence + Enter: French translation and the attention matrix ("hot" colormap) | text field |
 | 5 `demo5-few-shot/1-complete.html` | base LLM completes the text box (completion in blue); starts empty, temperature 1 | presets, **complete** (Ctrl/⌘-Enter; shift-click to let it run past the line), temperature, ⚙ settings |
 
