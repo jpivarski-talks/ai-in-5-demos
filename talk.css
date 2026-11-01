@@ -44,3 +44,16 @@
    e.g.  <div class="at" style="left: 900px; top: 300px; width: 600px">...</div>  */
 .reveal .at { position: absolute; margin: 0; }
 .reveal .at img, .reveal img.at { display: block; max-width: none; margin: 0; }
+
+/* hold R: the 1600 x 900 slide's outline, everything outside it shaded, and how far the window is
+   from 16:9 (see index.html) */
+#aspect-frame {
+  position: fixed; z-index: 1000; pointer-events: none; display: none;
+  box-sizing: border-box; border: 3px solid var(--accent);
+  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.45);
+}
+#aspect-frame.on { display: block; }
+#aspect-frame div {
+  position: absolute; right: 0; bottom: 0; padding: 4px 10px;
+  background: var(--accent); color: #fff; font: 16px var(--mono); white-space: nowrap;
+}

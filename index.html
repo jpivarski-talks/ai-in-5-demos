@@ -14,7 +14,7 @@
 <body>
 <!--
   HOW THIS WORKS
-  Serve the repository (python -m http.server) and open http://localhost:8000/talk.html.
+  Serve the repository (python -m http.server) and open http://localhost:8000/.
 
   Each <section> is one slide: a 1600 x 900 canvas, scaled as a whole to fit the screen.
     * Ordinary content (headings, paragraphs, lists) flows from the top-left inside a margin.
@@ -26,7 +26,8 @@
       data-background-interactive: the demo fills the slide and responds to the mouse.
 
   Keys: → / PageDown next, ← / PageUp previous (also while a demo has the keyboard),
-        Esc or O overview, S speaker notes, F full screen, B black screen.
+        Esc or O overview, S speaker notes, F full screen, B black screen,
+        hold R to see the 1600 x 900 boundary and how far the window is from 16:9 (? lists Reveal's keys).
   The URL ends in #/slide-id (or #/number), so reloading returns to the same slide.
 -->
 <div class="reveal">
@@ -149,6 +150,33 @@ function focusSlide() {
 }
 Reveal.on("ready", focusSlide);
 Reveal.on("slidechanged", focusSlide);
+
+// While R is held down, outline the 1600 x 900 slide, shade the rest of the window, and say how
+// far the window is from 16:9, to help size a window when not in full screen. A demo that has the
+// keyboard passes R up as a {aspectFrame: true/false} message (see common/stage.js).
+const aspectFrame = document.createElement("div");
+aspectFrame.id = "aspect-frame";
+aspectFrame.appendChild(document.createElement("div"));
+document.body.appendChild(aspectFrame);
+function showAspectFrame(on) {
+  aspectFrame.classList.toggle("on", on);
+  if (!on) return;
+  const r = document.querySelector(".reveal .slides").getBoundingClientRect();
+  const ww = window.innerWidth, wh = window.innerHeight;
+  Object.assign(aspectFrame.style, { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px" });
+  const tall = Math.round(wh - ww * 9 / 16), wide = Math.round(ww - wh * 16 / 9);
+  const fix = tall > 0 ? `${tall} px too tall` : wide > 0 ? `${wide} px too wide` : "16:9 exactly";
+  aspectFrame.firstChild.textContent = `window ${ww} × ${wh}: ${fix}`;
+}
+const isTyping = (t) => t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
+const isR = (e) => e.key.toLowerCase() === "r" && !e.ctrlKey && !e.metaKey && !e.altKey;
+document.addEventListener("keydown", (e) => { if (isR(e) && !isTyping(e.target)) showAspectFrame(true); });
+document.addEventListener("keyup", (e) => { if (e.key.toLowerCase() === "r") showAspectFrame(false); });
+window.addEventListener("message", (e) => {
+  if (e.data && typeof e.data === "object" && "aspectFrame" in e.data) showAspectFrame(!!e.data.aspectFrame);
+});
+window.addEventListener("blur", () => { if (!document.querySelector("iframe:focus")) showAspectFrame(false); });
+window.addEventListener("resize", () => { if (aspectFrame.classList.contains("on")) showAspectFrame(true); });
 </script>
 </body>
 </html>

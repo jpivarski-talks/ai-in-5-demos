@@ -2,14 +2,14 @@
 
 Interactive widgets for an introduction to AI: optimization → compression → generalization → attention → few-shot learning. Every page is a 16:9 stage (1600×900, scaled to fit the window or an `<iframe>`). They share one layout: the main view on the left, controls below it, the big readout at the top right, and the history plot at the bottom right.
 
-Start at [`index.html`](index.html). ←/→ step between pages. The navigation arrows hide automatically inside an iframe, or with `?embed` in the URL.
+[`index.html`](index.html) is the talk (below). [`demos.html`](demos.html) lists the demo pages on their own; ←/→ step between them. The navigation arrows hide automatically inside an iframe, or with `?embed` in the URL.
 
 There's no build step. Each page is plain HTML and JavaScript. The only library is TensorFlow.js 4.22.0, vendored in `lib/` so the pages work offline.
 
 ## Running
 
 ```bash
-python3 -m http.server 8000        # then open http://localhost:8000/
+python3 -m http.server 8000        # then open http://localhost:8000/ (the talk) or http://localhost:8000/demos.html
 ```
 
 or use GitHub Pages (Settings → Pages → deploy from the `main` branch, root folder). Demos 1–3 also work straight from `file://`. Demos 4 and 5 fetch files, so they need a server.
@@ -17,9 +17,9 @@ or use GitHub Pages (Settings → Pages → deploy from the `main` branch, root 
 
 ## The talk
 
-[`talk.html`](talk.html) is the slide deck: a title slide, then a placeholder slide before each demo, each demo as a full, interactive slide, and an empty slide at the end. It uses [reveal.js](https://revealjs.com) 6.0.2, vendored in `lib/reveal/` (MIT license), with `talk.css` matching the demos' look. Start the same server as above and open http://localhost:8000/talk.html (the last demo also needs `./serve-llm.sh`). Comments at the top of `talk.html` explain how to write slides: ordinary flowing text, `class="at"` with `left`/`top` in slide pixels for exact placement, `class="fragment"` for step-by-step reveals, and `<aside class="notes">` for speaker notes (press S).
+[`index.html`](index.html) is the slide deck: a title slide, then a placeholder slide before each demo, each demo as a full, interactive slide, and an empty slide at the end. It uses [reveal.js](https://revealjs.com) 6.0.2, vendored in `lib/reveal/` (MIT license), with `talk.css` matching the demos' look. Start the same server as above and open http://localhost:8000/ (the last demo also needs `./serve-llm.sh`). Comments at the top of `index.html` explain how to write slides: ordinary flowing text, `class="at"` with `left`/`top` in slide pixels for exact placement, `class="fragment"` for step-by-step reveals, and `<aside class="notes">` for speaker notes (press S).
 
-Keys: → / PageDown next, ← / PageUp previous, also while a demo has the keyboard: the demos pass those keys to the deck (in `common/stage.js`), except arrows while you're typing in a text box. Arriving on a demo slide gives it the keyboard, so keys like the space bar work right away. A demo restarts each time you come back to it.
+Keys: → / PageDown next, ← / PageUp previous, also while a demo has the keyboard: the demos pass those keys to the deck (in `common/stage.js`), except arrows while you're typing in a text box. Arriving on a demo slide gives it the keyboard, so keys like the space bar work right away. A demo restarts each time you come back to it. Hold R (anywhere but a text box) to see the 1600×900 slide's outline and how many pixels the window is from 16:9, for sizing a window to design in; ? lists reveal.js's own keys.
 
 ## The demos
 

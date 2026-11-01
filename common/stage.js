@@ -42,6 +42,7 @@
     const s = stage();
     const ww = window.innerWidth, wh = window.innerHeight;
     scale = Math.min(ww / W, wh / H);
+    if (embedded) scale = Math.round(scale * 100) / 100;   // reveal.js rounds its slides' scale this way
     const ox = (ww - W * scale) / 2, oy = (wh - H * scale) / 2;
     s.style.transform = `translate(${ox}px, ${oy}px) scale(${scale})`;
     for (const p of panels) p._resize();
@@ -165,6 +166,16 @@
       e.preventDefault();
       window.parent.postMessage(JSON.stringify({ method }), "*");
     });
+    // holding R shows the deck's 1600 x 900 boundary (see index.html)
+    const isR = (e) => e.key.toLowerCase() === "r" && !e.ctrlKey && !e.metaKey && !e.altKey;
+    document.addEventListener("keydown", (e) => {
+      const t = e.target, typing = t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
+      if (isR(e) && !typing) window.parent.postMessage({ aspectFrame: true }, "*");
+    });
+    document.addEventListener("keyup", (e) => {
+      if (e.key.toLowerCase() === "r") window.parent.postMessage({ aspectFrame: false }, "*");
+    });
+    window.addEventListener("blur", () => window.parent.postMessage({ aspectFrame: false }, "*"));
   }
 
   // prev/next links (hidden when embedded in a slide)
@@ -172,7 +183,7 @@
     if (embedded) return;
     const d = el("div", { class: "nav" });
     if (prev) el("a", { href: prev, html: "&larr;" }, d);
-    el("a", { href: rootPath() + "index.html", html: "&#9776;" }, d);
+    el("a", { href: rootPath() + "demos.html", html: "&#9776;" }, d);
     if (next) el("a", { href: next, html: "&rarr;" }, d);
     document.addEventListener("keydown", (e) => {
       const t = e.target;
