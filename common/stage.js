@@ -151,6 +151,22 @@
     return new URLSearchParams(location.search).has("embed");
   })();
 
+  // Inside a slide deck (an iframe), keys pressed in the demo never reach the deck, so pass the
+  // slide-changing ones up to it: reveal.js accepts {"method": ...} messages from other windows.
+  // Arrows are left alone while typing in a text field (they move the cursor there); PageUp and
+  // PageDown, which is what a presentation clicker sends, always change the slide.
+  if (window.self !== window.top) {
+    document.addEventListener("keydown", (e) => {
+      const t = e.target, typing = t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
+      let method = null;
+      if (e.key === "PageDown" || (e.key === "ArrowRight" && !typing)) method = "next";
+      if (e.key === "PageUp" || (e.key === "ArrowLeft" && !typing)) method = "prev";
+      if (!method) return;
+      e.preventDefault();
+      window.parent.postMessage(JSON.stringify({ method }), "*");
+    });
+  }
+
   // prev/next links (hidden when embedded in a slide)
   function nav(prev, next) {
     if (embedded) return;

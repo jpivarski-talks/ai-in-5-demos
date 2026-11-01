@@ -14,6 +14,13 @@ python3 -m http.server 8000        # then open http://localhost:8000/
 
 or use GitHub Pages (Settings → Pages → deploy from the `main` branch, root folder). Demos 1–3 also work straight from `file://`. Demos 4 and 5 fetch files, so they need a server.
 
+
+## The talk
+
+[`talk.html`](talk.html) is the slide deck: a title slide, then a placeholder slide before each demo, each demo as a full, interactive slide, and an empty slide at the end. It uses [reveal.js](https://revealjs.com) 6.0.2, vendored in `lib/reveal/` (MIT license), with `talk.css` matching the demos' look. Start the same server as above and open http://localhost:8000/talk.html (the last demo also needs `./serve-llm.sh`). Comments at the top of `talk.html` explain how to write slides: ordinary flowing text, `class="at"` with `left`/`top` in slide pixels for exact placement, `class="fragment"` for step-by-step reveals, and `<aside class="notes">` for speaker notes (press S).
+
+Keys: → / PageDown next, ← / PageUp previous, also while a demo has the keyboard: the demos pass those keys to the deck (in `common/stage.js`), except arrows while you're typing in a text box. Arriving on a demo slide gives it the keyboard, so keys like the space bar work right away. A demo restarts each time you come back to it.
+
 ## The demos
 
 | page | what's on it | controls |
