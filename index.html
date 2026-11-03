@@ -35,7 +35,7 @@
 
 <section>
   <h1 class="at" style="left: 90px; top: 300px; width: 1400px">What is AI, really?</h1>
-  <p class="at grey" style="left: 92px; top: 430px; font-size: 40px">Optimization to Generative AI in Five Demos</p>
+  <p class="at grey" style="left: 92px; top: 430px; font-size: 40px">From Optimization to Generative AI in Five Demos</p>
   <p class="at" style="left: 92px; top: 600px">Jim Pivarski</p>
   <p class="at grey" style="left: 92px; top: 655px; font-size: 28px">University of Chicago, Data Science Institute</p>
 </section>
@@ -67,19 +67,28 @@
       box-shadow: inset 5px 0 0 orange;
       padding-left: 10px;
     }
+
+    span.bold {
+      font-weight: bold;
+      color: #606060;
+    }
+
+    span.italic {
+      font-style: italic;
+    }
   </style>
 
   <div>
     <p>Cultural metaphors:</p>
     <table class="timeline">
-      <tr class="timeline_orange fragment"><td>1950's:</td><td><span style="font-weight: bold; color: #606060;">Oracle,</span> a giant brain you approach with questions</td></tr>
-      <tr class="timeline_blue fragment"><td>1960's:</td><td><span style="font-weight: bold; color: #606060;">Bureaucracy,</span> a filing cabinet for big companies and government</td></tr>
-      <tr class="timeline_blue fragment"><td>1970's:</td><td><span style="font-weight: bold; color: #606060;">Hobby,</span> homebrew, hacking, “computer lib,” video games</td></tr>
-      <tr class="timeline_blue fragment"><td>1980's:</td><td><span style="font-weight: bold; color: #606060;">Personal desktop,</span> spreadsheets, tools, “bicycle of the mind”</td></tr>
-      <tr class="timeline_blue fragment"><td>1990's:</td><td><span style="font-weight: bold; color: #606060;">Place,</span> cyberspace, superhighway, “my ’lil corner of the Internet”</td></tr>
-      <tr class="timeline_blue fragment"><td>2000's:</td><td><span style="font-weight: bold; color: #606060;">Open mic,</span> decentralized communication, the bazaar, the commons</td></tr>
-      <tr class="timeline_blue fragment"><td>2010's:</td><td><span style="font-weight: bold; color: #606060;">Platform,</span> the cloud, social mirror, the Feed/the Algorithm</td></tr>
-      <tr class="timeline_orange fragment"><td>2020's:</td><td><span style="font-weight: bold; color: #606060;">Chatbot,</span> genie, copilot, stochastic parrot…</td></tr>
+      <tr class="timeline_orange fragment"><td>1950's:</td><td><span class="bold">Oracle,</span> a giant brain you approach with questions</td></tr>
+      <tr class="timeline_blue fragment"><td>1960's:</td><td><span class="bold">Bureaucracy,</span> a filing cabinet for big companies and government</td></tr>
+      <tr class="timeline_blue fragment"><td>1970's:</td><td><span class="bold">Hobby,</span> homebrew, hacking, “computer lib,” video games</td></tr>
+      <tr class="timeline_blue fragment"><td>1980's:</td><td><span class="bold">Personal desktop,</span> spreadsheets, tools, “bicycle of the mind”</td></tr>
+      <tr class="timeline_blue fragment"><td>1990's:</td><td><span class="bold">Place,</span> cyberspace, superhighway, “my ’lil corner of the Internet”</td></tr>
+      <tr class="timeline_blue fragment"><td>2000's:</td><td><span class="bold">Open mic,</span> decentralized communication, the bazaar, the commons</td></tr>
+      <tr class="timeline_blue fragment"><td>2010's:</td><td><span class="bold">Platform,</span> the cloud, social mirror, the Feed/the Algorithm</td></tr>
+      <tr class="timeline_orange fragment"><td>2020's:</td><td><span class="bold">Chatbot,</span> genie, copilot, stochastic parrot…</td></tr>
     </table>
   </div>
 
@@ -97,47 +106,121 @@
 
   <p class="fragment">The purpose of this talk is to try to say what, exactly, happened.</p>
 
-  <p class="fragment">I want to present a technically accurate picture, using interactive demos instead of mathematics.</p>
+  <p class="fragment">I want to present a technically accurate picture, using interactive demos instead of mathematical derivations.</p>
 
   <div class="fragment">
     <p>Specifically avoiding anthropomorphism and brain metaphors:</p>
 
-    <div style="display: flex; justify-content: center; align-items: center; gap: 40px; height: 350px">
-      <img style="height: 100%;" src="img/not-this-chatbot.jpg"></img>
-      <img style="height: 100%;" src="img/not-a-brain.jpg"></img>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 40px; height: 350px;">
+      <img style="height: 100%;" src="img/not-this-chatbot.jpg">
+      <img style="height: 100%;" src="img/not-a-brain.jpg">
     </div>
   </div>
 </section>
+
+<section>
+  <h2>Five demos</h2>
+
+  <ol>
+    <li><span class="bold">Optimization:</span> solving problems by “farming,” rather than “craftsmanship”
+    <li><span class="bold">Compression:</span> neural networks part 1
+    <li><span class="bold">Generalization:</span> neural networks part 2
+    <li><span class="bold">Language models:</span> semantic meaning in numerical form
+    <li><span class="bold">Few-shot learning:</span> the surprise discovery
+  </ol>
+</section>
+
+<section>
+  <h2>“Craftsmanship” versus “farming”</h2>
+
+  <div class="r-hstack" style="align-items: flex-start;">
+    <div style="width: 40%;">
+      <p><span class="bold">Craftsmanship:</span> Writing instructions to tell a computer what to do</p>
+
+      <img style="height: 200px; display: block; margin: 0 auto;" src="img/metaphor-craftsmanship.png">
+
+      <br>
+      <ul>
+        <li class="fragment" data-fragment-index="1">All details are human choices
+        <li class="fragment" data-fragment-index="2">Complexity limited by human mental capacity and ability to communicate in large groups
+      </ul>
+    </div>
+
+    <div style="width: 5%;"></div>
+
+    <div style="width: 40%;">
+      <p><span class="bold">Farming:</span> Defining constraints and letting an optimization fit them</p>
+
+      <img style="height: 200px; display: block; margin: 0 auto;" src="img/metaphor-farming.png">
+
+      <br>
+      <ul>
+        <li class="fragment" data-fragment-index="1">Details from optimization process
+        <li class="fragment" data-fragment-index="2">Complexity limited by training data and computational resources
+      </ul>
+    </div>
+  </div>
+
+  <div class="fragment">
+    <p>Farmers don't manually arrange the individual cells of the plants in their fields.</p>
+    <p>They manipulate the conditions for growth so the plants can make themselves.</p>
+  </div>
+
+</section>
+
+<section data-background-iframe="demo1-optimization/1-simulation.html" data-background-interactive></section>
+<section data-background-iframe="demo1-optimization/2-random.html" data-background-interactive></section>
+<section data-background-iframe="demo1-optimization/3-optimize.html" data-background-interactive></section>
+
+<section>
+  <h2>Optimization</h2>
+
+  <p>We defined 15 free parameters (points on the slide) and a goal: minimize the rolling time.</p>
+
+  <p class="fragment">An optimizer wiggled all 15 parameters, keeping combinations that approach the goal and discarding combinations that take it farther away.</p>
+
+  <div class="fragment">
+    <p>Similar to “survival of the fittest,” but faster: the optimizer samples the rate of change and aims in the optimal dimension, like this minimization of 2 parameters, <span class="italic">x</span> and <span class="italic">y</span>:
+
+      <div style="display: flex; justify-content: center; align-items: center; gap: 40px; height: 400px;">
+        <img style="height: 100%;" src="img/optimization-cat-3d.png">
+        <img style="height: 100%;" src="img/optimization-cat-top.png">
+      </div>
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>Analytic solutions and “brute force” computing</h2>
+
+  <p class="fragment">This slide optimization problem is an old one that can be solved with calculus of variations.</p>
+
+  <p class="fragment">The optimal shape can be computed on paper by solving a differential equation.</p>
+
+  <p class="fragment"><span class="bold">…For this problem.</span> Small modifications, like a ball on a slide with air resistance, results in equations without exact solutions.</p>
+
+  <br><br>
+  <div class="fragment">
+    <p>This is what computers made possible:</p>
+    <ul>
+      <li>solving <span class="italic">generic</span> optimization problems—any constraints
+      <li>that may be very <span class="italic">complex</span>—number of parameters is limited only by computational power
+    </ul>
+  </div>
+</section>
+
+
+
+
 
 
 
 
 <!-- HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE -->
 
-<!-- ============================================================ 1. optimization -->
-<section id="before-ball-on-a-slide">
-  <h2>Ball on a Slide</h2>
-  <!-- (an example of each kind of thing; replace it all) -->
-  <ul>
-    <li>Ordinary text flows from the top-left</li>
-    <li class="fragment">This line appears on the next key press</li>
-    <li class="fragment">…and this one after that
-      <ul><li>nested items are smaller and grey</li></ul>
-    </li>
-  </ul>
-  <div class="at" style="left: 1000px; top: 330px; width: 480px; padding: 24px; border: 2px solid var(--accent); border-radius: 12px">
-    A box placed exactly: <span class="accent">left 1000px, top 330px</span>
-  </div>
-  <p class="at grey" style="left: 90px; top: 800px; font-size: 24px">(placeholder: press S to see this slide's speaker notes)</p>
-  <aside class="notes">Speaker notes go here. They appear only in the presenter window (press S).</aside>
-</section>
-<section id="ball-on-a-slide" data-background-iframe="demo1-optimization/1-simulation.html" data-background-interactive></section>
 
-<section id="before-random-slides"><h2>Random Slides</h2></section>
-<section id="random-slides" data-background-iframe="demo1-optimization/2-random.html" data-background-interactive></section>
 
-<section id="before-optimizing-the-slide"><h2>Optimizing the Slide</h2></section>
-<section id="optimizing-the-slide" data-background-iframe="demo1-optimization/3-optimize.html" data-background-interactive></section>
+
 
 <!-- ============================================================= 2. compression -->
 <section id="before-fitting-a-curve"><h2>Fitting a Curve</h2></section>
