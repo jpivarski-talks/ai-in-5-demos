@@ -33,13 +33,86 @@
 <div class="reveal">
 <div class="slides">
 
-<!-- ===================================================================== title -->
-<section id="title">
-  <h1 class="at" style="left: 90px; top: 300px; width: 1400px">AI in Five Demos</h1>
-  <p class="at grey" style="left: 92px; top: 430px; font-size: 40px">From optimization to large language models</p>
+<section>
+  <h1 class="at" style="left: 90px; top: 300px; width: 1400px">What is AI, really?</h1>
+  <p class="at grey" style="left: 92px; top: 430px; font-size: 40px">Optimization to Generative AI in Five Demos</p>
   <p class="at" style="left: 92px; top: 600px">Jim Pivarski</p>
   <p class="at grey" style="left: 92px; top: 655px; font-size: 28px">University of Chicago, Data Science Institute</p>
 </section>
+
+<section>
+  <h2>Computers have come full-circle</h2>
+
+  <style>
+    table.timeline {
+      border-collapse: separate;
+      border-spacing: 50px 0;   /* horizontal gap only */
+      margin: 0 -50px;
+    }
+
+    table.timeline td {
+      padding-block: 0.25em;    /* vertical space between rows, inside the cells */
+    }
+
+    table.timeline tr > td:first-child {
+      padding-left: 10px;
+    }
+
+    section:has(.timeline_lines.visible) table.timeline tr.timeline_blue > td:first-child {
+      box-shadow: inset 5px 0 0 blue;
+      padding-left: 10px;
+    }
+
+    section:has(.timeline_lines.visible) table.timeline tr.timeline_orange > td:first-child {
+      box-shadow: inset 5px 0 0 orange;
+      padding-left: 10px;
+    }
+  </style>
+
+  <div>
+    <p>Cultural metaphors:</p>
+    <table class="timeline">
+      <tr class="timeline_orange fragment"><td>1950's:</td><td><span style="font-weight: bold; color: #606060;">Oracle,</span> a giant brain you approach with questions</td></tr>
+      <tr class="timeline_blue fragment"><td>1960's:</td><td><span style="font-weight: bold; color: #606060;">Bureaucracy,</span> a filing cabinet for big companies and government</td></tr>
+      <tr class="timeline_blue fragment"><td>1970's:</td><td><span style="font-weight: bold; color: #606060;">Hobby,</span> homebrew, hacking, “computer lib,” video games</td></tr>
+      <tr class="timeline_blue fragment"><td>1980's:</td><td><span style="font-weight: bold; color: #606060;">Personal desktop,</span> spreadsheets, tools, “bicycle of the mind”</td></tr>
+      <tr class="timeline_blue fragment"><td>1990's:</td><td><span style="font-weight: bold; color: #606060;">Place,</span> cyberspace, superhighway, “my ’lil corner of the Internet”</td></tr>
+      <tr class="timeline_blue fragment"><td>2000's:</td><td><span style="font-weight: bold; color: #606060;">Open mic,</span> decentralized communication, the bazaar, the commons</td></tr>
+      <tr class="timeline_blue fragment"><td>2010's:</td><td><span style="font-weight: bold; color: #606060;">Platform,</span> the cloud, social mirror, the Feed/the Algorithm</td></tr>
+      <tr class="timeline_orange fragment"><td>2020's:</td><td><span style="font-weight: bold; color: #606060;">Chatbot,</span> genie, copilot, stochastic parrot…</td></tr>
+    </table>
+  </div>
+
+  <div class="timeline_lines fragment">
+    <br>
+    <p><span style="font-weight: bold; color: orange">Animate:</span> Someone you talk to.</p>
+    <p><span style="font-weight: bold; color: blue">Inanimate:</span> Something you use.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Computers are what our grandparents thought they'd be</h2>
+
+  <p>After 70 years, something happened to make this hope/fear possible.</p>
+
+  <p class="fragment">The purpose of this talk is to try to say what, exactly, happened.</p>
+
+  <p class="fragment">I want to present a technically accurate picture, using interactive demos instead of mathematics.</p>
+
+  <div class="fragment">
+    <p>Specifically avoiding anthropomorphism and brain metaphors:</p>
+
+    <div style="display: flex; justify-content: center; align-items: center; gap: 40px; height: 350px">
+      <img style="height: 100%;" src="img/not-this-chatbot.jpg"></img>
+      <img style="height: 100%;" src="img/not-a-brain.jpg"></img>
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE -->
 
 <!-- ============================================================ 1. optimization -->
 <section id="before-ball-on-a-slide">
