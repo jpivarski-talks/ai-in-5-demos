@@ -329,10 +329,32 @@
 </section>
 
 <section>
+  <h2>The problem with templates</h2>
 
-  HERE: you need a lot of sinusoidal templates to fill in detail everywhere, but real data is often detailed in small regions and flat or empty in large regions
+  <p>It's common for real datasets to have localized detail and broad regions without much detail. Templates with a fixed shape struggle to fit data like that.</p>
 
+  <img style="height: 300px; display: block; margin: 0 auto;" src="img/spike_fit.svg">
+
+  <br><br>
+  <p class="fragment">The problem is more extreme for high-dimensional data. Spaces with hundreds or thousands of dimensions are mostly empty.</p>
 </section>
+
+<section>
+  <h2>Adaptive fit functions</h2>
+
+  <p>Instead of a fixed set of templates that can only be scaled vertically, let's use S-shaped curves that can be placed and scaled horizontally as well as scaled vertically.</p>
+
+  <img style="height: 200px; display: block; margin: 0 auto;" src="img/scaling_freedom.svg">
+
+  <div class="fragment" style="margin-top: 20px;">
+    <p>Now we can fit localized detail better.</p>
+
+    <img style="height: 300px; display: block; margin: 0 auto;" src="img/logistic_components.svg">
+  </div>
+</section>
+
+<section data-background-iframe="demo2-compression/3-logistic-1d.html" data-background-interactive></section>
+<section data-background-iframe="demo2-compression/4-adaptive-image.html" data-background-interactive></section>
 
 <section>
   <h2 style="text-align: center; margin-top: 300px;">Generalization</h2>
@@ -350,14 +372,6 @@
 <!-- HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE -->
 
 
-
-
-
-<section id="before-adaptive-shapes"><h2>Adaptive Shapes</h2></section>
-<section id="adaptive-shapes" data-background-iframe="demo2-compression/3-logistic-1d.html" data-background-interactive></section>
-
-<section id="before-fitting-an-image-adaptively"><h2>Fitting an Image Adaptively</h2></section>
-<section id="fitting-an-image-adaptively" data-background-iframe="demo2-compression/4-adaptive-image.html" data-background-interactive></section>
 
 <!-- ========================================================== 3. generalization -->
 <section id="before-overfitting"><h2>Overfitting</h2></section>
