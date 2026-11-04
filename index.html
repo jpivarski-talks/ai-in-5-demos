@@ -42,19 +42,31 @@
 
     .reveal table.timeline td {
       padding-block: 0.25em;    /* vertical space between rows, inside the cells */
+      border: none;
     }
 
     .reveal table.timeline tr > td:first-child {
+      border-left: 5px solid transparent;   /* colored by the rules below */
       padding-left: 10px;
     }
 
     section:has(.timeline_lines.visible) table.timeline tr.timeline_blue > td:first-child {
-      box-shadow: inset 5px 0 0 #1f6fb4;
+      border-left-color: #1f6fb4;
       padding-left: 10px;
     }
 
     section:has(.timeline_lines.visible) table.timeline tr.timeline_orange > td:first-child {
-      box-shadow: inset 5px 0 0 #f28c28;
+      border-left-color: #f28c28;
+      padding-left: 10px;
+    }
+
+    table.timeline tr.timeline_blue2 > td:first-child {
+      border-left-color: #1f6fb4;
+      padding-left: 10px;
+    }
+
+    table.timeline tr.timeline_orange2 > td:first-child {
+      border-left-color: #f28c28;
       padding-left: 10px;
     }
 
@@ -724,18 +736,60 @@
   <ul>
     <li><span class="bold">Refinement:</span> frontier labs have been making bigger models, curating training data, improving RLHF techniques, and integrating LLMs with image recognition and generation.
 
-    <li style="margin-top: 30px;"><span class="bold">Agents:</span> everyone else has been building workflows of conventional code around LLMs.
+    <li style="margin-top: 30px;" class="fragment"><span class="bold">Agents:</span> everyone else has been building workflows of conventional code around LLMs.
       <ul style="margin-top: 30px;">
-        <li>New connectors: Model Context Protocol (MCP)
-        <li>Integrating into search engines
-        <li>Memory systems
-        <li>Statistical workflows
+        <li>Integrating into search engines, retrieval over private documents
+        <li>Memory systems, LLM-accessible databases
+        <li>Coding agents that write, run, and test code in a loop
+        <li>New connectors through the Model Context Protocol (MCP)
+        <li>Browser and computer use: clicking and typing in applications designed for humans
+        <li>Orchestration: one agent delegating subtasks to others
+        <li>Statistical workflows with LLMs as classifiers or for structuring free-text data
+        <li>Guardrails: code that checks LLM output
       </ul>
+      <img style="display: block; margin: -200px 0 0 auto; height: 200px;" src="img/redstone.png">
   </ul>
-
 </section>
 
-<!-- HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE -->
+<section>
+  <h2>Notice that only one piece is fundamentally new: the LLM</h2>
+
+  <br>
+  <p class="fragment">In my opinion, the one truly surprising result was that a raw LLM can solve generic tasks through <span class="bold">few-shot learning</span>.</p>
+
+  <br>
+  <p class="fragment">The deep neural network and attention technologies <span class="italic" style="text-decoration: underline">only fit the statistical pattern</span> of text.<br>The capacity of few-shot learning fell out of generating text like the input text.</p>
+
+  <br>
+  <p class="fragment">If there's an oracle—or golem—in modern chatbots, it's something that had always been latent in the text that humans have been generating for five thousand years.</p>
+
+  <br>
+  <p class="fragment">For the past five years, we've been working through the consequences of that discovery.</p>
+</section>
+
+<section>
+  <h2>Computers have come full-circle</h2>
+
+  <div>
+    <p>Cultural metaphors:</p>
+    <table class="timeline">
+      <tr class="timeline_orange2"><td>1950's:</td><td><span class="bold">Oracle,</span> a giant brain you approach with questions</td></tr>
+      <tr class="timeline_blue2"><td>1960's:</td><td><span class="bold">Bureaucracy,</span> a filing cabinet for big companies and government</td></tr>
+      <tr class="timeline_blue2"><td>1970's:</td><td><span class="bold">Hobby,</span> homebrew, hacking, “computer lib,” video games</td></tr>
+      <tr class="timeline_blue2"><td>1980's:</td><td><span class="bold">Personal desktop,</span> spreadsheets, tools, “bicycle of the mind”</td></tr>
+      <tr class="timeline_blue2"><td>1990's:</td><td><span class="bold">Place,</span> cyberspace, superhighway, “my ’lil corner of the Internet”</td></tr>
+      <tr class="timeline_blue2"><td>2000's:</td><td><span class="bold">Open mic,</span> decentralized communication, the bazaar, the commons</td></tr>
+      <tr class="timeline_blue2"><td>2010's:</td><td><span class="bold">Platform,</span> the cloud, social mirror, the Feed/the Algorithm</td></tr>
+      <tr class="timeline_orange2"><td>2020's:</td><td><span class="bold">Chatbot,</span> genie, copilot, stochastic parrot…</td></tr>
+    </table>
+  </div>
+
+  <br><br>
+  <p>The thing we're now talking to is a compressed copy of our own text.</p>
+</section>
+
+<!-- this demo also needs ./serve-llm.sh running in another terminal -->
+<section data-background-iframe="demo5-few-shot/1-complete.html" data-background-interactive></section>
 
 </div>
 </div>
