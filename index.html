@@ -512,6 +512,10 @@
 <section data-background-iframe="demo5-few-shot/1-complete.html" data-background-interactive></section>
 
 <section>
+  <h2 style="text-align: center; margin-top: 300px;">Large Language Models</h2>
+</section>
+
+<section>
   <h2>Large Language Model (LLM)</h2>
 
   <p>Neural network with an attention mechanism, optimized to predict the probability of the next word in a sequence using an enormous text dataset.</p>
@@ -523,10 +527,213 @@
   </div>
 </section>
 
+<section>
+  <h2>Not always the best-fit word</h2>
 
+  <p>For more natural output, LLMs are usually asked for less-perfect autocompletions, controlled by “temperature.” Analogy with physics: higher temperature → more high-energy atoms, higher temperature → more bizarre autocompletions.</p>
 
+  <img style="height: 550px; display: block; margin: 0 auto;" src="img/temperature-and-autocomplete.svg">
 
+</section>
 
+<section>
+  <h2>Does an LLM “contain” the training dataset?</h2>
+
+  <div class="fragment" data-fragment-index="1">
+    <p>Not all of it.</p>
+
+    <p>GPT-style LLMs can memorize <span class="bold">3.6 bits/parameter</span> and GPT-4 has <span class="bold">1.76 trillion parameters</span>, so <span class="bold">0.79 TB</span>. However, it was trained with <span class="bold">52 TB</span> of data. It could only store <span class="bold">1%</span> of its training.</p>
+  </div>
+
+  <br>
+  <p class="fragment" data-fragment-index="2">Remember that it's like a JPEG, approximating the details:</p>
+
+  <div class="jpeg-demo fragment" data-fragment-index="2">
+    <div class="jd-wrap" style="width: 800px;">
+      <figure style="display: inline-block;">
+        <img style="height: 252px;" src="img/jpeg-demo-full-image.jpg">
+        <a class="jd-credit"
+           href="https://www.peppercarrot.com/go/viewer/artworks__2022-12-18_Point-of-View_by-David-Revoy.html">“Point of View” by David Revoy – CC-BY 4.0</a>
+      </figure>
+
+      <img style="height: 252px; width: 309px; display: inline-block;" src="img/jpeg-demo-lossy.png">
+    </div>
+  </div>
+
+  <br><br>
+  <p class="fragment" data-fragment-index="2">It learns the kinds of things people say, not exactly what they said.</p>
+</section>
+
+<section>
+  <h2>However, texts that get the most attention are in the 1%</h2>
+
+  <img style="height: 700px; display: block; margin: 0 auto;" src="img/harry-potter.png">
+</section>
+
+<section>
+  <h2>Experiment: two lines from <span class="italic">A Tale of Two Cities</span></h2>
+
+  <div class="r-hstack" style="align-items: flex-start;">
+    <div style="width: 40%;">
+      <p>What follows “It was the best of times”?</p>
+
+      <p style="font-size: 0.75em;">
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.
+      </p>
+
+      <br><br>
+      <p class="fragment">Correct every time for the famous first line, never right for the line<br>from <span class="italic">Book the Third, Chapter VI</span>.</p>
+
+    </div>
+    <div style="width: 60%;">
+      <p>What follows “His judges sat upon the Bench in feathered hats”?</p>
+
+      <p style="font-size: 0.75em;">
+→ and looked at Monsieur the Marquis as if they thought him too much above the common herd to be tried by such canaille.<br>
+→ and gold-laced coats.<br>
+→ but the whole Court was sufficiently covered, as to appearance, with black cloth and horse-hair, as to display an unnatural blotting out of day.<br>
+→ but not in furs, to mock the afflicted man.<br>
+→ but the roughest men at the Bar had no more emotion than if they had been so many rats.<br>
+→ but the red glare of the furnace shone upon them, stern and inexorable, as if they had all been so many fallen angels.<br>
+→ and gold-laced coats.<br>
+→ and were all in jewels but the axe was sharp, and the block was black.<br>
+→ and hanging robes.<br>
+→ and hoods; when a prisoner was tried, they had such an air of being all packed up somewhere for safe keeping, that one could have fancied they were all in several bags, and might at any time be brought out and squeezed dry.
+      </p>
+
+    </div>
+  </div>
+</section>
+
+<!-- this demo also needs ./serve-llm.sh running in another terminal -->
+<section data-background-iframe="demo5-few-shot/1-complete.html" data-background-interactive></section>
+
+<section>
+  <h2>Reinforcement Learning from Human Feedback (RLHF)</h2>
+
+  <br>
+  <p>The difference between this “raw” LLM and what you've used is refinement.</p>
+
+  <br>
+  <p class="fragment">Now nearly all LLMs are further trained on text in the form of stage directions between two characters, “Assistant” and “User”, with the LLM only completing the “Assistant” messages.</p>
+
+  <br>
+  <p class="fragment">Humans rate the quality of the messages, and the optimizer maximizes that score.</p>
+
+  <br>
+  <p class="fragment">Often, standardized tests will also be used, to increase the fraction of correct responses.</p>
+</section>
+
+<section>
+  <h2 style="text-align: center; margin-top: 300px;">Chatbots and Agents</h2>
+</section>
+
+<section>
+  <h2>Basic chatbot = LLM + transcript</h2>
+
+  <p>An LLM has no memory: it only knows what's been said because it's in the transcript.</p>
+
+  <img style="height: 640px; display: block; margin: 0 auto;" src="img/basic-chatbot.png">
+</section>
+
+<section>
+  <h2>Modern chatbots also talk to “tools” like web search</h2>
+
+  <p>The web is a better source of correct facts than a lossy-compressed text corpus.</p>
+
+  <img style="height: 640px; display: block; margin: 0 auto;" src="img/tool-web-search.png">
+</section>
+
+<section>
+  <h2>Same lines from <span class="italic">A Tale of Two Cities</span>, with web-search</h2>
+
+  <div class="r-hstack" style="align-items: flex-start;">
+    <div style="width: 25%;">
+      <p>What follows “It was the best of times”?</p>
+
+      <p style="font-size: 0.75em;">
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.
+      </p>
+    </div>
+    <div style="width: 75%;">
+      <p>What follows “His judges sat upon the Bench in feathered hats”?<br>&nbsp;</p>
+
+      <p style="font-size: 0.75em;">
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.
+      </p>
+
+    </div>
+  </div>
+
+  <br>
+  <p class="fragment">Now it's correct every time.</p>
+
+  <p class="fragment">We're only relying on its ability to summarize what it found, which is much more accurate.</p>
+
+</section>
+
+<section>
+  <h2>An internal tool: “reasoning”</h2>
+
+  <p>A complex problem is more likely to be solved correctly if it's a summary of a long transcript with the problem broken down into steps. Intermediate transcripts are not shown to the user.</p>
+
+  <p>This is the “reasoning effort” knob (low/medium/high) in typical chatbots.</p>
+
+  <img style="height: 500px; display: block; margin: 0 auto;" src="img/tool-reasoning.png">
+</section>
+
+<section>
+  <h2>Agents</h2>
+
+  <p>If these transcripts are interpreted by other programs as instructions to run, the chatbot can change real things. <span class="bold">Coding agents</span> are particularly useful.</p>
+
+  <img style="height: 600px; display: block; margin: 0 auto;" src="img/tool-agent.png">
+</section>
+
+<section>
+  <h2>Two fronts for generative AI</h2>
+
+  <br>
+  <ul>
+    <li><span class="bold">Refinement:</span> frontier labs have been making bigger models, curating training data, improving RLHF techniques, and integrating LLMs with image recognition and generation.
+
+    <li style="margin-top: 30px;"><span class="bold">Agents:</span> everyone else has been building workflows of conventional code around LLMs.
+      <ul style="margin-top: 30px;">
+        <li>New connectors: Model Context Protocol (MCP)
+        <li>Integrating into search engines
+        <li>Memory systems
+        <li>Statistical workflows
+      </ul>
+  </ul>
+
+</section>
 
 <!-- HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE -->
 
