@@ -409,49 +409,114 @@
 <section>
   <h2>Chaining adaptive fit functions</h2>
 
-  <p></p>
+  <p>Connect the output of one artificial neuron to the input of the next.</p>
 
   <img style="height: 450px; display: block; margin: 0 auto;" src="img/network_three_layers.svg">
 
-
+  <br>
+  <p class="fragment">One layer fits an arbitrary pattern; two layers fits patterns of patterns; three layers fits patterns of patterns of patterns…</p>
 </section>
 
+<section data-background-iframe="demo3-generalization/2-circle.html" data-background-interactive></section>
+<section data-background-iframe="demo3-generalization/3-spirals.html" data-background-interactive></section>
 
+<section>
+  <h2>Layered neural networks find symmetries in the data</h2>
+
+  <p>Without layers, a fit function needs an adaptive template to match every wiggle in the data.</p>
+
+  <p>With layers, one layer can fold space to line up symmetric elements for the next layer to fit with a single layer.</p>
+
+  <img style="height: 300px; display: block; margin: 0 auto;" src="img/deep-learning-by-space-folding.svg">
+
+  <br><br>
+  <p class="fragment">The more layers a network has, the more cross-cutting structure it will find, as opposed to just matching curves to data fluctuations. Many-layer networks are called <span class="bold">deep learning</span>.</p>
+</section>
 
 <section>
   <h2 style="text-align: center; margin-top: 300px;">Language Models</h2>
 </section>
 
 <section>
+  <h2>Neural networks can fit any data composed of numbers</h2>
+
+  <p>And anything that can be a file in a computer can be an array of numbers.</p>
+
+  <ul>
+    <li><span class="bold">Images:</span> grids of pixel brightnesses</li>
+    <li><span class="bold">Video:</span> stacks of images over time</li>
+    <li><span class="bold">Audio:</span> air pressure, sampled thousands of times per second</li>
+    <li><span class="bold">Tables and time series:</span> sensor readings, prices, medical records</li>
+    <li><span class="bold">Board games:</span> positions of pieces on a grid</li>
+    <li><span class="bold">DNA and proteins:</span> sequences of nucleotides</li>
+    <li><span class="bold">Natural language:</span> …</li>
+  </ul>
+
+  <br>
+  <p class="fragment">Encodings like apple = 1, ball = 2, cat = 3 are not very efficient because they don't capture the meanings of words or how words relate to other words.</p>
+</section>
+
+<section data-background-iframe="demo4-attention/1-embedding.html" data-background-interactive></section>
+
+<section>
+  <h2>Semantics → geometry</h2>
+
+  <p>Word embeddings express relationships between the meanings of words as geometric positions in space, and neural networks are great at fiting the shapes of clouds of data points.</p>
+
+  <div class="fragment">
+    <br>
+    <p>There are lots of applications:</p>
+    <ul>
+      <li><span class="bold">Text in, label out:</span> spam filtering, sentiment analysis, grammar checking</li>
+      <li><span class="bold">Text in, different text out:</span> language translation, human language → code, summarization</li>
+      <li><span class="bold">Text in, closest vectors out:</span> semantic search, recommendations, finding duplicates</li>
+      <li><span class="bold">Text in, next word out:</span> autocomplete, chatbots</li>
+      <li><span class="bold">Text paired with other data:</span> speech recognition, text-to-speech, image captioning</li>
+    </ul>
+  </div>
+
+  <br>
+  <p class="fragment">For years, the hardest part was maintaining coherence over long spans of text.</p>
+</section>
+
+<section data-background-iframe="demo4-attention/2-translation.html" data-background-interactive></section>
+
+<section>
+  <h2>This “attention mechanism” solved the distance problem</h2>
+
+  <p>Nowadays, language models create a grid of how every word is related to every other word in a sequence. The size of that grid is called the <span class="bold">context window</span>.</p>
+
+  <div class="r-hstack fragment" style="margin-top: -60px;">
+    <div>
+      <p>This solved the last problem that was preventing language models from being trained on Internet-scale datasets.</p>
+
+      <ul>
+        <li class="fragment" style="margin-top: 50px;">The text corpus gets <span class="bold">lossy-compressed</span> like a JPEG: much more data than the model parameters can store.
+        <li class="fragment" style="margin-top: 50px;">The deeply layered network seeks <span class="bold">cross-cutting structures</span> in the text, rather than idiosyncratic details.
+      </ul>
+
+      <p class="fragment" style="margin-top: 50px;">But then the model ended up with surprising capabilities…</p>
+    </div>
+
+    <div>
+      <img style="height: 650px; display: block; margin-left: 50px;" src="img/trillions-of-words-and-parameters.png">
+    </div>
+  </div>
+</section>
+
+<section>
   <h2 style="text-align: center; margin-top: 300px;">Few-Shot Learning</h2>
 </section>
 
+<!-- this demo also needs ./serve-llm.sh running in another terminal -->
+<section data-background-iframe="demo5-few-shot/1-complete.html" data-background-interactive></section>
+
+
+
+
+
 
 <!-- HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE -->
-
-
-
-
-<section id="before-generalizing-with-layers"><h2>Generalizing with Layers</h2></section>
-<section id="generalizing-with-layers" data-background-iframe="demo3-generalization/2-circle.html" data-background-interactive></section>
-
-<section id="before-patterns-of-patterns"><h2>Patterns of Patterns</h2></section>
-<section id="patterns-of-patterns" data-background-iframe="demo3-generalization/3-spirals.html" data-background-interactive></section>
-
-<!-- ========================================================= 4. language models -->
-<section id="before-word-embeddings"><h2>Word Embeddings</h2></section>
-<section id="word-embeddings" data-background-iframe="demo4-attention/1-embedding.html" data-background-interactive></section>
-
-<section id="before-attention"><h2>Attention</h2></section>
-<section id="attention" data-background-iframe="demo4-attention/2-translation.html" data-background-interactive></section>
-
-<!-- ======================================================== 5. few-shot learning -->
-<!-- this demo also needs ./serve-llm.sh running in another terminal -->
-<section id="before-generic-problem-solver"><h2>Generic Problem Solver</h2></section>
-<section id="generic-problem-solver" data-background-iframe="demo5-few-shot/1-complete.html" data-background-interactive></section>
-
-<!-- ===================================================================== end -->
-<section id="end"></section>
 
 </div>
 </div>
