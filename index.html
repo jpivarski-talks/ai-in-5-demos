@@ -99,6 +99,15 @@
       font: 700 27px/1.2 Helvetica, Arial, sans-serif;
       text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
     }
+
+    .reveal table.center_table {
+      margin: 0 auto;
+      border-spacing: 50px 40px;
+    }
+
+    .reveal table.center_table td {
+      text-align: center;
+    }
   </style>
 
 <section>
@@ -156,8 +165,8 @@
 
   <ol>
     <li><span class="bold">Optimization:</span> solving problems by “farming,” rather than “craftsmanship”
-    <li><span class="bold">Compression:</span> neural networks part 1
-    <li><span class="bold">Generalization:</span> neural networks part 2
+    <li><span class="bold">Compression:</span> neural networks part 1: the first layer
+    <li><span class="bold">Generalization:</span> neural networks part 2: many layers
     <li><span class="bold">Language Models:</span> semantic meaning in numerical form
     <li><span class="bold">Few-Shot Learning:</span> the surprise discovery
   </ol>
@@ -355,6 +364,28 @@
 
 <section data-background-iframe="demo2-compression/3-logistic-1d.html" data-background-interactive></section>
 <section data-background-iframe="demo2-compression/4-adaptive-image.html" data-background-interactive></section>
+
+<section>
+  <h2>A fit with adaptive functions is a neural network layer</h2>
+
+  <img style="height: 700px; display: block; margin: 0 auto;" src="img/real_neuron_artificial_neurons.svg">
+</section>
+
+<section>
+  <h2>Differences between a neural network and real neurons</h2>
+
+  <table class="center_table">
+    <tr><td><span class="bold" style="text-decoration: underline;">Neural network</span></td><td><span class="bold" style="text-decoration: underline;">Real neurons</span></td></tr>
+    <tr class="fragment"><td>data are floating-point numbers</td><td>data are pulses, timing carries information</td></tr>
+    <tr class="fragment"><td>output is a sum of adaptive fit templates</td><td>response is more complex than that</td></tr>
+    <tr class="fragment"><td>organized in layers</td><td>no layer structure</td></tr>
+    <tr class="fragment"><td>optimized by a global fit,<br>steered toward steepest descent</td><td>optimized by local rules,<br>chemical signals, and evolution</td></tr>
+    <tr class="fragment"><td>only connections matter</td><td>chemical signals bypass connections</td></tr>
+  </table>
+
+  <br><br>
+  <p class="fragment">Neural networks are inspired by real neurons the way airplanes are inspired by birds.</p>
+</section>
 
 <section>
   <h2 style="text-align: center; margin-top: 300px;">Generalization</h2>
