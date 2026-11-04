@@ -163,12 +163,12 @@
 <section>
   <h2>Five demos</h2>
 
-  <ol>
-    <li><span class="bold">Optimization:</span> solving problems by “farming,” rather than “craftsmanship”
-    <li><span class="bold">Compression:</span> neural networks part 1: the first layer
-    <li><span class="bold">Generalization:</span> neural networks part 2: many layers
-    <li><span class="bold">Language Models:</span> semantic meaning in numerical form
-    <li><span class="bold">Few-Shot Learning:</span> the surprise discovery
+  <ol style="padding-left: 150px; margin-top: 100px;">
+    <li style="margin-top: 30px;"><span class="bold">Optimization:</span> solving problems by “farming,” rather than “craftsmanship”
+    <li style="margin-top: 30px;"><span class="bold">Compression:</span> neural networks part 1: the first layer
+    <li style="margin-top: 30px;"><span class="bold">Generalization:</span> neural networks part 2: many layers
+    <li style="margin-top: 30px;"><span class="bold">Language Models:</span> semantic meaning in numerical form
+    <li style="margin-top: 30px;"><span class="bold">Few-Shot Learning:</span> the surprise discovery
   </ol>
 </section>
 
@@ -391,6 +391,33 @@
   <h2 style="text-align: center; margin-top: 300px;">Generalization</h2>
 </section>
 
+<section data-background-iframe="demo3-generalization/1-overfit.html" data-background-interactive></section>
+
+<section>
+  <h2>Memorization versus generalization</h2>
+
+  <br>
+  <p>Data come from measurements of semi-random processes. New data points from the same process are not exactly equal to old data points, but they have the same statistical patterns.</p>
+
+  <br>
+  <p class="fragment">An exact fit to one dataset that doesn't fit new data from the same process is a good <span class="bold">compression</span> of the first dataset, but not a good <span class="bold">predictor</span> of the second.</p>
+
+  <br>
+  <p class="fragment">For <span class="bold">prediction</span> and <span class="bold">generation</span> of new data, we want models that generalize.</p>
+</section>
+
+<section>
+  <h2>Chaining adaptive fit functions</h2>
+
+  <p></p>
+
+  <img style="height: 450px; display: block; margin: 0 auto;" src="img/network_three_layers.svg">
+
+
+</section>
+
+
+
 <section>
   <h2 style="text-align: center; margin-top: 300px;">Language Models</h2>
 </section>
@@ -404,9 +431,6 @@
 
 
 
-<!-- ========================================================== 3. generalization -->
-<section id="before-overfitting"><h2>Overfitting</h2></section>
-<section id="overfitting" data-background-iframe="demo3-generalization/1-overfit.html" data-background-interactive></section>
 
 <section id="before-generalizing-with-layers"><h2>Generalizing with Layers</h2></section>
 <section id="generalizing-with-layers" data-background-iframe="demo3-generalization/2-circle.html" data-background-interactive></section>
