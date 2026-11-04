@@ -33,6 +33,74 @@
 <div class="reveal">
 <div class="slides">
 
+  <style>
+    .reveal table.timeline {
+      border-collapse: separate;
+      border-spacing: 50px 0;   /* horizontal gap only */
+      margin: 0 -50px;
+    }
+
+    .reveal table.timeline td {
+      padding-block: 0.25em;    /* vertical space between rows, inside the cells */
+    }
+
+    .reveal table.timeline tr > td:first-child {
+      padding-left: 10px;
+    }
+
+    section:has(.timeline_lines.visible) table.timeline tr.timeline_blue > td:first-child {
+      box-shadow: inset 5px 0 0 #1f6fb4;
+      padding-left: 10px;
+    }
+
+    section:has(.timeline_lines.visible) table.timeline tr.timeline_orange > td:first-child {
+      box-shadow: inset 5px 0 0 #f28c28;
+      padding-left: 10px;
+    }
+
+    .reveal span.bold {
+      font-weight: bold;
+      color: #606060;
+    }
+
+    .reveal span.italic {
+      font-style: italic;
+    }
+
+    .jpeg-demo .jd-wrap { width: 700px; margin: 0 auto; }
+    .jpeg-demo figure { position: relative; margin: 0; }
+    .jpeg-demo img {
+      display: block; width: 100%; height: auto;
+      margin: 0; max-width: none; max-height: none;
+      border: none; box-shadow: none; background: none;
+    }
+    /* Red box marking the cropped region: 103x84 px at (274, 324) in the 960x512 image */
+    .jpeg-demo .jd-box {
+      position: absolute; box-sizing: border-box;
+      left: 28.542%; top: 63.281%; width: 10.729%; height: 16.406%;
+      border: 3px solid #db5b5b;
+    }
+    .jpeg-demo .jd-credit,
+    .jpeg-demo .jd-credit:hover {
+      position: absolute; left: 2.2%; top: 2.5%;
+      color: #fff; text-decoration: underline;
+      font: 700 19px/1.2 Helvetica, Arial, sans-serif;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+    }
+    .jpeg-demo .jd-crops {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-top: 13px;
+    }
+    .jpeg-demo .jd-crop { border: 3px solid #db5b5b; overflow: hidden; }
+    /* Uncomment to show individual pixels instead of smoothing them: */
+    /* .reveal .jpeg-demo .jd-crop img { image-rendering: pixelated; } */
+    .jpeg-demo figcaption {
+      position: absolute; left: 0; right: 0; bottom: 7%;
+      margin: 0; text-align: center; color: #fff;
+      font: 700 27px/1.2 Helvetica, Arial, sans-serif;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    }
+  </style>
+
 <section>
   <h1 class="at" style="left: 90px; top: 300px; width: 1400px">What is AI, really?</h1>
   <p class="at grey" style="left: 92px; top: 430px; font-size: 40px">From Optimization to Generative AI in Five Demos</p>
@@ -42,41 +110,6 @@
 
 <section>
   <h2>Computers have come full-circle</h2>
-
-  <style>
-    table.timeline {
-      border-collapse: separate;
-      border-spacing: 50px 0;   /* horizontal gap only */
-      margin: 0 -50px;
-    }
-
-    table.timeline td {
-      padding-block: 0.25em;    /* vertical space between rows, inside the cells */
-    }
-
-    table.timeline tr > td:first-child {
-      padding-left: 10px;
-    }
-
-    section:has(.timeline_lines.visible) table.timeline tr.timeline_blue > td:first-child {
-      box-shadow: inset 5px 0 0 blue;
-      padding-left: 10px;
-    }
-
-    section:has(.timeline_lines.visible) table.timeline tr.timeline_orange > td:first-child {
-      box-shadow: inset 5px 0 0 orange;
-      padding-left: 10px;
-    }
-
-    span.bold {
-      font-weight: bold;
-      color: #606060;
-    }
-
-    span.italic {
-      font-style: italic;
-    }
-  </style>
 
   <div>
     <p>Cultural metaphors:</p>
@@ -94,8 +127,8 @@
 
   <div class="timeline_lines fragment">
     <br>
-    <p><span style="font-weight: bold; color: orange">Animate:</span> Someone you talk to.</p>
-    <p><span style="font-weight: bold; color: blue">Inanimate:</span> Something you use.</p>
+    <p><span style="font-weight: bold; color: #f28c28">Animate:</span> Someone you talk to.</p>
+    <p><span style="font-weight: bold; color: #1f6fb4">Inanimate:</span> Something you use.</p>
   </div>
 </section>
 
@@ -125,9 +158,13 @@
     <li><span class="bold">Optimization:</span> solving problems by “farming,” rather than “craftsmanship”
     <li><span class="bold">Compression:</span> neural networks part 1
     <li><span class="bold">Generalization:</span> neural networks part 2
-    <li><span class="bold">Language models:</span> semantic meaning in numerical form
-    <li><span class="bold">Few-shot learning:</span> the surprise discovery
+    <li><span class="bold">Language Models:</span> semantic meaning in numerical form
+    <li><span class="bold">Few-Shot Learning:</span> the surprise discovery
   </ol>
+</section>
+
+<section>
+  <h2 style="text-align: center; margin-top: 300px;">Optimization</h2>
 </section>
 
 <section>
@@ -180,7 +217,7 @@
   <p class="fragment">An optimizer wiggled all 15 parameters, keeping combinations that approach the goal and discarding combinations that take it farther away.</p>
 
   <div class="fragment">
-    <p>Similar to “survival of the fittest,” but faster: the optimizer samples the rate of change and aims in the optimal dimension, like this minimization of 2 parameters, <span class="italic">x</span> and <span class="italic">y</span>:
+    <p>Similar to “survival of the fittest,” but faster: the optimizer samples the rate of change and aims “downhill,” like this minimization of <span class="italic">f(x, y)</span> over 2 parameters, <span class="italic">x</span> and <span class="italic">y</span>:
 
       <div style="display: flex; justify-content: center; align-items: center; gap: 40px; height: 400px;">
         <img style="height: 100%;" src="img/optimization-cat-3d.png">
@@ -209,11 +246,105 @@
   </div>
 </section>
 
+<section>
+  <h2 style="text-align: center; margin-top: 300px;">Compression</h2>
+</section>
 
+<section>
+  <h2>Fitting data</h2>
 
+  <p>A major application of optimization: fitting a <span style="color: #f28c28;">theoretical curve</span> to <span style="color: #1f6fb4;">experimental data</span>.</p>
 
+  <img style="height: 300px; display: block; margin: 0 auto;" src="img/curve_fit.svg">
 
+  <p>Instead of minimizing time on a slide, we minimize distance between the curve and the data.</p>
 
+  <p class="fragment">The data are: <span class="bold">finite in number</span> and <span class="bold">finite in range</span>.</p>
+
+  <div class="fragment">
+    <p>The curve is:</p>
+    <ul>
+      <li><span class="bold">continuous</span>, filling in gaps between the data points
+      <li><span class="bold">infinite in extent</span>, extrapolating to the left and right of all data points
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Deep connections between</h2>
+
+  <ul>
+    <li><span class="bold">Fitting:</span> finding a theoretical curve that explains experimental data
+    <li class="fragment"><span class="bold">Predicting:</span> using that curve to predict the values of new data before they are measured
+    <li class="fragment"><span class="bold">Compression:</span> replacing the dataset with a curve that approximates it
+    <li class="fragment"><span class="bold">Generation:</span> producing synthetic data that are similar to real data
+  </ul>
+
+  <br><br>
+  <p class="fragment">Generative AI is <span class="bold">fitted</span> to human text and images, is a <span class="bold">compressed</span> version of them, and <span class="bold">generates</span> new products that are statistically like them.</p>
+</section>
+
+<section>
+  <h2>Fitting arbitrary shapes</h2>
+
+  <p>If the data can have any shape, we have to build arbitrary shapes by adding templates:</p>
+
+  <img style="height: 400px; display: block; margin: 0 auto;" src="img/fourier_components.svg">
+
+  <br>
+  <p class="fragment">The optimization process determines how much of each template to contribute.</p>
+
+  <br>
+  <p class="fragment">With enough sinusoidal waves, you can approximate any continuous shape.</p>
+</section>
+
+<section data-background-iframe="demo2-compression/1-fourier-1d.html" data-background-interactive></section>
+
+<section data-background-iframe="demo2-compression/2-fourier-image.html" data-background-interactive></section>
+
+<section>
+  <h2>This is how JPEG compression works</h2>
+
+  <div class="jpeg-demo">
+    <div class="jd-wrap">
+      <figure>
+        <img src="img/jpeg-demo-full-image.jpg">
+        <span class="jd-box"></span>
+        <a class="jd-credit"
+           href="https://www.peppercarrot.com/go/viewer/artworks__2022-12-18_Point-of-View_by-David-Revoy.html">“Point of View” by David Revoy – CC-BY 4.0</a>
+      </figure>
+
+      <div class="jd-crops">
+        <figure class="jd-crop">
+          <img src="img/jpeg-demo-lossless.png">
+          <figcaption>Lossless compression</figcaption>
+        </figure>
+        <figure class="jd-crop">
+          <img src="img/jpeg-demo-lossy.png">
+          <figcaption>Lossy compression</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+
+  HERE: you need a lot of sinusoidal templates to fill in detail everywhere, but real data is often detailed in small regions and flat or empty in large regions
+
+</section>
+
+<section>
+  <h2 style="text-align: center; margin-top: 300px;">Generalization</h2>
+</section>
+
+<section>
+  <h2 style="text-align: center; margin-top: 300px;">Language Models</h2>
+</section>
+
+<section>
+  <h2 style="text-align: center; margin-top: 300px;">Few-Shot Learning</h2>
+</section>
 
 
 <!-- HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE -->
@@ -221,13 +352,6 @@
 
 
 
-
-<!-- ============================================================= 2. compression -->
-<section id="before-fitting-a-curve"><h2>Fitting a Curve</h2></section>
-<section id="fitting-a-curve" data-background-iframe="demo2-compression/1-fourier-1d.html" data-background-interactive></section>
-
-<section id="before-fitting-an-image"><h2>Fitting an Image</h2></section>
-<section id="fitting-an-image" data-background-iframe="demo2-compression/2-fourier-image.html" data-background-interactive></section>
 
 <section id="before-adaptive-shapes"><h2>Adaptive Shapes</h2></section>
 <section id="adaptive-shapes" data-background-iframe="demo2-compression/3-logistic-1d.html" data-background-interactive></section>
