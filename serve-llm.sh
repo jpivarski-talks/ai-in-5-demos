@@ -8,11 +8,14 @@
 #   ./serve-llm.sh          Qwen3-8B-Base (same as `qwen`; needs ~6 GB of free memory)
 #   ./serve-llm.sh qwen     Qwen3-8B-Base (its pretraining included instruction datasets)
 #   ./serve-llm.sh llama    Llama-3.1-8B, the base model (~6 GB)
-#   ./serve-llm.sh big      Qwen3-30B-A3B-Base (needs ~20 GB; better at the harder prompts)
+#   ./serve-llm.sh big      Qwen3-30B-A3B-Base (needs ~20 GB; better at the harder prompts, but
+#                           slow, ~5 words/s, on a GPU too small for it, e.g. a 12 GB RTX 3060)
 #
 # Then open demo5-few-shot/1-complete.html; it talks to http://localhost:8080.
 # --context-shift lets a completion run indefinitely: when the 4096-token context fills up,
 # the oldest text is dropped instead of stopping.
+# llama.cpp decides how much of the model goes on the GPU: all of it if it fits (always, on a Mac,
+# whose GPU shares the main memory), and otherwise as much as fits, with the rest in RAM (slower).
 set -euo pipefail
 
 case "${1:-qwen}" in
@@ -39,5 +42,4 @@ exec llama-server \
   --hf-repo "$REPO" --hf-file "$FILE" \
   --host 127.0.0.1 --port 8080 \
   --ctx-size 4096 \
-  --context-shift \
-  --n-gpu-layers 999
+  --context-shift
