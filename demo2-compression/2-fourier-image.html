@@ -24,6 +24,7 @@ const panel = new Stage.Panel(Stage.L.main);
 const readout = new Plots.Readout({ label: "loss" });
 const history = new Plots.History({ mode: "line", xSpan: LEVELS, yLabel: "loss", xLabel: "step" });
 ImageDemo.caption(LEFT, "original");
+ImageDemo.credit(LEFT, "Kansas City Confidential — public domain");
 ImageDemo.caption(RIGHT, "approximation");
 
 // 1D cosine templates (orthonormal DCT-II): B[u][x]

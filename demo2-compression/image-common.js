@@ -70,5 +70,14 @@
     return Stage.label(text, { x: Stage.L.main.x + r.x, y: Stage.L.main.y + r.y + r.h + 14, w: r.w }, { textAlign: "center", fontSize: "22px" });
   }
 
-  window.ImageDemo = { N, BOX, LEFT, RIGHT, loadImage, drawGrey, showDifference, sse, caption };
+  // an image credit over the box's top-left corner, styled like the one on the talk's JPEG slide
+  // (.jpeg-demo .jd-credit in index.html)
+  function credit(r, text) {
+    return Stage.label(text, { x: Stage.L.main.x + r.x + 15, y: Stage.L.main.y + r.y + 10 }, {
+      color: "#fff", font: "700 19px/1.2 Helvetica, Arial, sans-serif", textAlign: "left",
+      textShadow: "0 1px 3px rgba(0, 0, 0, 0.75)", whiteSpace: "nowrap", pointerEvents: "none",
+    });
+  }
+
+  window.ImageDemo = { N, BOX, LEFT, RIGHT, loadImage, drawGrey, showDifference, sse, caption, credit };
 })();

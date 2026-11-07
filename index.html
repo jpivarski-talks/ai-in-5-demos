@@ -185,7 +185,7 @@
 </section>
 
 <section>
-  <h2 style="text-align: center; margin-top: 300px;">Optimization</h2>
+  <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Optimization</h2>
 </section>
 
 <section>
@@ -268,7 +268,7 @@
 </section>
 
 <section>
-  <h2 style="text-align: center; margin-top: 300px;">Compression</h2>
+  <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Compression</h2>
 </section>
 
 <section>
@@ -352,12 +352,12 @@
 <section>
   <h2>The problem with templates</h2>
 
-  <p>It's common for real datasets to have localized detail and broad regions without much detail. Templates with a fixed shape struggle to fit data like that.</p>
+  <p>It's common for real datasets to have localized detail and broad regions without much detail. Templates with fixed shapes struggle to fit data like that.</p>
 
   <img style="height: 300px; display: block; margin: 0 auto;" src="img/spike_fit.svg">
 
   <br><br>
-  <p class="fragment">The problem is more extreme for high-dimensional data. Spaces with hundreds or thousands of dimensions are mostly empty.</p>
+  <p class="fragment">The problem is even worse for high-dimensional data. Spaces with hundreds or thousands of dimensions are mostly empty.</p>
 </section>
 
 <section>
@@ -380,6 +380,12 @@
 <section>
   <h2>A fit with adaptive functions is a neural network layer</h2>
 
+  <img style="height: 700px; display: block; margin: 0 auto;" src="img/real_neuron_artificial_neurons-0.svg">
+</section>
+
+<section>
+  <h2>A fit with adaptive functions is a neural network layer</h2>
+
   <img style="height: 700px; display: block; margin: 0 auto;" src="img/real_neuron_artificial_neurons.svg">
 </section>
 
@@ -389,7 +395,7 @@
   <table class="center_table">
     <tr><td><span class="bold" style="text-decoration: underline;">Neural network</span></td><td><span class="bold" style="text-decoration: underline;">Real neurons</span></td></tr>
     <tr class="fragment"><td>data are floating-point numbers</td><td>data are pulses, timing carries information</td></tr>
-    <tr class="fragment"><td>output is a sum of adaptive fit templates</td><td>response is more complex than that</td></tr>
+    <tr class="fragment"><td>output is a sum of adaptive fitting components</td><td>response is more complex than that</td></tr>
     <tr class="fragment"><td>organized in layers</td><td>no layer structure</td></tr>
     <tr class="fragment"><td>optimized by a global fit,<br>steered toward steepest descent</td><td>optimized by local rules,<br>chemical signals, and evolution</td></tr>
     <tr class="fragment"><td>only connections matter</td><td>chemical signals bypass connections</td></tr>
@@ -400,7 +406,7 @@
 </section>
 
 <section>
-  <h2 style="text-align: center; margin-top: 300px;">Generalization</h2>
+  <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Generalization</h2>
 </section>
 
 <section data-background-iframe="demo3-generalization/1-overfit.html" data-background-interactive></section>
@@ -409,17 +415,17 @@
   <h2>Memorization versus generalization</h2>
 
   <br>
-  <p>Data come from measurements of semi-random processes. New data points from the same process are not exactly equal to old data points, but they have the same statistical patterns.</p>
+  <p>Data come from measurements of semi-random processes. New data points from the same process are not exactly equal to old data points. They have the same statistical patterns.</p>
 
   <br>
-  <p class="fragment">An exact fit to one dataset that doesn't fit new data from the same process is a good <span class="bold">compression</span> of the first dataset, but not a good <span class="bold">predictor</span> of the second.</p>
+  <p class="fragment">An exact fit to one dataset that doesn't fit new data from the same process is a good <span class="bold">compression</span> of the first dataset, but not a good <span class="bold">predictor</span> of the process.</p>
 
   <br>
   <p class="fragment">For <span class="bold">prediction</span> and <span class="bold">generation</span> of new data, we want models that generalize.</p>
 </section>
 
 <section>
-  <h2>Chaining adaptive fit functions</h2>
+  <h2>Chaining adaptive fits</h2>
 
   <p>Connect the output of one artificial neuron to the input of the next.</p>
 
@@ -434,8 +440,12 @@
 
 <section>
   <h2>Layered neural networks find symmetries in the data</h2>
+</section>
 
-  <p>Without layers, a fit function needs an adaptive template to match every wiggle in the data.</p>
+<section>
+  <h2>Layered neural networks find symmetries in the data</h2>
+
+  <p>Without layers, a fit function needs an adaptive component to match every wiggle in the data.</p>
 
   <p>With layers, one layer can fold space to line up symmetric elements for the next layer to fit with a single layer.</p>
 
@@ -446,7 +456,7 @@
 </section>
 
 <section>
-  <h2 style="text-align: center; margin-top: 300px;">Language Models</h2>
+  <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Language Models</h2>
 </section>
 
 <section>
@@ -460,12 +470,12 @@
     <li><span class="bold">Audio:</span> air pressure, sampled thousands of times per second</li>
     <li><span class="bold">Tables and time series:</span> sensor readings, prices, medical records</li>
     <li><span class="bold">Board games:</span> positions of pieces on a grid</li>
-    <li><span class="bold">DNA and proteins:</span> sequences of nucleotides</li>
+    <li><span class="bold">DNA and proteins:</span> sequences of nucleotides or amino acids</li>
     <li><span class="bold">Natural language:</span> …</li>
   </ul>
 
   <br>
-  <p class="fragment">Encodings like apple = 1, ball = 2, cat = 3 are not very efficient because they don't capture the meanings of words or how words relate to other words.</p>
+  <p class="fragment">Encodings like a = 1, b = 2, c = 3 or apple = 1, ball = 2, cat = 3 are not very efficient because they don't capture the meanings of words or how words relate to other words.</p>
 </section>
 
 <section data-background-iframe="demo4-attention/1-embedding.html" data-background-interactive></section>
@@ -473,7 +483,7 @@
 <section>
   <h2>Semantics → geometry</h2>
 
-  <p>Word embeddings express relationships between the meanings of words as geometric positions in space, and neural networks are great at fiting the shapes of clouds of data points.</p>
+  <p>Word embeddings express relationships between the meanings of words as geometric positions in space, and neural networks are great at finding geometric patterns (of patterns).</p>
 
   <div class="fragment">
     <br>
@@ -517,14 +527,14 @@
 </section>
 
 <section>
-  <h2 style="text-align: center; margin-top: 300px;">Few-Shot Learning</h2>
+  <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Few-Shot Learning</h2>
 </section>
 
 <!-- this demo also needs ./serve-llm.sh running in another terminal -->
 <section data-background-iframe="demo5-few-shot/1-complete.html" data-background-interactive></section>
 
 <section>
-  <h2 style="text-align: center; margin-top: 300px;">Large Language Models</h2>
+  <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Large Language Models</h2>
 </section>
 
 <section>
@@ -540,7 +550,7 @@
 </section>
 
 <section>
-  <h2>Not always the best-fit word</h2>
+  <h2>Technicality: not always the best-fit word</h2>
 
   <p>For more natural output, LLMs are usually asked for less-perfect autocompletions, controlled by “temperature.” Analogy with physics: higher temperature → more high-energy atoms, higher temperature → more bizarre autocompletions.</p>
 
@@ -573,7 +583,7 @@
   </div>
 
   <br><br>
-  <p class="fragment" data-fragment-index="2">It learns the kinds of things people say, not exactly what they said.</p>
+  <p class="fragment" data-fragment-index="2">An LLM learns the kinds of things people say, not exactly what they said.</p>
 </section>
 
 <section>
@@ -646,7 +656,7 @@
 </section>
 
 <section>
-  <h2 style="text-align: center; margin-top: 300px;">Chatbots and Agents</h2>
+  <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Chatbots and Agents</h2>
 </section>
 
 <section>

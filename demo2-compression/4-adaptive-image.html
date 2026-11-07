@@ -35,6 +35,7 @@ const panel = new Stage.Panel(Stage.L.main);
 const readout = new Plots.Readout();
 const history = new Plots.History({ mode: "line", xSpan: CFG.ease, yLabel: "loss", xLabel: "iteration" });
 ImageDemo.caption(LEFT, "original");
+ImageDemo.credit(LEFT, "Kansas City Confidential — public domain");
 ImageDemo.caption(RIGHT, "approximation");
 const u = Optim.rng();
 
