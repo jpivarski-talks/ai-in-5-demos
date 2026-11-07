@@ -42,16 +42,6 @@ window.PRESETS = [
       "All snerfs are made of plinth. This teapot is a snerf. Therefore,",
   },
   {
-    // turning messy text into a table; the third example shows that it's about reading, not copying
-    label: "text → data",
-    prompt:
-      "Sentence: Hi, I'm Maria, I'm 34 and I live in Lisbon.\nData: name=Maria; age=34; lives in=Lisbon\n\n" +
-      "Sentence: Greetings from Osaka, where Kenji just celebrated his 50th birthday.\nData: name=Kenji; age=50; lives in=Osaka\n\n" +
-      "Sentence: My grandmother Ingrid, who turns 80 next month, grew up in Bergen but has lived in Oslo since the war.\n" +
-      "Data: name=Ingrid; age=79; lives in=Oslo\n\n" +
-      "Sentence: Diego, twenty-seven, was born in Lima, but last spring he packed up and moved to Montreal.\nData:",
-  },
-  {
     // no examples at all (zero-shot), with names that make the question unlikely to have been seen.
     label: "bicycles",
     prompt:
