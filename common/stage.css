@@ -115,3 +115,11 @@ input.text:focus { border-color: var(--accent); }
 .nav:hover { opacity: 1; }
 .nav a { color: var(--grey); text-decoration: none; padding: 0 6px; }
 .nav a:hover { color: var(--accent); }
+
+/* citations on demo pages, matching the slides' (talk.css .cite); placed with Stage.cite */
+.cite { position: absolute; font-size: 18px; line-height: 1.3; color: var(--grey); }
+.cite > * { display: block; }
+.cite.inline > * { display: inline; }
+.cite.inline > * + * { margin-left: 0.6em; }
+.cite a { color: var(--grey); text-decoration: none; }
+.cite a:hover { color: #bbb; }

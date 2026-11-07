@@ -238,9 +238,9 @@
   <p class="fragment">An optimizer wiggled all 15 parameters, keeping combinations that approach the goal and discarding combinations that take it farther away.</p>
 
   <div class="fragment">
-    <p>Similar to “survival of the fittest,” but faster: the optimizer samples the rate of change and aims “downhill,” like this minimization of <span class="italic">f(x, y)</span> over 2 parameters, <span class="italic">x</span> and <span class="italic">y</span>:
+    <p>Similar to “survival of the fittest,” but faster: an optimizer samples the rate of change and aims “downhill,” like this minimization of <span class="italic">f(x, y)</span> over 2 parameters, <span class="italic">x</span> and <span class="italic">y</span>:
 
-      <div style="display: flex; justify-content: center; align-items: center; gap: 40px; height: 400px;">
+      <div style="display: flex; justify-content: center; align-items: center; gap: 40px; height: 380px;">
         <img style="height: 100%;" src="img/optimization-cat-3d.png">
         <img style="height: 100%;" src="img/optimization-cat-top.png">
       </div>
@@ -251,9 +251,9 @@
 <section>
   <h2>Analytic solutions and “brute force” computing</h2>
 
-  <p class="fragment">This slide optimization problem is an old one that can be solved with calculus of variations.</p>
+  <p class="fragment">This optimization problem is an old one that can be solved with calculus of variations.</p>
 
-  <p class="fragment">The optimal shape can be computed on paper by solving a differential equation.</p>
+  <p class="fragment">One can compute the optimal shape on paper by solving a differential equation.</p>
 
   <p class="fragment"><span class="bold">…For this problem.</span> Small modifications, like a ball on a slide with air resistance, results in equations without exact solutions.</p>
 
@@ -293,6 +293,8 @@
 
 <section>
   <h2>Deep connections between</h2>
+  <!-- <div class="cite"><a href="https://doi.org/10.48550/arXiv.2309.10668" target="_blank" rel="noopener">G. Delétang et al., Language Modeling Is Compression (2023).</a></div> -->
+  <!-- Not really; that paper was about lossless compression. -->
 
   <ul>
     <li><span class="bold">Fitting:</span> finding a theoretical curve that explains experimental data
@@ -325,6 +327,7 @@
 
 <section>
   <h2>This is how JPEG compression works</h2>
+  <div class="cite"><a href="https://www.newyorker.com/tech/annals-of-technology/chatgpt-is-a-blurry-jpeg-of-the-web" target="_blank" rel="noopener">T. Chiang, ChatGPT Is a Blurry JPEG of the Web (2023).</a></div>
 
   <div class="jpeg-demo">
     <div class="jd-wrap">
@@ -379,12 +382,14 @@
 
 <section>
   <h2>A fit with adaptive functions is a neural network layer</h2>
+  <div class="cite"><a href="https://doi.org/10.1007/BF02551274" target="_blank" rel="noopener">G. Cybenko, Approximation by superpositions of a sigmoidal function (1989).</a></div>
 
   <img style="height: 700px; display: block; margin: 0 auto;" src="img/real_neuron_artificial_neurons-0.svg">
 </section>
 
 <section>
   <h2>A fit with adaptive functions is a neural network layer</h2>
+  <div class="cite"><a href="https://doi.org/10.1007/BF02551274" target="_blank" rel="noopener">G. Cybenko, Approximation by superpositions of a sigmoidal function (1989).</a></div>
 
   <img style="height: 700px; display: block; margin: 0 auto;" src="img/real_neuron_artificial_neurons.svg">
 </section>
@@ -395,7 +400,7 @@
   <table class="center_table">
     <tr><td><span class="bold" style="text-decoration: underline;">Neural network</span></td><td><span class="bold" style="text-decoration: underline;">Real neurons</span></td></tr>
     <tr class="fragment"><td>data are floating-point numbers</td><td>data are pulses, timing carries information</td></tr>
-    <tr class="fragment"><td>output is a sum of adaptive fitting components</td><td>response is more complex than that</td></tr>
+    <!-- <tr class="fragment"><td>output is a sum of adaptive fitting components</td><td>response is more complex than that</td></tr> -->
     <tr class="fragment"><td>organized in layers</td><td>no layer structure</td></tr>
     <tr class="fragment"><td>optimized by a global fit,<br>steered toward steepest descent</td><td>optimized by local rules,<br>chemical signals, and evolution</td></tr>
     <tr class="fragment"><td>only connections matter</td><td>chemical signals bypass connections</td></tr>
@@ -444,6 +449,7 @@
 
 <section>
   <h2>Layered neural networks find symmetries in the data</h2>
+  <div class="cite"><a href="https://doi.org/10.48550/arXiv.1402.1869" target="_blank" rel="noopener">G. Montúfar, R. Pascanu, K. Cho, Y. Bengio, On the Number of Linear Regions of Deep Neural Networks (2014).</a></div>
 
   <p>Without layers, a fit function needs an adaptive component to match every wiggle in the data.</p>
 
@@ -485,7 +491,7 @@
 
   <p>Word embeddings express relationships between the meanings of words as geometric positions in space, and neural networks are great at finding geometric patterns (of patterns).</p>
 
-  <div class="fragment">
+  <div class="fragment" data-fragment-index="1">
     <br>
     <p>There are lots of applications:</p>
     <ul>
@@ -498,13 +504,16 @@
   </div>
 
   <br>
-  <p class="fragment">For years, the hardest part was maintaining coherence over long spans of text.</p>
+  <p class="fragment" data-fragment-index="2">For years, the hardest part was maintaining coherence over long spans of text.</p>
+  <!-- cites only that last line, so it appears with it (same fragment index), at the bottom -->
+  <div class="cite bottom fragment" data-fragment-index="2"><a href="https://doi.org/10.1109/72.279181" target="_blank" rel="noopener">Y. Bengio, P. Simard, P. Frasconi, Learning long-term dependencies with gradient descent is difficult (1994).</a></div>
 </section>
 
 <section data-background-iframe="demo4-attention/2-translation.html" data-background-interactive></section>
 
 <section>
   <h2>This “attention mechanism” solved the distance problem</h2>
+  <div class="cite"><a href="https://doi.org/10.48550/arXiv.1706.03762" target="_blank" rel="noopener">A. Vaswani et al., Attention Is All You Need (2017).</a></div>
 
   <p>Nowadays, language models create a grid of how every word is related to every other word in a sequence. The size of that grid is called the <span class="bold">context window</span>.</p>
 
@@ -543,7 +552,7 @@
   <p>Neural network with an attention mechanism, optimized to predict the probability of the next word in a sequence using an enormous text dataset.</p>
 
   <div class="fragment">
-    <p>It can generate likely text by predicting the next word and then repeating with that word.</p>
+    <p>It can generate likely text by predicting the next word, then predicting the next with that word.</p>
 
     <img style="height: 500px; display: block; margin: 0 auto;" src="img/llm-token-prediction.svg">
   </div>
@@ -560,6 +569,7 @@
 
 <section>
   <h2>Does an LLM “contain” the training dataset?</h2>
+  <div class="cite fragment" data-fragment-index="1"><a href="https://doi.org/10.48550/arXiv.2505.24832" target="_blank" rel="noopener">J. X. Morris et al., How much do language models memorize? (2025).</a><a href="https://newsletter.semianalysis.com/p/gpt-4-architecture-infrastructure" target="_blank" rel="noopener">D. Patel, G. Wong, GPT-4 Architecture, Infrastructure, Training Dataset, Costs, Vision, MoE (2023).</a></div>
 
   <div class="fragment" data-fragment-index="1">
     <p>Not all of it.</p>
@@ -588,12 +598,14 @@
 
 <section>
   <h2>However, texts that get the most attention are in the 1%</h2>
+  <div class="cite"><a href="https://doi.org/10.48550/arXiv.2505.12546" target="_blank" rel="noopener">A. F. Cooper et al., Extracting memorized pieces of (copyrighted) books from open-weight language models (2025).</a></div>
 
   <img style="height: 700px; display: block; margin: 0 auto;" src="img/harry-potter.png">
 </section>
 
 <section>
   <h2>Experiment: two lines from <span class="italic">A Tale of Two Cities</span></h2>
+  <div class="cite"><span>OpenAI gpt-5.4, temperature 1, no web search, no reasoning.</span></div>
 
   <div class="r-hstack" style="align-items: flex-start;">
     <div style="width: 40%;">
@@ -613,7 +625,7 @@
       </p>
 
       <br><br>
-      <p class="fragment">Correct every time for the famous first line, never right for the line<br>from <span class="italic">Book the Third, Chapter VI</span>.</p>
+      <p class="fragment">Correct every time for the famous first line, never right for a line<br>from <span class="italic">Book the Third, Chapter VI</span>.</p>
 
     </div>
     <div style="width: 60%;">
@@ -641,18 +653,20 @@
 
 <section>
   <h2>Reinforcement Learning from Human Feedback (RLHF)</h2>
+  <!-- each citation appears with the sentence it supports (same fragment index) -->
+  <div class="cite"><a class="fragment" data-fragment-index="2" href="https://doi.org/10.48550/arXiv.2203.02155" target="_blank" rel="noopener">L. Ouyang et al., Training language models to follow instructions with human feedback (2022).</a><a class="fragment" data-fragment-index="3" href="https://doi.org/10.48550/arXiv.2411.15124" target="_blank" rel="noopener">N. Lambert et al., Tülu 3 (2024).</a></div>
 
   <br>
   <p>The difference between this “raw” LLM and what you've used is refinement.</p>
 
   <br>
-  <p class="fragment">Now nearly all LLMs are further trained on text in the form of stage directions between two characters, “Assistant” and “User”, with the LLM only completing the “Assistant” messages.</p>
+  <p class="fragment" data-fragment-index="1">Now nearly all LLMs are further trained on text in the form of stage directions between two characters, “Assistant” and “User”, with the LLM only completing the “Assistant” messages.</p>
 
   <br>
-  <p class="fragment">Humans rate the quality of the messages, and the optimizer maximizes that score.</p>
+  <p class="fragment" data-fragment-index="2">Humans rate the quality of the messages, and the optimizer maximizes that score.</p>
 
   <br>
-  <p class="fragment">Often, standardized tests will also be used, to increase the fraction of correct responses.</p>
+  <p class="fragment" data-fragment-index="3">Often, standardized tests will also be used, to increase the fraction of correct responses.</p>
 </section>
 
 <section>
@@ -677,6 +691,7 @@
 
 <section>
   <h2>Same lines from <span class="italic">A Tale of Two Cities</span>, with web-search</h2>
+  <div class="cite"><span>OpenAI gpt-5.4, temperature 1, <span style="text-decoration: underline;">with web search</span>, no reasoning.</span></div>
 
   <div class="r-hstack" style="align-items: flex-start;">
     <div style="width: 25%;">
@@ -723,6 +738,7 @@
 
 <section>
   <h2>An internal tool: “reasoning”</h2>
+  <div class="cite"><a href="https://doi.org/10.48550/arXiv.2201.11903" target="_blank" rel="noopener">J. Wei et al., Chain-of-Thought Prompting Elicits Reasoning in Large Language Models (2022).</a><a href="https://doi.org/10.1038/s41586-025-09422-z" target="_blank" rel="noopener">D. Guo et al., DeepSeek-R1 incentivizes reasoning in LLMs through reinforcement learning (2025).</a></div>
 
   <p>A complex problem is more likely to be solved correctly if it's a summary of a long transcript with the problem broken down into steps. Intermediate transcripts are not shown to the user.</p>
 
@@ -768,13 +784,13 @@
   <p class="fragment">In my opinion, the only deeply surprising result was that a raw LLM can solve generic tasks through <span class="bold">few-shot learning</span>. Everything else is a corollary.</p>
 
   <br>
-  <p class="fragment">Deep neural networks, the attention mechanism, and many other advancements of the past few decades are <span class="italic">detector technologies</span> that discovered this fact about human-generated text. They only fitted and reproduced the <span class="italic">statistical patterns</span> that are in the text.</p>
+  <p class="fragment">Deep neural networks, the attention mechanism, and many other advancements of the past few decades are <span class="italic">detector technologies</span> that <span class="italic">discovered</span> this fact about human-generated text.</p>
 
   <br>
   <p class="fragment">If there's an oracle—or golem—in modern chatbots, it's something that had always been latent in our text, for thousands of years.</p>
 
   <br>
-  <p class="fragment">What we've been doing for the past five years is working through the consequences of that discovery.</p>
+  <p class="fragment">What we've been doing since 2022 is working through the consequences of that discovery.</p>
 </section>
 
 <section>
@@ -797,11 +813,11 @@
   <br><br>
   <p>The oracle is a compressed copy of our own text.</p>
 
-  <p>Probably not what science fiction authors had in mind.</p>
+  <p class="fragment">Probably not what the old science fiction authors had in mind.</p>
 </section>
 
 <!-- this demo also needs ./serve-llm.sh running in another terminal -->
-<section data-background-iframe="demo5-few-shot/1-complete.html" data-background-interactive></section>
+<!-- <section data-background-iframe="demo5-few-shot/1-complete.html" data-background-interactive></section> -->
 
 </div>
 </div>

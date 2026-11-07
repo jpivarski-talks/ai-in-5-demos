@@ -128,6 +128,25 @@
     return d;
   }
 
+  // Citations, styled like the slides' (.cite in stage.css and talk.css). Each item is [text, url]
+  // for a link or a plain string for a note. r gives x and w, and either y (top) or bottom; with
+  // opts.inline the items share one line (spaced apart, see stage.css), otherwise each gets its own line.
+  function cite(items, r, opts) {
+    opts = opts || {};
+    const d = el("div", { class: "cite" });
+    place(d, { x: r.x, y: r.y != null ? r.y : 0, w: r.w });
+    if (r.bottom != null) { d.style.top = ""; d.style.bottom = (H - r.bottom) + "px"; }
+    // outside a slide deck, keep a bottom-right citation clear of the page-navigation arrows
+    if (!embedded && r.bottom != null && r.bottom > H - 40 && opts.align !== "left") d.style.width = (r.w - 120) + "px";
+    d.style.textAlign = opts.align || "right";
+    if (opts.inline) d.classList.add("inline");
+    items.forEach((it) => {
+      if (typeof it === "string") el("span", { text: it }, d);
+      else el("a", { text: it[0], href: it[1], target: "_blank", rel: "noopener" }, d);
+    });
+    return d;
+  }
+
   // Popup window in front of everything. Returns {box, close}.
   function popup(r, onclose) {
     const ov = el("div", { class: "overlay" });
@@ -216,7 +235,7 @@
   document.addEventListener("DOMContentLoaded", fit);
 
   window.Stage = {
-    W, H, L, COLORS, Panel, el, place, button, controls, label, popup, nav, loop, fit,
+    W, H, L, COLORS, Panel, el, place, button, controls, label, cite, popup, nav, loop, fit,
     onResize: (f) => resizeHooks.push(f),
     get scale() { return scale; },
     embedded,

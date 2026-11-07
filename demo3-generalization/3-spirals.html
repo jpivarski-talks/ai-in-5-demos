@@ -207,6 +207,8 @@ Stage.loop(() => {
   draw();
 });
 
+Stage.cite([["Adapted from A. Canziani, Y. LeCun, NYU Deep Learning (2020).", "https://github.com/Atcold/NYU-DLSP20"]],
+  { x: 20, w: 1560, bottom: 884 });
 Stage.nav("2-circle.html", "../demo4-attention/1-embedding.html");
 window.demo = { draw, CFG, get model() { return model; }, history, train, newModel, loss, get acc() { return view.acc; } };
 </script>

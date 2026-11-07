@@ -377,6 +377,10 @@ function draw(dt) {
 input.addEventListener("keydown", (e) => { if (e.key === "Enter" && tr) lookup(input.value); });
 Seq2Seq.Translator.load("model/").then((t) => { tr = t; input.placeholder = "word"; input.focus(); });
 Stage.loop(draw);
+Stage.cite([
+  ["J. Pennington, R. Socher, C. D. Manning, GloVe (2014).", "https://doi.org/10.3115/v1/D14-1162"],
+  ["T. Mikolov, W. Yih, G. Zweig, Linguistic Regularities in Continuous Space Word Representations (2013).", "https://aclanthology.org/N13-1090/"],
+], { x: 20, w: 1560, bottom: 884 }, { inline: true });
 Stage.nav("../demo3-generalization/3-spirals.html", "2-translation.html");
 window.demo = { lookup, parse, layout, get tr() { return tr; }, get view() { return view; } };
 </script>

@@ -57,3 +57,15 @@
   position: absolute; right: 0; bottom: 0; padding: 4px 10px;
   background: var(--accent); color: #fff; font: 16px var(--mono); white-space: nowrap;
 }
+
+/* citations: small grey lines in the top-right corner, above the heading (which starts at y = 70);
+   links get lighter on hover, plain notes (e.g. how an experiment was run) don't. Two lines fit. */
+.reveal .cite {
+  position: absolute; top: 16px; right: 90px; margin: 0;
+  text-align: right; font-size: 18px; line-height: 1.3; color: var(--grey);
+}
+.reveal .cite > * { display: block; }
+.reveal .cite a { color: var(--grey); text-decoration: none; }
+.reveal .cite a:hover { color: #bbb; }
+/* class="cite bottom": the bottom-right corner instead, for a citation of just the slide's last part */
+.reveal .cite.bottom { top: auto; bottom: 30px; }

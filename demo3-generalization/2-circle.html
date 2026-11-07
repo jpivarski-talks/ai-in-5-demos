@@ -133,6 +133,8 @@ Stage.loop(() => {
   draw();
 });
 
+Stage.cite([["Adapted from C. Olah, Neural Networks, Manifolds, and Topology (2014).", "https://colah.github.io/posts/2014-03-NN-Manifolds-Topology/"]],
+  { x: 20, w: 1560, bottom: 884 });
 Stage.nav("1-overfit.html", "3-spirals.html");
 window.demo = { CFG, get model() { return model; }, history, train, newModel, loss, view3d };
 </script>

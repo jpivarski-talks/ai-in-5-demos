@@ -41,7 +41,11 @@ if (q.get("endpoint")) cfg.endpoint = q.get("endpoint");
 const text = Stage.el("div", { id: "text", contenteditable: "plaintext-only", spellcheck: "false" });
 Stage.place(text, { x: 20, y: 20, w: 1250, h: 860 });
 const side = Stage.el("div", { id: "side" });
-Stage.place(side, { x: 1300, y: 20, w: 280, h: 700 });
+// the citation tops the right column; the presets start below however many lines it takes
+const cite = Stage.cite([["T. B. Brown et al., Language Models are Few-Shot Learners (2020).", "https://doi.org/10.48550/arXiv.2005.14165"]],
+  { x: 1300, y: 20, w: 280 }, { align: "left" });
+const sideTop = 20 + cite.offsetHeight + 14;
+Stage.place(side, { x: 1300, y: sideTop, w: 280, h: 720 - sideTop });
 const err = Stage.el("div", { id: "err" });
 Stage.place(err, { x: 1300, y: 590, w: 280, h: 90 });
 // temperature and max tokens sit out here (not in settings) so they can be changed quickly,
