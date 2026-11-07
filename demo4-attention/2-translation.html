@@ -97,7 +97,7 @@ input.addEventListener("keydown", (e) => { if (e.key === "Enter" && tr) translat
 Seq2Seq.Translator.load("model/").then((t) => { tr = t; out.textContent = ""; input.focus(); });
 Stage.loop(draw);
 Stage.cite([
-  ["D. Bahdanau, K. Cho, Y. Bengio, Neural Machine Translation by Jointly Learning to Align and Translate (2014).", "https://doi.org/10.48550/arXiv.1409.0473"],
+  ["D. Bahdanau, K. Cho, Y. Bengio, <i>Neural Machine Translation by Jointly Learning to Align and Translate</i> (2014).", "https://doi.org/10.48550/arXiv.1409.0473"],
   ["Training sentences: Tatoeba.org, CC-BY 2.0 FR.", "https://tatoeba.org"],
 ], { x: 20, w: 1560, bottom: 884 }, { inline: true });
 Stage.nav("1-embedding.html", "../demo5-few-shot/1-complete.html");

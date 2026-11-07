@@ -129,7 +129,7 @@
   }
 
   // Citations, styled like the slides' (.cite in stage.css and talk.css). Each item is [text, url]
-  // for a link or a plain string for a note. r gives x and w, and either y (top) or bottom; with
+  // for a link or a plain string for a note; the text is HTML, so titles can be <i>italic</i>. r gives x and w, and either y (top) or bottom; with
   // opts.inline the items share one line (spaced apart, see stage.css), otherwise each gets its own line.
   function cite(items, r, opts) {
     opts = opts || {};
@@ -141,8 +141,8 @@
     d.style.textAlign = opts.align || "right";
     if (opts.inline) d.classList.add("inline");
     items.forEach((it) => {
-      if (typeof it === "string") el("span", { text: it }, d);
-      else el("a", { text: it[0], href: it[1], target: "_blank", rel: "noopener" }, d);
+      if (typeof it === "string") el("span", { html: it }, d);
+      else el("a", { html: it[0], href: it[1], target: "_blank", rel: "noopener" }, d);
     });
     return d;
   }

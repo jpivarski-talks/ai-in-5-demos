@@ -42,7 +42,7 @@ const text = Stage.el("div", { id: "text", contenteditable: "plaintext-only", sp
 Stage.place(text, { x: 20, y: 20, w: 1250, h: 860 });
 const side = Stage.el("div", { id: "side" });
 // the citation tops the right column; the presets start below however many lines it takes
-const cite = Stage.cite([["T. B. Brown et al., Language Models are Few-Shot Learners (2020).", "https://doi.org/10.48550/arXiv.2005.14165"]],
+const cite = Stage.cite([["T. B. Brown et al., <i>Language Models are Few-Shot Learners</i> (2020).", "https://doi.org/10.48550/arXiv.2005.14165"]],
   { x: 1300, y: 20, w: 280 }, { align: "left" });
 const sideTop = 20 + cite.offsetHeight + 14;
 Stage.place(side, { x: 1300, y: sideTop, w: 280, h: 720 - sideTop });

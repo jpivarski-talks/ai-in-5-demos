@@ -67,5 +67,6 @@
 .reveal .cite > * { display: block; }
 .reveal .cite a { color: var(--grey); text-decoration: none; }
 .reveal .cite a:hover { color: #bbb; }
+.reveal .cite i { font-style: italic; }   /* titles; reveal's reset.css turns <i> off */
 /* class="cite bottom": the bottom-right corner instead, for a citation of just the slide's last part */
 .reveal .cite.bottom { top: auto; bottom: 30px; }

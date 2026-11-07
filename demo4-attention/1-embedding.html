@@ -27,7 +27,7 @@ const input = Stage.el("input", { class: "text", type: "text", placeholder: "loa
 Stage.place(input, { x: 20, y: 20, w: 1560 - 31, h: null });
 const vecBox = Stage.el("div", { id: "vec" });
 Stage.place(vecBox, { x: 20, y: 100, w: 1560, h: 150 });
-const panel = new Stage.Panel({ x: 20, y: 270, w: 1560, h: 585 });   // ends above the page-navigation arrows
+const panel = new Stage.Panel({ x: 20, y: 262, w: 1560, h: 568 });   // ends at y = 830, above two lines of citations
 
 let tr = null, view = null;
 
@@ -109,7 +109,7 @@ const CANDIDATES = 500;     // nearest words laid out: more than ever fit in the
 const NEAREST_GAP = 0.03;   // the nearest word's distance from the center (in dissimilarity)
 const ITERATIONS = 80;
 const MAX_CROWDED = 0.15;   // stop zooming out when more than this fraction of labels still collide after nudging
-const HALF_W = 780, HALF_H = 292;   // half the plot, in pixels
+const HALF_W = panel.w / 2, HALF_H = panel.h / 2;   // half the plot, in pixels
 
 function layout(V) {
   const n = V.length, d = V[0].length;
@@ -378,9 +378,9 @@ input.addEventListener("keydown", (e) => { if (e.key === "Enter" && tr) lookup(i
 Seq2Seq.Translator.load("model/").then((t) => { tr = t; input.placeholder = "word"; input.focus(); });
 Stage.loop(draw);
 Stage.cite([
-  ["J. Pennington, R. Socher, C. D. Manning, GloVe (2014).", "https://doi.org/10.3115/v1/D14-1162"],
-  ["T. Mikolov, W. Yih, G. Zweig, Linguistic Regularities in Continuous Space Word Representations (2013).", "https://aclanthology.org/N13-1090/"],
-], { x: 20, w: 1560, bottom: 884 }, { inline: true });
+  ["J. Pennington, R. Socher, C. D. Manning, <i>GloVe: Global Vectors for Word Representation</i> (2014).", "https://doi.org/10.3115/v1/D14-1162"],
+  ["T. Mikolov, W. Yih, G. Zweig, <i>Linguistic Regularities in Continuous Space Word Representations</i> (2013).", "https://aclanthology.org/N13-1090/"],
+], { x: 20, w: 1560, bottom: 884 });
 Stage.nav("../demo3-generalization/3-spirals.html", "2-translation.html");
 window.demo = { lookup, parse, layout, get tr() { return tr; }, get view() { return view; } };
 </script>

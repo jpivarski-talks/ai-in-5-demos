@@ -123,3 +123,4 @@ input.text:focus { border-color: var(--accent); }
 .cite.inline > * + * { margin-left: 0.6em; }
 .cite a { color: var(--grey); text-decoration: none; }
 .cite a:hover { color: #bbb; }
+.cite i { font-style: italic; }   /* titles */
