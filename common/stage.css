@@ -77,6 +77,15 @@ input.text {
 }
 input.text:focus { border-color: var(--accent); }
 
+/* small number field (e.g. temperature, number of layers) */
+.knob { box-sizing: border-box; font-family: var(--font); font-size: 24px; padding: 4px 10px;
+        color: var(--ink); border: 1.5px solid #bbb; border-radius: 8px; outline: none; text-align: center; }
+.knob:focus { border-color: var(--accent); }
+
+/* a control with its name, for the controls bar: <label class="field">name <input ...></label> */
+.field { display: flex; align-items: center; gap: 10px; font-size: 22px; color: var(--ink); cursor: pointer; }
+.field input[type="checkbox"] { width: 22px; height: 22px; margin: 0; accent-color: var(--accent); cursor: pointer; }
+
 .label { position: absolute; font-size: 20px; color: var(--grey); }
 
 /* popup window that appears in front of everything */

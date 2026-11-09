@@ -5,8 +5,10 @@
   const C = Stage.COLORS;
   const N = 128;
   const BOX = 500;
-  // two equal boxes side by side in the main panel
-  const LEFT = { x: 20, y: 60, w: BOX, h: BOX }, RIGHT = { x: 560, y: 60, w: BOX, h: BOX };
+  // two equal boxes side by side in the main panel, vertically centered between the top of the
+  // page and the tops of the buttons (y = 828 on the stage; the main panel starts at y = 20)
+  const BOX_Y = (828 - BOX) / 2 - Stage.L.main.y;
+  const LEFT = { x: 20, y: BOX_Y, w: BOX, h: BOX }, RIGHT = { x: 560, y: BOX_Y, w: BOX, h: BOX };
 
   function loadImage(src) {
     return new Promise((resolve) => {

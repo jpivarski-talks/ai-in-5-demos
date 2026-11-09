@@ -16,7 +16,7 @@
 <script src="image-common.js"></script>
 <script>
 "use strict";
-// The approximation is a constant plus M adaptive functions of two kinds, each with
+// The approximation is a fixed grey background plus M adaptive functions of two kinds, each with
 // 6 numbers (x0, y0, theta, two widths, height A); u, v are coordinates rotated by
 // theta around (x0, y0):
 //   blob:  A exp(-u^2 / 2a^2 - v^2 / 2b^2)            (a = exp(r1), b = exp(r2))
@@ -24,7 +24,7 @@
 // Optimized with Adam. Every so often, the functions doing the least are moved to
 // where the leftover error is largest ("respawning").
 const CFG = {
-  M: 333, edges: 33,            // 6 x 333 + 1 = 1999 numbers: 33 edge functions and 300 blobs
+  M: 500, edges: 50,            // 6 x 500 = 3000 numbers: 50 edge functions and 450 blobs
                                 // (edges up to ~20% fit this image as well as pure blobs)
   lr: 0.03, ease: 800, floor: 0.05,   // learning rate eases down over 800 steps, then stays at 5%
   respawnEvery: 25, respawnN: 16, respawnUntil: 640,
@@ -34,9 +34,9 @@ const { N, LEFT, RIGHT } = ImageDemo;
 const panel = new Stage.Panel(Stage.L.main);
 const readout = new Plots.Readout();
 const history = new Plots.History({ mode: "line", xSpan: CFG.ease, yLabel: "loss", xLabel: "iteration" });
-ImageDemo.caption(LEFT, "original");
-ImageDemo.credit(LEFT, "Kansas City Confidential — public domain");
-ImageDemo.caption(RIGHT, "approximation");
+ImageDemo.caption(LEFT, `original: ${(N * N).toLocaleString("en-US")} pixels`);
+ImageDemo.credit(LEFT, "Kansas City Confidential — public domain noir");
+ImageDemo.caption(RIGHT, `approximation: ${(6 * CFG.M).toLocaleString("en-US")} parameters`);
 const u = Optim.rng();
 
 // pixel coordinates in [-1, 1] (y up)
@@ -80,10 +80,10 @@ function init() {
   params = tf.variable(tf.tensor(P, [M, 6]));
   if (r1sign) r1sign.dispose();
   r1sign = tf.keep(tf.tensor(Float32Array.from({ length: M }, (_, k) => (k < nEdge ? 1 : -1)), [M, 1]));
-  let mean = 0;
-  for (const v of img) mean += v / img.length;
-  bias = tf.variable(tf.scalar(mean));
-  vars = [params, bias];
+  // the background is a fixed grey, not one of the fitted numbers, so that the count is exactly 6 M;
+  // 0.4 is close to this image's average brightness (0.407), so the functions start from the right level
+  if (!bias) bias = tf.keep(tf.scalar(0.4));
+  vars = [params];
   adam = { m: vars.map((v) => tf.keep(tf.zerosLike(v))), v: vars.map((v) => tf.keep(tf.zerosLike(v))), t: 0 };
   step = 0;
   history.clear();
@@ -238,7 +238,6 @@ ImageDemo.loadImage(TEST_IMAGE.src).then((a) => {
   target = tf.tensor(Float32Array.from(img), [N * N]);
   init();
   readout.set(history.a[0].toFixed(3));
-  readout.setSub((6 * CFG.M + 1) + " numbers");
   Stage.loop(() => {
     if (running) {
       // as many steps as fit in the frame budget (faster GPUs show faster progress)
@@ -256,7 +255,7 @@ ImageDemo.loadImage(TEST_IMAGE.src).then((a) => {
   });
 });
 
-Stage.nav("3-logistic-1d.html", "../demo3-generalization/1-overfit.html");
+Stage.nav("3-logistic-1d.html", "../demo3-generalization/0a-sawtooth-wide.html");
 window.demo = { CFG, run, init, loss, get params() { return params; }, get bias() { return bias; }, pieces, lossFn, approx, get step() { return step; }, get ready() { return !!params; }, get last() { return history.a[history.length - 1]; } };
 </script>
 </body>

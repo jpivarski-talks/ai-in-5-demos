@@ -41,9 +41,11 @@
   function fit() {
     const s = stage();
     const ww = window.innerWidth, wh = window.innerHeight;
-    scale = Math.min(ww / W, wh / H);
+    // the stage is 1600 x 900 unless a page's CSS resizes it (a demo inside an ordinary slide)
+    const sw = s.offsetWidth || W, sh = s.offsetHeight || H;
+    scale = Math.min(ww / sw, wh / sh);
     if (embedded) scale = Math.round(scale * 100) / 100;   // reveal.js rounds its slides' scale this way
-    const ox = (ww - W * scale) / 2, oy = (wh - H * scale) / 2;
+    const ox = (ww - sw * scale) / 2, oy = (wh - sh * scale) / 2;
     s.style.transform = `translate(${ox}px, ${oy}px) scale(${scale})`;
     for (const p of panels) p._resize();
     for (const f of resizeHooks) f();

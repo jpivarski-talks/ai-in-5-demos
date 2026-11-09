@@ -132,7 +132,7 @@ function draw() {
       c.beginPath(); c.arc(q[0], q[1], 9, 0, 2 * Math.PI); c.fill(); c.stroke();
     }
   }
-  wide.frame({ xlabel: "x", ylabel: "y" });
+  wide.frame();
   wide.clip(() => {
     wide.dots(Fits1D.xs, y, { r: 4.5, color: "#555" });
     wide.curve(FX, Fits1D.logisticSum(Array.from(p), base, FX), { color: C.accent, width: 4 });

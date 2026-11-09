@@ -124,7 +124,7 @@
 
 <section>
   <h1 class="at" style="left: 90px; top: 300px; width: 1400px">What is Generative AI, really?</h1>
-  <p class="at grey" style="left: 92px; top: 430px; font-size: 40px">From Optimization to Generative AI in Five Demos</p>
+  <p class="at grey" style="left: 92px; top: 430px; font-size: 40px">From Optimization to Chatbots in Five Interactive Demos</p>
   <p class="at" style="left: 92px; top: 600px">Jim Pivarski</p>
   <p class="at grey" style="left: 92px; top: 655px; font-size: 28px">University of Chicago, Data Science Institute</p>
 </section>
@@ -156,22 +156,16 @@
 <section>
   <h2>Computers are what our grandparents thought they’d be</h2>
 
-  <p>Before most people had personal experience with computers, 
+  <p class="fragment">When computers were first invented, the public thought of them in anthropomorphic terms: giant brains that scientists would ask questions.</p>
 
-</p>
+  <p class="fragment">After the widespread growth of personal computing and the Internet, we've come to think of them as <span class="bold">things</span> or <span class="bold">places</span>: desktop, tool, game, cyberspace, platform, storefront, feed.</p>
 
-
-
-  <p>After 70 years, something happened to make this hope/fear possible.</p>
-
-  <p class="fragment">The purpose of this talk is to try to say what, exactly, happened.</p>
-
-  <p class="fragment">I want to present a technically accurate picture, using interactive demos instead of mathematical derivations.</p>
+  <p class="fragment">Now computers <span class="italic">actually can</span> hold a conversation, like a giant brain.</p>
 
   <div class="fragment">
-    <p>Specifically avoiding anthropomorphism and brain metaphors:</p>
+    <p>The purpose of this talk is to try to say what, exactly, happened, without anthropomorphizing.</p>
 
-    <div style="display: flex; justify-content: center; align-items: center; gap: 40px; height: 350px;">
+    <div style="display: flex; justify-content: center; align-items: center; gap: 40px; height: 300px;">
       <img style="height: 100%;" src="img/not-this-chatbot.jpg">
       <img style="height: 100%;" src="img/not-a-brain.jpg">
     </div>
@@ -239,9 +233,20 @@
 <section>
   <h2>Optimization</h2>
 
+  <br>
   <p>We defined 15 free parameters (points on the slide) and a goal: minimize the rolling time.</p>
 
+  <br>
   <p class="fragment">An optimizer wiggled all 15 parameters, keeping combinations that approach the goal and discarding combinations that take it farther away.</p>
+
+  <br>
+  <p class="fragment">Although this particular problem (brachistochrone) could be solved by hand, the technique is broad and applies to arbitrarily complex problems:</p>
+
+  <ol>
+    <li class="fragment">Specify parameters that the optimizer is allowed to tune
+    <li class="fragment">Define a goal as a numerical score
+    <li class="fragment">Let the optimizer tune the parameters until the score is good enough
+  </ol>
 
   <!-- <div class="fragment"> -->
   <!--   <p>Similar to “survival of the fittest,” but faster: an optimizer samples the rate of change and aims “downhill,” like this minimization of <span class="italic">f(x, y)</span> over 2 parameters, <span class="italic">x</span> and <span class="italic">y</span>: -->
@@ -284,7 +289,12 @@
 
   <img style="height: 300px; display: block; margin: 0 auto;" src="img/curve_fit.svg">
 
-  <p>Instead of minimizing time on a slide, we minimize distance between the curve and the data.</p>
+  <br>
+  <p class="fragment">As an optimization problem:</p>
+  <ul>
+    <li class="fragment">The parameters control the shape of the theoretical curve.
+    <li class="fragment">The numerical goal is to minimize total distance between the curve and each data point.
+  </ul>
 
   <!-- <p class="fragment">The data are: <span class="bold">finite in number</span> and <span class="bold">finite in range</span>.</p> -->
 
@@ -303,10 +313,10 @@
   <!-- Not really; that paper was about lossless compression. -->
 
   <ul>
-    <li><span class="bold">Fitting:</span> finding a theoretical curve that explains experimental data
-    <li class="fragment"><span class="bold">Predicting:</span> using that curve to predict the values of new data before they are measured
-    <li class="fragment"><span class="bold">Compression:</span> replacing the dataset with a curve that approximates it
-    <li class="fragment"><span class="bold">Generation:</span> producing synthetic data that are similar to real data
+    <li><span class="bold">Fitting:</span> finding a theoretical curve that explains experimental data.
+    <li class="fragment"><span class="bold">Predicting:</span> using that curve to predict the values of new data before they are measured.
+    <li class="fragment"><span class="bold">Compression:</span> replacing the dataset with a curve that approximates it.
+    <li class="fragment"><span class="bold">Generation:</span> producing synthetic data that are similar to real data.
   </ul>
 
   <br><br>
@@ -370,31 +380,39 @@
 <!-- </section> -->
 
 <section>
-  <h2>Fitting arbitrary data</h2>
+  <h2>Building a fit function</h2>
 
-  <p>Instead of a fixed set of templates that can only be scaled vertically, let’s use S-shaped curves that can be placed and scaled horizontally as well as scaled vertically.</p>
+  <p>Consider an S-shaped curve with 3 parameters:</p>
 
-  <img style="height: 200px; display: block; margin: 0 auto;" src="img/scaling_logistic.svg">
+  <img style="height: 220px; display: block; margin: 0 auto;" src="img/scaling_logistic.svg">
 
-  <div class="fragment" style="margin-top: 20px;">
-    <p>Now we can fit localized detail better.</p>
+  <div class="fragment">
+    <br>
+    <p>And add several of them together:</p>
 
-    <img style="height: 300px; display: block; margin: 0 auto;" src="img/logistic_components.svg">
+  <!-- a small demo in the lower part of the slide: data-src, so it loads (fresh, all unchecked) when the slide is shown -->
+    <iframe class="at" style="left: 90px; top: 548px; width: 1420px; height: 340px; border: none;" data-src="demo2-compression/logistic-terms.html"></iframe>
   </div>
+
+  <!-- <div class="fragment" style="margin-top: 20px;"> -->
+  <!--   <p>Now we can fit localized detail better.</p> -->
+
+  <!--   <img style="height: 300px; display: block; margin: 0 auto;" src="img/logistic_components.svg"> -->
+  <!-- </div> -->
 </section>
 
 <section data-background-iframe="demo2-compression/3-logistic-1d.html" data-background-interactive></section>
 <section data-background-iframe="demo2-compression/4-adaptive-image.html" data-background-interactive></section>
 
 <section>
-  <h2>A fit with adaptive functions is a neural network layer</h2>
+  <h2>This kind of fit function is a neural network layer</h2>
   <div class="cite"><a href="https://doi.org/10.1007/BF02551274" target="_blank" rel="noopener">G. Cybenko, <i>Approximation by superpositions of a sigmoidal function</i> (1989).</a></div>
 
   <img style="height: 700px; display: block; margin: 0 auto;" src="img/real_neuron_artificial_neurons-0.svg">
 </section>
 
 <section>
-  <h2>A fit with adaptive functions is a neural network layer</h2>
+  <h2>This kind of fit function is a neural network layer</h2>
   <div class="cite"><a href="https://doi.org/10.1007/BF02551274" target="_blank" rel="noopener">G. Cybenko, <i>Approximation by superpositions of a sigmoidal function</i> (1989).</a></div>
 
   <img style="height: 700px; display: block; margin: 0 auto;" src="img/real_neuron_artificial_neurons.svg">
@@ -421,7 +439,7 @@
   <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Generalization</h2>
 </section>
 
-<section data-background-iframe="demo3-generalization/1-overfit.html" data-background-interactive></section>
+<!-- <section data-background-iframe="demo3-generalization/1-overfit.html" data-background-interactive></section> -->
 
 <section>
   <h2>Memorization versus generalization</h2>
