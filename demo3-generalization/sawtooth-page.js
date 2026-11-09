@@ -133,12 +133,16 @@
       const L = net.L - 1, mid = NET.y + NET.h / 2, BW = 80, BH = 64, ys = D.stack(2, mid, BH + 60);
       const left = 40 + BW / 2, step = (NET.w - 70 - BW / 2 - left) / (CFG.deep.max + 1);
       const cx = (i) => left + step * i;   // column centers: x, the layers, the output
-      // edges first, under the boxes; into a box with two inputs, they arrive at different heights
+      // edges first, under the boxes. Between two layers, the edge from the node at the same height
+      // goes straight across, and the one crossing over from the other node arrives a little to the
+      // side it comes from, so the two are clearly separate lines; likewise the two into the output.
+      const GAP = 14;
       for (let k = 0; k <= L; k++) {
         const W = net.W[k], m = net.sizes[k], h = net.sizes[k + 1], wm = D.maxAbs(W);
         const from = m === 1 ? [mid] : ys, to = h === 1 ? [mid] : ys;
         for (let i = 0; i < m; i++) for (let j = 0; j < h; j++) {
-          const dy = m === 2 ? (i === 0 ? -1 : 1) * BH / 4 : 0;
+          const side = i === 0 ? -1 : 1;
+          const dy = m === 1 ? 0 : h === 1 ? side * GAP / 2 : i !== j ? side * GAP : 0;
           D.edge(c, cx(k) + BW / 2, from[i], cx(k + 1) - BW / 2, to[j] + dy, W[i * h + j], wm);
         }
       }
