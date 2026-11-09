@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<title>Demo 3: samples from a probability distribution</title>
+<link rel="stylesheet" href="../common/stage.css">
+<!-- Embedded in the lower part of an ordinary slide ("Memorization versus generalization" in index.html),
+     so the stage is the size of that iframe, 1420 x 428, not a whole slide. Drawn in SVG, not canvas,
+     because reveal.js scales the slide (and this iframe in it) with a CSS transform: vectors stay sharp. -->
+<style>
+  #stage { width: 1420px; height: 428px; }
+  svg { position: absolute; display: block; overflow: visible; }
+  /* each set of samples slides down a row (and the oldest fades away) when a new set arrives */
+  .set { transition: transform 0.45s ease-in-out, opacity 0.45s ease-in-out; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/stage.js"></script>
+<script src="../common/optim.js"></script>
+<script>
+"use strict";
+const C = Stage.COLORS;
+const NS = "http://www.w3.org/2000/svg";
+
+// A softly bimodal distribution on [0, 1]: two overlapping bumps of the form (1 - u^2)^2 (zero outside
+// |u| < 1, so the support is 0.06 to 0.94, inside the plot). The small bump has 22% of the probability,
+// so of 5 samples, none land in it 29% of the time, one 41%, two 23%, and three or more 7%.
+const BUMPS = [
+  { c: 0.36, h: 0.30, w: 0.78 },
+  { c: 0.76, h: 0.18, w: 0.22 },
+];
+const bump = (x, b) => { const t = (x - b.c) / b.h; return Math.abs(t) < 1 ? b.w * (15 / 16) / b.h * (1 - t * t) ** 2 : 0; };
+const density = (x) => BUMPS.reduce((s, b) => s + bump(x, b), 0);
+const u = Optim.rng();
+function sample() {
+  let r = u(), b = BUMPS[BUMPS.length - 1];
+  for (const q of BUMPS) { if (r < q.w) { b = q; break; } r -= q.w; }
+  for (;;) {   // rejection sampling within the chosen bump
+    const t = 2 * u() - 1;
+    if (u() < (1 - t * t) ** 2) return b.c + b.h * t;
+  }
+}
+
+function svg(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+
+// ---- the probability density on top, the rows of samples below it
+const X0 = 90, XW = 1040;             // x = 0 to 1 spans these pixels (labels to the left)
+const X = (x) => X0 + x * XW;
+const BASE = 160, TOP = 8;            // the density's baseline and the height of its peak
+const PMAX = Math.max(...Array.from({ length: 500 }, (_, i) => density(i / 499)));
+// the curve is drawn only over the support, so the grey baseline shows where the density is zero
+const LO = Math.min(...BUMPS.map((b) => b.c - b.h)), HI = Math.max(...BUMPS.map((b) => b.c + b.h));
+const SX = Array.from({ length: 500 }, (_, i) => LO + (HI - LO) * i / 499);
+const Y = (p) => BASE - p / PMAX * (BASE - TOP);
+const ROW0 = 210, ROWGAP = 49, ROWS = 5;   // the newest set is at ROW0, the oldest of ROWS at the bottom
+const rowY = (k) => ROW0 + k * ROWGAP;
+
+const plot = svg("svg", { width: 1420, height: 428 }, document.getElementById("stage"));
+svg("line", { x1: X(0), x2: X(1), y1: BASE, y2: BASE, stroke: "#bbb", "stroke-width": 2 }, plot);
+svg("path", {
+  d: SX.map((x, i) => (i ? "L" : "M") + X(x).toFixed(1) + " " + Y(density(x)).toFixed(1)).join(""),
+  fill: "none", stroke: C.orange, "stroke-width": 4, "stroke-linejoin": "round",
+}, plot);
+// the axis label, styled like f(x) on the "Fitting data" slide
+const label = svg("text", { x: X0 - 14, y: (TOP + BASE) / 2 + 9, "text-anchor": "end", "font-size": 25, "font-style": "italic", fill: "#000", "font-family": C.font }, plot);
+label.textContent = "P(x)";
+const sets = svg("g", {}, plot);
+
+// each set is a line with 5 points on it, positioned by a CSS transform so that it can glide
+let live = [], trial = 0;   // newest first
+function place(g, k, opacity) {
+  g.style.transform = `translateY(${rowY(k)}px)`;
+  g.style.opacity = opacity;
+}
+function generate() {
+  const g = svg("g", { class: "set" }, sets);
+  svg("line", { x1: X(0), x2: X(1), y1: 0, y2: 0, stroke: "#ddd", "stroke-width": 1.5 }, g);
+  const n = svg("text", { x: X0 - 14, y: 8, "text-anchor": "end", "font-size": 22, fill: C.grey, "font-family": C.font }, g);
+  n.textContent = ++trial;
+  for (let i = 0; i < 5; i++) svg("circle", { cx: X(sample()), cy: 0, r: 7, fill: C.blue, stroke: "#fff", "stroke-width": 1.7 }, g);
+  // a new set drops in from just under the density
+  g.style.transform = `translateY(${rowY(0) - 30}px)`;
+  g.style.opacity = 0;
+  g.getBoundingClientRect();   // (so the transition starts from there)
+  live.unshift(g);
+  live.forEach((s, k) => place(s, k, k < ROWS ? 1 : 0));
+  for (const s of live.splice(ROWS)) setTimeout(() => s.remove(), 500);
+}
+
+const bar = Stage.controls({ x: 1180, y: 0, w: 240, h: 428 });
+bar.style.justifyContent = "center";
+Stage.button("generate", generate, bar, { cls: "primary" });
+document.addEventListener("keydown", (e) => { if (e.key === " ") { e.preventDefault(); generate(); } });
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<title>Demo 3.0b: a sawtooth with many narrow layers</title>
+<link rel="stylesheet" href="../common/stage.css">
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/stage.js"></script>
+<script src="../common/plots.js"></script>
+<script src="../common/optim.js"></script>
+<script src="nn-diagram.js"></script>
+<script src="sawtooth.js"></script>
+<script src="sawtooth-page.js"></script>
+<script>
+"use strict";
+window.demo = SawPage.run({ kind: "deep" });
+Stage.nav("0a-sawtooth-wide.html", "1-overfit.html");
+</script>
+</body>
+</html>

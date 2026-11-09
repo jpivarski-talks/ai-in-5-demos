@@ -439,23 +439,33 @@
   <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Generalization</h2>
 </section>
 
+<section data-background-iframe="demo3-generalization/0a-sawtooth-wide.html" data-background-interactive></section>
+<section data-background-iframe="demo3-generalization/0b-sawtooth-deep.html" data-background-interactive></section>
+
 <!-- <section data-background-iframe="demo3-generalization/1-overfit.html" data-background-interactive></section> -->
 
 <section>
   <h2>Memorization versus generalization</h2>
 
-  <br>
-  <p>Data come from measurements of semi-random processes. New data points from the same process are not exactly equal to old data points. They have the same statistical patterns.</p>
+  <p>When we’re <span class="bold">compressing</span> a dataset, we want the fit function to <span class="bold">memorize</span> it exactly.</p>
 
   <br>
-  <p class="fragment">An exact fit to one dataset that doesn’t fit new data from the same process is a good <span class="bold">compression</span> of the first dataset, but not a good <span class="bold">predictor</span> of the process.</p>
+  <p>When we’re <span class="bold">predicting</span> or <span class="bold">generating</span> new data, we want it to <span class="bold">generalize</span> from the given data to the probability distribution that generated it.</p>
 
-  <br>
-  <p class="fragment">For <span class="bold">prediction</span> and <span class="bold">generation</span> of new data, we want models that generalize.</p>
+  <iframe class="at" style="left: 90px; top: 460px; width: 1420px; height: 428px; border: none;" data-src="demo3-generalization/generate-samples.html"></iframe>
+
+  <!-- <br> -->
+  <!-- <p>Data come from measurements of semi-random processes. New data points from the same process are not exactly equal to old data points. They have the same statistical patterns.</p> -->
+
+  <!-- <br> -->
+  <!-- <p class="fragment">An exact fit to one dataset that doesn’t fit new data from the same process is a good <span class="bold">compression</span> of the first dataset, but not a good <span class="bold">predictor</span> of the process.</p> -->
+
+  <!-- <br> -->
+  <!-- <p class="fragment">For <span class="bold">prediction</span> and <span class="bold">generation</span> of new data, we want models that generalize.</p> -->
 </section>
 
 <section>
-  <h2>Chaining adaptive fits</h2>
+  <h2>Chaining fit functions</h2>
 
   <p>Connect the output of one artificial neuron to the input of the next.</p>
 

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<title>Demo 2: a fit function built from four logistics</title>
+<link rel="stylesheet" href="../common/stage.css">
+<!-- Embedded in the lower part of an ordinary slide ("Building a fit function" in index.html), so the
+     stage is the size of that iframe, 1420 x 340, not a whole slide. Drawn in SVG, not canvas,
+     because reveal.js scales the slide (and this iframe in it) with a CSS transform: vectors stay sharp. -->
+<style>
+  #stage { width: 1420px; height: 340px; }
+  svg { position: absolute; display: block; overflow: visible; }
+  .term {
+    position: absolute; box-sizing: border-box; width: 210px;   /* height: set below, from the data box */
+    display: flex; align-items: center; gap: 4px; padding-left: 12px;
+    border: 2px solid var(--light); border-radius: 10px; cursor: pointer;
+  }
+  .term:hover { background: #fafafa; }
+  /* the real checkbox is invisible; .box is drawn in its place, filled with the term's color (--c) when checked */
+  .term input { position: absolute; opacity: 0; pointer-events: none; }
+  .term .box {
+    box-sizing: border-box; width: 34px; height: 34px; flex: none;
+    border: 2px solid #999; border-radius: 6px; background: #fff;
+  }
+  .term .box svg { display: none; }
+  .term input:checked + .box { background: var(--c); border-color: var(--c); }
+  .term input:checked + .box svg { display: block; }
+  .term input:focus-visible + .box { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .term svg { position: static; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/stage.js"></script>
+<script src="../common/optim.js"></script>
+<script>
+"use strict";
+const C = Stage.COLORS;
+const NS = "http://www.w3.org/2000/svg";
+const logistic = (x, x0, w, A) => A / (1 + Math.exp(-(x - x0) / w));
+
+// The four terms, in the order of the checkboxes (not left to right): the data are their sum plus
+// noise, and every one is big enough that leaving it out misses the data by a lot.
+const TERMS = [
+  { x0: 0.36, w: 0.085, A: 2.4 },    // soft, high, rising
+  { x0: 0.63, w: 0.004, A: -1.2 },   // sharp, falling
+  { x0: 0.15, w: 0.008, A: 0.7 },    // sharp, low, rising
+  { x0: 0.84, w: 0.035, A: -1.9 },   // fairly soft, high, falling
+];
+const BASE = 0;
+
+const N = 100, u = Optim.rng(12);
+const xs = Array.from({ length: N }, (_, i) => i / (N - 1));
+const ys = xs.map((x) => TERMS.reduce((s, t) => s + logistic(x, t.x0, t.w, t.A), BASE) + 0.07 * u.normal());
+const FX = Array.from({ length: 400 }, (_, i) => i / 399);
+
+function svg(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+// maps [0, 1] x ylim onto a rectangle
+function axes(r, ylim) {
+  return {
+    X: (x) => r.x + x * r.w,
+    Y: (y) => r.y + r.h - (y - ylim[0]) / (ylim[1] - ylim[0]) * r.h,
+  };
+}
+function path(ax, f) {
+  return FX.map((x, i) => (i ? "L" : "M") + ax.X(x).toFixed(1) + " " + ax.Y(f(x)).toFixed(1)).join("");
+}
+
+// ---- the data and the fit, on the left (styled like the curve fit on the "Fitting data" slide)
+const R = { x: 70, y: 6, w: 880, h: 290 };
+const ax = axes(R, [-0.4, 3.4]);
+const plot = svg("svg", { width: 1420, height: 340 }, document.getElementById("stage"));
+svg("clipPath", { id: "frame" }, svg("defs", {}, plot)).appendChild(svg("rect", { x: R.x, y: R.y, width: R.w, height: R.h }));
+svg("rect", { x: R.x, y: R.y, width: R.w, height: R.h, fill: "none", stroke: "#bbb", "stroke-width": 1.5 }, plot);
+const inside = svg("g", { "clip-path": "url(#frame)" }, plot);
+for (let i = 0; i < N; i++) svg("circle", { cx: ax.X(xs[i]), cy: ax.Y(ys[i]), r: 5.5, fill: C.blue, stroke: "#fff", "stroke-width": 1.7 }, inside);
+const fitLine = svg("path", { fill: "none", stroke: C.orange, "stroke-width": 4, "stroke-linejoin": "round" }, inside);
+const label = (text, x, y, anchor) => {
+  const t = svg("text", { x, y, "text-anchor": anchor, "font-size": 25, "font-style": "italic", fill: "#000", "font-family": C.font }, plot);
+  t.textContent = text;
+};
+label("x", R.x + R.w / 2, R.y + R.h + 30, "middle");
+label("f(x)", R.x - 8, R.y + R.h / 2 + 9, "end");
+
+// ---- the bank of checkboxes, on the right, each labeled by a plot of its term
+// (all on the same vertical scale, so the heights can be compared); the bank spans the data box's height
+const GAP = 14, TW = 210, TH = (R.h - GAP) / 2, TX = 1420 - 2 * TW - GAP;
+const thumbAx = axes({ x: 4, y: 6, w: 134, h: 108 }, [-2.6, 2.6]);
+const on = TERMS.map(() => 0);        // how far each term is switched on, animated from 0 to 1
+const target = TERMS.map(() => 0);
+TERMS.forEach((t, k) => {
+  const box = Stage.el("label", { class: "term" });
+  Object.assign(box.style, { left: TX + (k % 2) * (TW + GAP) + "px", top: R.y + Math.floor(k / 2) * (TH + GAP) + "px", height: TH + "px" });
+  box.style.setProperty("--c", C.orange);
+  const input = Stage.el("input", { type: "checkbox" }, box);
+  const check = svg("svg", { width: 30, height: 30, viewBox: "0 0 30 30" }, Stage.el("span", { class: "box" }, box));
+  svg("path", { d: "M7 15.5l5 5 11-11", fill: "none", stroke: "#fff", "stroke-width": 4, "stroke-linecap": "round", "stroke-linejoin": "round" }, check);
+  const g = svg("svg", { width: 152, height: 120 }, box);
+  svg("line", { x1: thumbAx.X(0), x2: thumbAx.X(1), y1: thumbAx.Y(0), y2: thumbAx.Y(0), stroke: "#ddd", "stroke-width": 1.5 }, g);
+  svg("path", { d: path(thumbAx, (x) => logistic(x, t.x0, t.w, t.A)), fill: "none", stroke: C.orange, "stroke-width": 3.5, "stroke-linejoin": "round" }, g);
+  input.addEventListener("change", () => {
+    target[k] = input.checked ? 1 : 0;
+    box.style.borderColor = input.checked ? C.orange : "";
+  });
+});
+
+function drawFit() {
+  const e = on.map((a) => a * a * (3 - 2 * a));   // eased
+  fitLine.setAttribute("d", path(ax, (x) => TERMS.reduce((s, t, k) => s + e[k] * logistic(x, t.x0, t.w, t.A), BASE)));
+}
+// a term slides into (or out of) the fit over a third of a second
+Stage.loop((dt) => {
+  let moved = false;
+  for (let k = 0; k < TERMS.length; k++) {
+    if (on[k] === target[k]) continue;
+    on[k] = target[k] > on[k] ? Math.min(target[k], on[k] + dt * 3) : Math.max(target[k], on[k] - dt * 3);
+    moved = true;
+  }
+  if (moved) drawFit();
+});
+drawFit();
+</script>
+</body>
+</html>
