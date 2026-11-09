@@ -64,7 +64,11 @@
   position: absolute; top: 16px; right: 90px; margin: 0;
   text-align: right; font-size: 18px; line-height: 1.3; color: var(--grey);
 }
-.reveal .cite > * { display: block; }
+/* items are inline (one per line via the ::before line break) so only the text itself is clickable,
+   and the box ignores the pointer so clicks beside the text reach whatever is underneath */
+.reveal .cite { pointer-events: none; }
+.reveal .cite > * { display: inline; pointer-events: auto; }
+.reveal .cite > * + *::before { content: "\A"; white-space: pre; }
 .reveal .cite a { color: var(--grey); text-decoration: none; }
 .reveal .cite a:hover { color: #bbb; }
 .reveal .cite i { font-style: italic; }   /* titles; reveal's reset.css turns <i> off */
