@@ -202,7 +202,6 @@
     if (embedded) return;
     const d = el("div", { class: "nav" });
     if (prev) el("a", { href: prev, html: "&larr;" }, d);
-    el("a", { href: rootPath() + "demos.html", html: "&#9776;" }, d);
     if (next) el("a", { href: next, html: "&rarr;" }, d);
     document.addEventListener("keydown", (e) => {
       const t = e.target;
@@ -210,11 +209,6 @@
       if (e.key === "ArrowLeft" && prev) location.href = prev;
       if (e.key === "ArrowRight" && next) location.href = next;
     });
-  }
-
-  function rootPath() {
-    // pages live one directory below the repo root
-    return "../";
   }
 
   // animation loop helper: f(dt_seconds, now_ms); returns a stop function

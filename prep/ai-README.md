@@ -2,14 +2,14 @@
 
 Interactive widgets for an introduction to AI: optimization → compression → generalization → attention → few-shot learning. Every page is a 16:9 stage (1600×900, scaled to fit the window or an `<iframe>`). They share one layout: the main view on the left, controls below it, the big readout at the top right, and the history plot at the bottom right.
 
-[`index.html`](index.html) is the talk (below). [`demos.html`](demos.html) lists the demo pages on their own; ←/→ step between them. The navigation arrows hide automatically inside an iframe, or with `?embed` in the URL.
+[`index.html`](index.html) is the talk (below). Each demo page also opens on its own, for working on it; ←/→ step between them. The navigation arrows hide automatically inside an iframe, or with `?embed` in the URL.
 
-There's no build step. Each page is plain HTML and JavaScript. The only library is TensorFlow.js 4.22.0, vendored in `lib/` so the pages work offline.
+There's no build step. Each page is plain HTML and JavaScript. The only library is TensorFlow.js 4.22.0, vendored in `lib/` so the pages work offline. In the talk, the demos that use it share `index.html`'s copy (`common/tf-host.js`, lent to them by `common/tf.js`), which compiles their GPU programs in invisible iframes while the first slides are up, so the first click of **optimize** doesn't freeze; a demo page on its own loads its own copy.
 
 ## Running
 
 ```bash
-python3 -m http.server 8000        # then open http://localhost:8000/ (the talk) or http://localhost:8000/demos.html
+python3 -m http.server 8000        # then open http://localhost:8000/ (the talk)
 ```
 
 or use GitHub Pages (Settings → Pages → deploy from the `main` branch, root folder). Demos 1–3 also work straight from `file://`. Demos 4 and 5 fetch files, so they need a server.

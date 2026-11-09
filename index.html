@@ -135,14 +135,14 @@
 <!--   <div> -->
 <!--     <p>Cultural metaphors:</p> -->
 <!--     <table class="timeline"> -->
-<!--       <tr class="timeline_orange fragment"><td>1950's:</td><td><span class="bold">Oracle,</span> a giant brain you approach with questions</td></tr> -->
-<!--       <tr class="timeline_blue fragment"><td>1960's:</td><td><span class="bold">Bureaucracy,</span> a filing cabinet for big companies and government</td></tr> -->
-<!--       <tr class="timeline_blue fragment"><td>1970's:</td><td><span class="bold">Hobby,</span> homebrew, hacking, “computer lib,” video games</td></tr> -->
-<!--       <tr class="timeline_blue fragment"><td>1980's:</td><td><span class="bold">Personal desktop,</span> spreadsheets, tools, “bicycle of the mind”</td></tr> -->
-<!--       <tr class="timeline_blue fragment"><td>1990's:</td><td><span class="bold">Place,</span> cyberspace, superhighway, “my ’lil corner of the Internet”</td></tr> -->
-<!--       <tr class="timeline_blue fragment"><td>2000's:</td><td><span class="bold">Open mic,</span> decentralized communication, the bazaar, the commons</td></tr> -->
-<!--       <tr class="timeline_blue fragment"><td>2010's:</td><td><span class="bold">Platform,</span> the cloud, social mirror, the Feed/the Algorithm</td></tr> -->
-<!--       <tr class="timeline_orange fragment"><td>2020's:</td><td><span class="bold">Chatbot,</span> genie, copilot, stochastic parrot…</td></tr> -->
+<!--       <tr class="timeline_orange fragment"><td>1950’s:</td><td><span class="bold">Oracle,</span> a giant brain you approach with questions</td></tr> -->
+<!--       <tr class="timeline_blue fragment"><td>1960’s:</td><td><span class="bold">Bureaucracy,</span> a filing cabinet for big companies and government</td></tr> -->
+<!--       <tr class="timeline_blue fragment"><td>1970’s:</td><td><span class="bold">Hobby,</span> homebrew, hacking, “computer lib,” video games</td></tr> -->
+<!--       <tr class="timeline_blue fragment"><td>1980’s:</td><td><span class="bold">Personal desktop,</span> spreadsheets, tools, “bicycle of the mind”</td></tr> -->
+<!--       <tr class="timeline_blue fragment"><td>1990’s:</td><td><span class="bold">Place,</span> cyberspace, superhighway, “my ’lil corner of the Internet”</td></tr> -->
+<!--       <tr class="timeline_blue fragment"><td>2000’s:</td><td><span class="bold">Open mic,</span> decentralized communication, the bazaar, the commons</td></tr> -->
+<!--       <tr class="timeline_blue fragment"><td>2010’s:</td><td><span class="bold">Platform,</span> the cloud, social mirror, the Feed/the Algorithm</td></tr> -->
+<!--       <tr class="timeline_orange fragment"><td>2020’s:</td><td><span class="bold">Chatbot,</span> genie, copilot, stochastic parrot…</td></tr> -->
 <!--     </table> -->
 <!--   </div> -->
 
@@ -154,7 +154,13 @@
 <!-- </section> -->
 
 <section>
-  <h2>Computers are what our grandparents thought they'd be</h2>
+  <h2>Computers are what our grandparents thought they’d be</h2>
+
+  <p>Before most people had personal experience with computers, 
+
+</p>
+
+
 
   <p>After 70 years, something happened to make this hope/fear possible.</p>
 
@@ -220,7 +226,7 @@
   </div>
 
   <div class="fragment">
-    <p>Farmers don't manually arrange the individual cells of the plants in their fields.</p>
+    <p>Farmers don’t manually arrange the individual cells of the plants in their fields.</p>
     <p>They manipulate the conditions for growth so the plants can make themselves.</p>
   </div>
 
@@ -355,7 +361,7 @@
 <!-- <section> -->
 <!--   <h2>The problem with templates</h2> -->
 
-<!--   <p>It's common for real datasets to have localized detail and broad regions without much detail. Templates with fixed shapes struggle to fit data like that.</p> -->
+<!--   <p>It’s common for real datasets to have localized detail and broad regions without much detail. Templates with fixed shapes struggle to fit data like that.</p> -->
 
 <!--   <img style="height: 300px; display: block; margin: 0 auto;" src="img/spike_fit.svg"> -->
 
@@ -364,11 +370,11 @@
 <!-- </section> -->
 
 <section>
-  <h2>Adaptive fit functions</h2>
+  <h2>Fitting arbitrary data</h2>
 
-  <p>Instead of a fixed set of templates that can only be scaled vertically, let's use S-shaped curves that can be placed and scaled horizontally as well as scaled vertically.</p>
+  <p>Instead of a fixed set of templates that can only be scaled vertically, let’s use S-shaped curves that can be placed and scaled horizontally as well as scaled vertically.</p>
 
-  <img style="height: 200px; display: block; margin: 0 auto;" src="img/scaling_freedom.svg">
+  <img style="height: 200px; display: block; margin: 0 auto;" src="img/scaling_logistic.svg">
 
   <div class="fragment" style="margin-top: 20px;">
     <p>Now we can fit localized detail better.</p>
@@ -424,7 +430,7 @@
   <p>Data come from measurements of semi-random processes. New data points from the same process are not exactly equal to old data points. They have the same statistical patterns.</p>
 
   <br>
-  <p class="fragment">An exact fit to one dataset that doesn't fit new data from the same process is a good <span class="bold">compression</span> of the first dataset, but not a good <span class="bold">predictor</span> of the process.</p>
+  <p class="fragment">An exact fit to one dataset that doesn’t fit new data from the same process is a good <span class="bold">compression</span> of the first dataset, but not a good <span class="bold">predictor</span> of the process.</p>
 
   <br>
   <p class="fragment">For <span class="bold">prediction</span> and <span class="bold">generation</span> of new data, we want models that generalize.</p>
@@ -482,7 +488,7 @@
   </ul>
 
   <br>
-  <p class="fragment">Encodings like a = 1, b = 2, c = 3 or apple = 1, ball = 2, cat = 3 are not very efficient because they don't capture the meanings of words or how words relate to other words.</p>
+  <p class="fragment">Encodings like a = 1, b = 2, c = 3 or apple = 1, ball = 2, cat = 3 are not very efficient because they don’t capture the meanings of words or how words relate to other words.</p>
 </section>
 
 <section data-background-iframe="demo4-attention/1-embedding.html" data-background-interactive></section>
@@ -579,7 +585,7 @@
   </div>
 
   <br>
-  <p class="fragment" data-fragment-index="2">Remember that it's like a JPEG, approximating the details:</p>
+  <p class="fragment" data-fragment-index="2">Remember that it’s like a JPEG, approximating the details:</p>
 
   <div class="jpeg-demo fragment" data-fragment-index="2">
     <div class="jd-wrap" style="width: 800px;">
@@ -658,7 +664,7 @@
   <div class="cite"><a class="fragment" data-fragment-index="2" href="https://doi.org/10.48550/arXiv.2203.02155" target="_blank" rel="noopener">L. Ouyang et al., <i>Training language models to follow instructions with human feedback</i> (2022).</a><a class="fragment" data-fragment-index="3" href="https://doi.org/10.48550/arXiv.2411.15124" target="_blank" rel="noopener">N. Lambert et al., <i>Tülu 3: Pushing Frontiers in Open Language Model Post-Training</i> (2024).</a></div>
 
   <br>
-  <p>The difference between this “raw” LLM and what you've used is refinement.</p>
+  <p>The difference between this “raw” LLM and what you’ve used is refinement.</p>
 
   <br>
   <p class="fragment" data-fragment-index="1">Now nearly all LLMs are further trained on text in the form of stage directions between two characters, “Assistant” and “User”, with the LLM only completing the “Assistant” messages.</p>
@@ -677,7 +683,7 @@
 <section>
   <h2>Basic chatbot = LLM + transcript</h2>
 
-  <p>An LLM has no memory: it only knows what's been said because it's in the transcript.</p>
+  <p>An LLM has no memory: it only knows what’s been said because it’s in the transcript.</p>
 
   <img style="height: 640px; display: block; margin: 0 auto;" src="img/basic-chatbot.png">
 </section>
@@ -731,9 +737,9 @@
   </div>
 
   <br>
-  <p class="fragment">Now it's correct every time.</p>
+  <p class="fragment">Now it’s correct every time.</p>
 
-  <p class="fragment">We're only relying on its ability to summarize what it found, which is much more accurate.</p>
+  <p class="fragment">We’re only relying on its ability to summarize what it found, which is much more accurate.</p>
 
 </section>
 
@@ -741,7 +747,7 @@
   <h2>An internal tool: “reasoning”</h2>
   <div class="cite"><a href="https://doi.org/10.48550/arXiv.2201.11903" target="_blank" rel="noopener">J. Wei et al., <i>Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</i> (2022).</a><a href="https://doi.org/10.1038/s41586-025-09422-z" target="_blank" rel="noopener">D. Guo et al., <i>DeepSeek-R1 incentivizes reasoning in LLMs through reinforcement learning</i> (2025).</a></div>
 
-  <p>A complex problem is more likely to be solved correctly if it's a summary of a long transcript with the problem broken down into steps. Intermediate transcripts are not shown to the user.</p>
+  <p>A complex problem is more likely to be solved correctly if it’s a summary of a long transcript with the problem broken down into steps. Intermediate transcripts are not shown to the user.</p>
 
   <p>This is the “reasoning effort” knob (low/medium/high) in typical chatbots.</p>
 
@@ -788,10 +794,10 @@
   <p class="fragment">Deep neural networks, the attention mechanism, and many other advancements of the past few decades are <span class="italic">detector technologies</span> that <span class="italic">discovered</span> this fact about human-generated text.</p>
 
   <br>
-  <p class="fragment">If there's an oracle—or golem—in modern chatbots, it's something that had always been latent in our text, for thousands of years.</p>
+  <p class="fragment">If there’s an oracle—or golem—in modern chatbots, it’s something that had always been latent in our text, for thousands of years.</p>
 
   <br>
-  <p class="fragment">What we've been doing since 2022 is working through the consequences of that discovery.</p>
+  <p class="fragment">What we’ve been doing since 2022 is working through the consequences of that discovery.</p>
 </section>
 
 <section>
@@ -800,14 +806,14 @@
   <div>
     <p>Cultural metaphors:</p>
     <table class="timeline">
-      <tr class="timeline_orange2"><td>1950's:</td><td><span class="bold">Oracle,</span> a giant brain you approach with questions</td></tr>
-      <tr class="timeline_blue2"><td>1960's:</td><td><span class="bold">Bureaucracy,</span> a filing cabinet for big companies and government</td></tr>
-      <tr class="timeline_blue2"><td>1970's:</td><td><span class="bold">Hobby,</span> homebrew, hacking, “computer lib,” video games</td></tr>
-      <tr class="timeline_blue2"><td>1980's:</td><td><span class="bold">Personal desktop,</span> spreadsheets, tools, “bicycle of the mind”</td></tr>
-      <tr class="timeline_blue2"><td>1990's:</td><td><span class="bold">Place,</span> cyberspace, superhighway, “my ’lil corner of the Internet”</td></tr>
-      <tr class="timeline_blue2"><td>2000's:</td><td><span class="bold">Open mic,</span> decentralized communication, the bazaar, the commons</td></tr>
-      <tr class="timeline_blue2"><td>2010's:</td><td><span class="bold">Platform,</span> the cloud, social mirror, the Feed/the Algorithm</td></tr>
-      <tr class="timeline_orange2"><td>2020's:</td><td><span class="bold">Chatbot,</span> genie, copilot, stochastic parrot…</td></tr>
+      <tr class="timeline_orange2"><td>1950’s:</td><td><span class="bold">Oracle,</span> a giant brain you approach with questions</td></tr>
+      <tr class="timeline_blue2"><td>1960’s:</td><td><span class="bold">Bureaucracy,</span> a filing cabinet for big companies and government</td></tr>
+      <tr class="timeline_blue2"><td>1970’s:</td><td><span class="bold">Hobby,</span> homebrew, hacking, “computer lib,” video games</td></tr>
+      <tr class="timeline_blue2"><td>1980’s:</td><td><span class="bold">Personal desktop,</span> spreadsheets, tools, “bicycle of the mind”</td></tr>
+      <tr class="timeline_blue2"><td>1990’s:</td><td><span class="bold">Place,</span> cyberspace, superhighway, “my ’lil corner of the Internet”</td></tr>
+      <tr class="timeline_blue2"><td>2000’s:</td><td><span class="bold">Open mic,</span> decentralized communication, the bazaar, the commons</td></tr>
+      <tr class="timeline_blue2"><td>2010’s:</td><td><span class="bold">Platform,</span> the cloud, social mirror, the Feed/the Algorithm</td></tr>
+      <tr class="timeline_orange2"><td>2020’s:</td><td><span class="bold">Chatbot,</span> genie, copilot, stochastic parrot…</td></tr>
     </table>
   </div>
 
@@ -825,6 +831,9 @@
 
 <script src="lib/reveal/reveal.js"></script>
 <script src="lib/reveal/plugin/notes.js"></script>
+<!-- one copy of TensorFlow.js, shared by the demos that use it (see common/tf-host.js) -->
+<script src="lib/tf.min.js"></script>
+<script src="common/tf-host.js"></script>
 <script>
 Reveal.initialize({
   // a fixed 1600 x 900 canvas, like the demos, scaled to fit the window
@@ -865,6 +874,13 @@ function focusSlide() {
   attempt();
 }
 Reveal.on("ready", focusSlide);
+// compile the TensorFlow.js demos' GPU programs now, unseen, so they don't freeze on first use
+Reveal.on("ready", () => TFHost.warmUp([
+  "demo2-compression/4-adaptive-image.html",
+  "demo3-generalization/1-overfit.html",
+  "demo3-generalization/2-circle.html",
+  "demo3-generalization/3-spirals.html",
+]));
 Reveal.on("slidechanged", focusSlide);
 
 // While R is held down, outline the 1600 x 900 slide, shade the rest of the window, and say how
