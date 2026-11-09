@@ -2,8 +2,8 @@
 // a wide plot of the data and the fit on top, the network below it, the loss at the right, and
 // "new start", "optimize", and a number field for the size of the network in the controls.
 //   SawPage.run({ kind: "wide" })   one hidden layer; the number field sets its number of nodes
-//   SawPage.run({ kind: "deep" })   two nodes per layer; the number field sets the number of layers,
-//                                   and a checkbox makes the teeth unequal ("asymmetric")
+//   SawPage.run({ kind: "deep" })   two nodes per layer; the number field sets the number of layers
+// On both, a checkbox makes the teeth unequal ("asymmetric").
 (function () {
   "use strict";
   const C = Stage.COLORS, D = NNDiagram;
@@ -50,8 +50,9 @@
       newFitter();
     }
     function newFitter() {
-      // (no more respawning once the fit is about as good as the noise allows)
-      fitter = new Saw.Fitter(net, data, { respawn: wide, rng: u, good: 1.5 * CFG.noise ** 2 + 5e-4 });
+      // (no more respawning once the fit is about as good as the noise allows: a little above the
+      // loss of the noiseless curve itself, so that even missing one of the small teeth is too much)
+      fitter = new Saw.Fitter(net, data, { respawn: wide, rng: u, good: data.noiseLoss + 3e-4 });
       history.clear();
       history.push(fitter.loss);
       history.draw();
@@ -194,18 +195,16 @@
       newStart();
     });
     num.addEventListener("keydown", (e) => { if (e.key === "Enter") num.blur(); });
-    if (!wide) {
-      Stage.el("div", { style: { width: "10px" } }, bar);
-      const check = Stage.el("label", { class: "field" }, bar);
-      const box = Stage.el("input", { type: "checkbox", name: "asymmetric" }, check);
-      Stage.el("span", { text: "asymmetric" }, check);
-      box.addEventListener("change", () => {
-        box.blur();
-        stop();
-        data = box.checked ? datasets.uneven : datasets.even;
-        newFitter();   // same network, new data
-      });
-    }
+    Stage.el("div", { style: { width: "10px" } }, bar);
+    const check = Stage.el("label", { class: "field" }, bar);
+    const box = Stage.el("input", { type: "checkbox", name: "asymmetric" }, check);
+    Stage.el("span", { text: "asymmetric" }, check);
+    box.addEventListener("change", () => {
+      box.blur();
+      stop();
+      data = box.checked ? datasets.uneven : datasets.even;
+      newFitter();   // same network, new data
+    });
     // space bar: optimize / stop (unless typing in the number field)
     document.addEventListener("keydown", (e) => {
       if (e.key !== " " || e.target === num) return;

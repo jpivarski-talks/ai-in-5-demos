@@ -33,7 +33,9 @@ const BUMPS = [
 ];
 const bump = (x, b) => { const t = (x - b.c) / b.h; return Math.abs(t) < 1 ? b.w * (15 / 16) / b.h * (1 - t * t) ** 2 : 0; };
 const density = (x) => BUMPS.reduce((s, b) => s + bump(x, b), 0);
-const u = Optim.rng();
+// seeded, so the talk always shows the same sequence: trials 1-3 all land in the big bump (left of the dip
+// at x = 0.617, by at least 0.04), then trials 4, 5, 6 put 1, 1, 0 points in the small one
+const u = Optim.rng(492);
 function sample() {
   let r = u(), b = BUMPS[BUMPS.length - 1];
   for (const q of BUMPS) { if (r < q.w) { b = q; break; } r -= q.w; }
@@ -68,9 +70,12 @@ svg("path", {
   d: SX.map((x, i) => (i ? "L" : "M") + X(x).toFixed(1) + " " + Y(density(x)).toFixed(1)).join(""),
   fill: "none", stroke: C.orange, "stroke-width": 4, "stroke-linejoin": "round",
 }, plot);
-// the axis label, styled like f(x) on the "Fitting data" slide
-const label = svg("text", { x: X0 - 14, y: (TOP + BASE) / 2 + 9, "text-anchor": "end", "font-size": 25, "font-style": "italic", fill: "#000", "font-family": C.font }, plot);
-label.textContent = "P(x)";
+// the axis labels, styled like f(x) and x on the "Fitting data" slide: P(x) to the left, x at the baseline's right end
+const label = (text, x, y, anchor) => {
+  svg("text", { x, y, "text-anchor": anchor, "font-size": 25, "font-style": "italic", fill: "#000", "font-family": C.font }, plot).textContent = text;
+};
+label("P(x)", X0 - 14, (TOP + BASE) / 2 + 9, "end");
+label("x", X(1) + 12, BASE + 8, "start");
 const sets = svg("g", {}, plot);
 
 // each set is a line with 5 points on it, positioned by a CSS transform so that it can glide

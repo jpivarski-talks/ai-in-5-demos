@@ -173,25 +173,37 @@
     return new URLSearchParams(location.search).has("embed");
   })();
 
+  // a field that takes typed text (where the arrows, Home, and End move the cursor), unlike a checkbox or button
+  const NOT_TEXT = ["checkbox", "radio", "button", "submit", "reset", "range", "color", "file", "image"];
+  const typingIn = (t) => !!t && (t.tagName === "TEXTAREA" || t.isContentEditable ||
+    (t.tagName === "INPUT" && !NOT_TEXT.includes((t.type || "").toLowerCase())));
+
   // Inside a slide deck (an iframe), keys pressed in the demo never reach the deck, so pass the
-  // slide-changing ones up to it: reveal.js accepts {"method": ...} messages from other windows.
-  // Arrows are left alone while typing in a text field (they move the cursor there); PageUp and
-  // PageDown, which is what a presentation clicker sends, always change the slide.
+  // slide-changing ones up to it: reveal.js accepts {"method": ..., "args": [...]} messages from other
+  // windows. The deck has no vertical slides, so like reveal.js itself: ← ↑ PageUp previous, → ↓ PageDown
+  // next, Home first slide, End last (Shift ← and Shift → too), Alt skips the fragments of a slide.
+  // Arrows, Home, and End are left alone while typing in a text field (they move the cursor there);
+  // PageUp and PageDown, which is what a presentation clicker sends, always change the slide.
   if (window.self !== window.top) {
     document.addEventListener("keydown", (e) => {
-      const t = e.target, typing = t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
-      let method = null;
-      if (e.key === "PageDown" || (e.key === "ArrowRight" && !typing)) method = "next";
-      if (e.key === "PageUp" || (e.key === "ArrowLeft" && !typing)) method = "prev";
-      if (!method) return;
+      if (e.ctrlKey || e.metaKey) return;
+      const typing = typingIn(e.target), step = [{ skipFragments: e.altKey }];
+      let msg = null;
+      if (e.key === "PageDown") msg = { method: "next", args: step };
+      else if (e.key === "PageUp") msg = { method: "prev", args: step };
+      else if (typing) return;
+      else if (e.key === "Home" || (e.key === "ArrowLeft" && e.shiftKey)) msg = { method: "slide", args: [0] };
+      else if (e.key === "End" || (e.key === "ArrowRight" && e.shiftKey)) msg = { method: "slide", args: [1e9] };   // reveal.js clamps to the last slide
+      else if (e.key === "ArrowRight" || e.key === "ArrowDown") msg = { method: "next", args: step };
+      else if (e.key === "ArrowLeft" || e.key === "ArrowUp") msg = { method: "prev", args: step };
+      if (!msg) return;
       e.preventDefault();
-      window.parent.postMessage(JSON.stringify({ method }), "*");
+      window.parent.postMessage(JSON.stringify(msg), "*");
     });
     // holding R shows the deck's 1600 x 900 boundary (see index.html)
     const isR = (e) => e.key.toLowerCase() === "r" && !e.ctrlKey && !e.metaKey && !e.altKey;
     document.addEventListener("keydown", (e) => {
-      const t = e.target, typing = t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
-      if (isR(e) && !typing) window.parent.postMessage({ aspectFrame: true }, "*");
+      if (isR(e) && !typingIn(e.target)) window.parent.postMessage({ aspectFrame: true }, "*");
     });
     document.addEventListener("keyup", (e) => {
       if (e.key.toLowerCase() === "r") window.parent.postMessage({ aspectFrame: false }, "*");

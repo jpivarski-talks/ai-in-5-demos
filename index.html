@@ -156,14 +156,14 @@
 <section>
   <h2>Computers are what our grandparents thought they’d be</h2>
 
-  <p class="fragment">When computers were first invented, the public thought of them in anthropomorphic terms: giant brains that scientists would ask questions.</p>
+  <p class="fragment">When computers were first invented, the public thought of them in anthropomorphic terms: giant brains that scientists would ask questions, like HAL in 2001.</p>
 
-  <p class="fragment">After the widespread growth of personal computing and the Internet, we've come to think of them as <span class="bold">things</span> or <span class="bold">places</span>: desktop, tool, game, cyberspace, platform, storefront, feed.</p>
+  <p class="fragment">After the widespread growth of personal computing and the Internet, we've come to think of them as a <span class="bold">thing</span> or a <span class="bold">place</span>: desktop, tool, game, cyberspace, platform, storefront, feed.</p>
 
-  <p class="fragment">Now computers <span class="italic">actually can</span> hold a conversation, like a giant brain.</p>
+  <p class="fragment">Now computers <span class="italic">actually can</span> hold a conversation, like HAL.</p>
 
   <div class="fragment">
-    <p>The purpose of this talk is to try to say what, exactly, happened, without anthropomorphizing.</p>
+    <p>The purpose of this talk is to understand what happened, without anthropomorphizing.</p>
 
     <div style="display: flex; justify-content: center; align-items: center; gap: 40px; height: 300px;">
       <img style="height: 100%;" src="img/not-this-chatbot.jpg">
@@ -173,7 +173,7 @@
 </section>
 
 <section>
-  <h2>Five demos</h2>
+  <h2>Five interactive demos</h2>
 
   <ol style="padding-left: 150px; margin-top: 100px;">
     <li style="margin-top: 30px;"><span class="bold">Optimization:</span> solving problems by “farming,” rather than “craftsmanship”
@@ -214,15 +214,14 @@
       <br>
       <ul>
         <li class="fragment" data-fragment-index="1">Details from optimization process
-        <li class="fragment" data-fragment-index="2">Complexity limited by training data and computational resources
+        <li class="fragment" data-fragment-index="2">Complexity limited by available data and computational resources
       </ul>
     </div>
   </div>
 
-  <div class="fragment">
-    <p>Farmers don’t manually arrange the individual cells of the plants in their fields.</p>
-    <p>They manipulate the conditions for growth so the plants can make themselves.</p>
-  </div>
+  <p class="fragment">Farmers don’t manually arrange the individual cells of the plants in their fields.</p>
+
+  <p class="fragment">They manipulate the conditions for growth so the plants can make themselves.</p>
 
 </section>
 
@@ -231,22 +230,24 @@
 <section data-background-iframe="demo1-optimization/3-optimize.html" data-background-interactive></section>
 
 <section>
-  <h2>Optimization</h2>
+  <h2>Recipe for optimization</h2>
 
   <br>
-  <p>We defined 15 free parameters (points on the slide) and a goal: minimize the rolling time.</p>
-
-  <br>
-  <p class="fragment">An optimizer wiggled all 15 parameters, keeping combinations that approach the goal and discarding combinations that take it farther away.</p>
-
-  <br>
-  <p class="fragment">Although this particular problem (brachistochrone) could be solved by hand, the technique is broad and applies to arbitrarily complex problems:</p>
-
   <ol>
-    <li class="fragment">Specify parameters that the optimizer is allowed to tune
-    <li class="fragment">Define a goal as a numerical score
-    <li class="fragment">Let the optimizer tune the parameters until the score is good enough
+    <li class="fragment">Specify parameters that the optimizer is allowed to tune.
+    <li class="fragment">Define a goal as a numerical score.
+    <li class="fragment">Let the optimizer tune the parameters until the score is good enough.
   </ol>
+
+  <br><br>
+  <div class="fragment">
+    <p>For the ball rolling down a slide (brachistochrone problem):</p>
+    <ol>
+      <li>The shape of the slide was specified in terms of 15 control points.
+      <li>The numerical goal was to minimize the rolling time.
+      <li>The optimization algorithm wiggled all parameters and favored combinations that reduced the rolling time.
+    </ol>
+  </div>
 
   <!-- <div class="fragment"> -->
   <!--   <p>Similar to “survival of the fittest,” but faster: an optimizer samples the rate of change and aims “downhill,” like this minimization of <span class="italic">f(x, y)</span> over 2 parameters, <span class="italic">x</span> and <span class="italic">y</span>: -->
@@ -283,18 +284,19 @@
 </section>
 
 <section>
-  <h2>Fitting data</h2>
+  <h2>But first, fitting data</h2>
 
-  <p>A major application of optimization: fitting a <span style="color: #f28c28;">theoretical curve</span> to <span style="color: #1f6fb4;">experimental data</span>.</p>
+  <p>This is a major application of optimization: fitting a <span style="color: #f28c28;">theoretical curve</span> to <span style="color: #1f6fb4;">experimental data</span>.</p>
 
   <img style="height: 300px; display: block; margin: 0 auto;" src="img/curve_fit.svg">
 
   <br>
   <p class="fragment">As an optimization problem:</p>
-  <ul>
-    <li class="fragment">The parameters control the shape of the theoretical curve.
-    <li class="fragment">The numerical goal is to minimize total distance between the curve and each data point.
-  </ul>
+  <ol>
+    <li class="fragment">Parameters control the shape of the theoretical curve.
+    <li class="fragment">The numerical goal is to minimize the distance between the curve and the data points.
+    <li class="fragment">Let the optimizer do its thing!
+  </ol>
 
   <!-- <p class="fragment">The data are: <span class="bold">finite in number</span> and <span class="bold">finite in range</span>.</p> -->
 
@@ -314,13 +316,13 @@
 
   <ul>
     <li><span class="bold">Fitting:</span> finding a theoretical curve that explains experimental data.
-    <li class="fragment"><span class="bold">Predicting:</span> using that curve to predict the values of new data before they are measured.
-    <li class="fragment"><span class="bold">Compression:</span> replacing the dataset with a curve that approximates it.
     <li class="fragment"><span class="bold">Generation:</span> producing synthetic data that are similar to real data.
+    <li class="fragment"><span class="bold">Prediction:</span> generating values and then comparing them to new measurements.
+    <li class="fragment"><span class="bold">Compression:</span> replacing the dataset with a curve that approximates it.
   </ul>
 
   <br><br>
-  <p class="fragment">Generative AI is <span class="bold">fitted</span> to human text and images, is a <span class="bold">compressed</span> version of them, and <span class="bold">generates</span> new products that are statistically like them.</p>
+  <p class="fragment">Generative AI is <span class="bold">fitted</span> to human text and images, <span class="bold">generates</span> new text and images that are statistically like them, and the AI model is a <span class="bold">compressed</span> version of them.</p>
 </section>
 
 <!-- <section> -->
@@ -382,13 +384,13 @@
 <section>
   <h2>Building a fit function</h2>
 
-  <p>Consider an S-shaped curve with 3 parameters:</p>
+  <p>Let’s use the following building block: an S-shaped curve with 3 parameters.</p>
 
   <img style="height: 220px; display: block; margin: 0 auto;" src="img/scaling_logistic.svg">
 
   <div class="fragment">
     <br>
-    <p>And add several of them together:</p>
+    <p>Add several of these building blocks together:</p>
 
   <!-- a small demo in the lower part of the slide: data-src, so it loads (fresh, all unchecked) when the slide is shown -->
     <iframe class="at" style="left: 90px; top: 548px; width: 1420px; height: 340px; border: none;" data-src="demo2-compression/logistic-terms.html"></iframe>
@@ -405,7 +407,7 @@
 <section data-background-iframe="demo2-compression/4-adaptive-image.html" data-background-interactive></section>
 
 <section>
-  <h2>This kind of fit function is a neural network layer</h2>
+  <h2>This kind of fit function is an artificial neuron</h2>
   <div class="cite"><a href="https://doi.org/10.1007/BF02551274" target="_blank" rel="noopener">G. Cybenko, <i>Approximation by superpositions of a sigmoidal function</i> (1989).</a></div>
 
   <img style="height: 700px; display: block; margin: 0 auto;" src="img/real_neuron_artificial_neurons-0.svg">
@@ -428,7 +430,7 @@
     <tr class="fragment"><td>organized in layers</td><td>no layer structure</td></tr>
     <tr class="fragment"><td>optimized by a global fit,<br>steered toward steepest descent</td><td>optimized by local rules,<br>chemical signals, and evolution</td></tr>
     <tr class="fragment"><td>only connections matter</td><td>chemical signals bypass connections</td></tr>
-    <tr class="fragment"><td>deterministic sum of functions</td><td>non-deterministic</td></tr>
+    <tr class="fragment"><td>stateless and deterministic</td><td>noisy, history-dependent, and chaotic</td></tr>
   </table>
 
   <br><br>
@@ -439,18 +441,13 @@
   <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Generalization</h2>
 </section>
 
-<section data-background-iframe="demo3-generalization/0a-sawtooth-wide.html" data-background-interactive></section>
-<section data-background-iframe="demo3-generalization/0b-sawtooth-deep.html" data-background-interactive></section>
-
-<!-- <section data-background-iframe="demo3-generalization/1-overfit.html" data-background-interactive></section> -->
-
 <section>
   <h2>Memorization versus generalization</h2>
 
   <p>When we’re <span class="bold">compressing</span> a dataset, we want the fit function to <span class="bold">memorize</span> it exactly.</p>
 
   <br>
-  <p>When we’re <span class="bold">predicting</span> or <span class="bold">generating</span> new data, we want it to <span class="bold">generalize</span> from the given data to any new data <span class="italic">like</span> it.</p>
+  <p class="fragment">When we’re <span class="bold">predicting</span> or <span class="bold">generating</span> new data, we want it to <span class="bold">generalize</span> from the given data to any new data <span class="italic">like</span> it.</p>
 
   <div class="fragment">
     <iframe class="at" style="left: 90px; top: 460px; width: 1420px; height: 428px; border: none;" data-src="demo3-generalization/generate-samples.html"></iframe>
@@ -467,36 +464,60 @@
 </section>
 
 <section>
-  <h2>Chaining fit functions</h2>
+  <h2>Memorization versus generalization</h2>
 
-  <p>Connect the output of one artificial neuron to the input of the next.</p>
+  <p>When we’re <span class="bold">compressing</span> a dataset, we want the fit function to <span class="bold">memorize</span> it exactly.</p>
+
+  <br>
+  <p>When we’re <span class="bold">predicting</span> or <span class="bold">generating</span> new data, we want it to <span class="bold">generalize</span> from the given data to any new data <span class="italic">like</span> it.</p>
+
+  <br><br>
+  <p>This means…
+  <ul>
+    <li class="fragment">We'll need lots of data to fully map out the probability distribution.
+    <li class="fragment">We'll need to find <span class="italic">systematic patterns</span> within the data, rather than fitting every point exactly.
+  </ul>
+</section>
+
+<section data-background-iframe="demo3-generalization/0a-sawtooth-wide.html" data-background-interactive></section>
+
+<section>
+  <h2>Chaining fit functions to find symmetries</h2>
+
+  <p>Layered neural network: send the output of one fit function into the input of the next.</p>
 
   <img style="height: 450px; display: block; margin: 0 auto;" src="img/network_three_layers.svg">
 
   <br>
-  <p class="fragment">One layer fits an arbitrary pattern; two layers fits patterns of patterns; three layers fits patterns of patterns of patterns…</p>
+  <p>One layer fits an arbitrary pattern; two layers fits patterns of patterns; three layers fits patterns of patterns of patterns…</p>
+</section>
+
+<section data-background-iframe="demo3-generalization/0b-sawtooth-deep.html" data-background-interactive></section>
+
+<!-- <section data-background-iframe="demo3-generalization/1-overfit.html" data-background-interactive></section> -->
+
+<section>
+  <h2>Why do layers find symmetries?</h2>
+  <div class="cite"><a href="https://doi.org/10.48550/arXiv.1402.1869" target="_blank" rel="noopener">G. Montúfar, R. Pascanu, K. Cho, Y. Bengio, <i>On the Number of Linear Regions of Deep Neural Networks</i> (2014).</a></div>
+
+  <p class="fragment">Without layers, a fit function needs a building block for every wiggle in the data.</p>
+
+  <div class="fragment">
+    <p>With layers, the first layer folds space to line up symmetric elements for the next to fit.</p>
+
+    <img style="height: 300px; display: block; margin: 0 auto;" src="img/deep-learning-by-space-folding.svg">
+  </div>
+
+  <br><br>
+  <div class="fragment">
+    <p>The more layers a network has, the more cross-cutting structure it will find, rather than just matching building blocks to each bend and curve in the data.</p>
+
+    <p>Many-layer networks are called <span class="bold">deep learning</span>.</p>
+  </div>
 </section>
 
 <section data-background-iframe="demo3-generalization/2-circle.html" data-background-interactive></section>
 <section data-background-iframe="demo3-generalization/3-spirals.html" data-background-interactive></section>
-
-<section>
-  <h2>Layered neural networks find symmetries in the data</h2>
-</section>
-
-<section>
-  <h2>Layered neural networks find symmetries in the data</h2>
-  <div class="cite"><a href="https://doi.org/10.48550/arXiv.1402.1869" target="_blank" rel="noopener">G. Montúfar, R. Pascanu, K. Cho, Y. Bengio, <i>On the Number of Linear Regions of Deep Neural Networks</i> (2014).</a></div>
-
-  <p>Without layers, a fit function needs an adaptive component to match every wiggle in the data.</p>
-
-  <p>With layers, one layer can fold space to line up symmetric elements for the next layer to fit with a single layer.</p>
-
-  <img style="height: 300px; display: block; margin: 0 auto;" src="img/deep-learning-by-space-folding.svg">
-
-  <br><br>
-  <p class="fragment">The more layers a network has, the more cross-cutting structure it will find, as opposed to just matching curves to data fluctuations. Many-layer networks are called <span class="bold">deep learning</span>.</p>
-</section>
 
 <section>
   <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Language Models</h2>
@@ -505,20 +526,20 @@
 <section>
   <h2>Neural networks can fit any data composed of numbers</h2>
 
-  <p>And anything that can be a file in a computer can be an array of numbers.</p>
+  <p>Anything that can be a file in a computer can be an array of numbers.</p>
 
   <ul>
-    <li><span class="bold">Images:</span> grids of pixel brightnesses</li>
-    <li><span class="bold">Video:</span> stacks of images over time</li>
-    <li><span class="bold">Audio:</span> air pressure, sampled thousands of times per second</li>
-    <li><span class="bold">Tables and time series:</span> sensor readings, prices, medical records</li>
-    <li><span class="bold">Board games:</span> positions of pieces on a grid</li>
-    <li><span class="bold">DNA and proteins:</span> sequences of nucleotides or amino acids</li>
-    <li><span class="bold">Natural language:</span> …</li>
+    <li><span class="bold">Images:</span> grids of pixel brightnesses
+    <li><span class="bold">Video:</span> stacks of images over time
+    <li><span class="bold">Audio:</span> air pressure, sampled thousands of times per second
+    <li><span class="bold">Tables and time series:</span> sensor readings, prices, medical records
+    <li><span class="bold">Board games:</span> positions of pieces on a grid
+    <li><span class="bold">DNA and proteins:</span> sequences of nucleotides or amino acids
+    <li><span class="bold">Natural language:</span> <span style="font-family: monospace;">a = 97, b = 98, c = 99</span>…
   </ul>
 
   <br>
-  <p class="fragment">Encodings like a = 1, b = 2, c = 3 or apple = 1, ball = 2, cat = 3 are not very efficient because they don’t capture the meanings of words or how words relate to other words.</p>
+  <p class="fragment">Character encodings like ASCII or word encodings like <span style="font-family: monospace;">apple = 1, ball = 2, cat = 3</span> don't capture the meanings of words or how words relate to other words.</p>
 </section>
 
 <section data-background-iframe="demo4-attention/1-embedding.html" data-background-interactive></section>
@@ -526,24 +547,25 @@
 <section>
   <h2>Semantics → geometry</h2>
 
+  <br><br><br>
   <p>Word embeddings express relationships between the meanings of words as geometric positions in space, and neural networks are great at finding geometric patterns (of patterns).</p>
 
-  <div class="fragment" data-fragment-index="1">
-    <br>
-    <p>There are lots of applications:</p>
-    <ul>
-      <li><span class="bold">Text in, label out:</span> spam filtering, sentiment analysis, grammar checking</li>
-      <li><span class="bold">Text in, different text out:</span> language translation, human language → code, summarization</li>
-      <li><span class="bold">Text in, closest vectors out:</span> semantic search, recommendations, finding duplicates</li>
-      <li><span class="bold">Text in, next word out:</span> autocomplete, chatbots</li>
-      <li><span class="bold">Text paired with other data:</span> speech recognition, text-to-speech, image captioning</li>
-    </ul>
-  </div>
+  <!-- <div class="fragment"> -->
+  <!--   <br> -->
+  <!--   <p>There are lots of applications:</p> -->
+  <!--   <ul> -->
+  <!--     <li><span class="bold">Text in, label out:</span> spam filtering, sentiment analysis, grammar checking</li> -->
+  <!--     <li><span class="bold">Text in, different text out:</span> language translation, human language → code, summarization</li> -->
+  <!--     <li><span class="bold">Text in, closest vectors out:</span> semantic search, recommendations, finding duplicates</li> -->
+  <!--     <li><span class="bold">Text in, next word out:</span> autocomplete, chatbots</li> -->
+  <!--     <li><span class="bold">Text paired with other data:</span> speech recognition, text-to-speech, image captioning</li> -->
+  <!--   </ul> -->
+  <!-- </div> -->
 
-  <br>
-  <p class="fragment" data-fragment-index="2">For years, the hardest part was maintaining coherence over long spans of text.</p>
-  <!-- cites only that last line, so it appears with it (same fragment index), at the bottom -->
-  <div class="cite bottom fragment" data-fragment-index="2"><a href="https://doi.org/10.1109/72.279181" target="_blank" rel="noopener">Y. Bengio, P. Simard, P. Frasconi, <i>Learning long-term dependencies with gradient descent is difficult</i> (1994).</a></div>
+  <br><br><br>
+  <p class="fragment" data-fragment-index="1">But for years, the hardest part was maintaining coherence over long spans of text.</p>
+
+  <div class="cite bottom fragment" data-fragment-index="1"><a href="https://doi.org/10.1109/72.279181" target="_blank" rel="noopener">Y. Bengio, P. Simard, P. Frasconi, <i>Learning long-term dependencies with gradient descent is difficult</i> (1994).</a></div>
 </section>
 
 <section data-background-iframe="demo4-attention/2-translation.html" data-background-interactive></section>
@@ -552,22 +574,22 @@
   <h2>This “attention mechanism” solved the distance problem</h2>
   <div class="cite"><a href="https://doi.org/10.48550/arXiv.1706.03762" target="_blank" rel="noopener">A. Vaswani et al., <i>Attention Is All You Need</i> (2017).</a></div>
 
-  <p>Nowadays, language models create a grid of how every word is related to every other word in a sequence. The size of that grid is called the <span class="bold">context window</span>.</p>
+  <p>With a grid of attention strengths between every pair of words, output word probabilities can depend on input words anywhere in the grid, which is called the <span class="bold">context window</span>.</p>
 
-  <div class="r-hstack fragment" style="margin-top: -60px;">
+  <div class="r-hstack fragment" style="margin-top: -20px;">
     <div>
-      <p>This solved the last problem that was preventing language models from being trained on Internet-scale datasets.</p>
+      <p>Now that they are no longer limited by short attention spans, language models can be fitted to Internet-scale datasets.</p>
 
       <ul>
-        <li class="fragment" style="margin-top: 50px;">The text corpus gets <span class="bold">lossy-compressed</span> like a JPEG: much more data than the model parameters can store.
-        <li class="fragment" style="margin-top: 50px;">The deeply layered network seeks <span class="bold">cross-cutting structures</span> in the text, rather than idiosyncratic details.
+        <li class="fragment" style="margin-top: 70px;">The language model is a <span class="bold">compression</span> of the text data.
+        <li class="fragment" style="margin-top: 70px;">The deeply layered network seeks <span class="bold">cross-cutting structures</span> in the text, rather than surface-level details.
       </ul>
 
-      <p class="fragment" style="margin-top: 50px;">But then the model ended up with surprising capabilities…</p>
+      <p class="fragment" style="margin-top: 50px;">And then the model ended up with surprising capabilities…</p>
     </div>
 
     <div>
-      <img style="height: 650px; display: block; margin-left: 50px;" src="img/trillions-of-words-and-parameters.svg">
+      <img style="height: 620px; display: block; margin-left: 50px;" src="img/trillions-of-words-and-parameters.svg">
     </div>
   </div>
 </section>
@@ -586,7 +608,7 @@
 <section>
   <h2>Large Language Model (LLM)</h2>
 
-  <p>Neural network with an attention mechanism, optimized to predict the probability of the next word in a sequence using an enormous text dataset.</p>
+  <p>An LLM is optimized to predict the probability of the next word in a sequence using an enormous text dataset.</p>
 
   <div class="fragment">
     <p>It can generate likely text by predicting the next word, then predicting the next with that word.</p>
@@ -595,46 +617,51 @@
   </div>
 </section>
 
-<section>
-  <h2>Technicality: not always the best-fit word</h2>
+<!-- <section> -->
+<!--   <h2>Technicality: not always the best-fit word</h2> -->
 
-  <p>For more natural output, LLMs are usually asked for less-perfect autocompletions, controlled by “temperature.” Analogy with physics: higher temperature → more high-energy atoms, higher temperature → more bizarre autocompletions.</p>
+<!--   <p>For more natural output, LLMs are usually asked for less-perfect autocompletions, controlled by “temperature.” Analogy with physics: higher temperature → more high-energy atoms, higher temperature → more bizarre autocompletions.</p> -->
 
-  <img style="height: 550px; display: block; margin: 0 auto;" src="img/temperature-and-autocomplete.svg">
+<!--   <img style="height: 550px; display: block; margin: 0 auto;" src="img/temperature-and-autocomplete.svg"> -->
 
-</section>
+<!-- </section> -->
 
 <section>
   <h2>Does an LLM “contain” the training dataset?</h2>
-  <div class="cite fragment" data-fragment-index="1"><a href="https://doi.org/10.48550/arXiv.2505.24832" target="_blank" rel="noopener">J. X. Morris et al., <i>How much do language models memorize?</i> (2025).</a><a href="https://newsletter.semianalysis.com/p/gpt-4-architecture-infrastructure" target="_blank" rel="noopener">D. Patel, G. Wong, <i>GPT-4 Architecture, Infrastructure, Training Dataset, Costs, Vision, MoE</i> (2023).</a></div>
+  <div class="cite fragment" data-fragment-index="2"><a href="https://doi.org/10.48550/arXiv.2505.24832" target="_blank" rel="noopener">J. X. Morris et al., <i>How much do language models memorize?</i> (2025).</a><a href="https://newsletter.semianalysis.com/p/gpt-4-architecture-infrastructure" target="_blank" rel="noopener">D. Patel, G. Wong, <i>GPT-4 Architecture, Infrastructure, Training Dataset, Costs, Vision, MoE</i> (2023).</a></div>
 
   <div class="fragment" data-fragment-index="1">
-    <p>Not all of it.</p>
+    <br>
+    <p data-fragment-index="1">Not all of it.</p>
 
-    <p>GPT-style LLMs can memorize <span class="bold">3.6 bits/parameter</span> and GPT-4 has <span class="bold">1.76 trillion parameters</span>, so <span class="bold">0.79 TB</span>. However, it was trained with <span class="bold">52 TB</span> of data. It could only store <span class="bold">1%</span> of its training.</p>
+    <br>
+    <p class="fragment" data-fragment-index="2">GPT-style LLMs can memorize <span class="bold">3.6 bits/parameter</span> and GPT-4 has <span class="bold">1.76 trillion parameters</span>, so <span class="bold">0.79 TB</span>. However, it was trained with <span class="bold">52 TB</span> of data. It can only store <span class="bold">1%</span> of its training.</p>
   </div>
+
+  <!-- <br> -->
+  <!-- <p class="fragment" data-fragment-index="2">Remember that it’s like a JPEG, approximating the details:</p> -->
+
+  <!-- <div class="jpeg-demo fragment" data-fragment-index="2"> -->
+  <!--   <div class="jd-wrap" style="width: 800px;"> -->
+  <!--     <figure style="display: inline-block;"> -->
+  <!--       <img style="height: 252px;" src="img/jpeg-demo-full-image.jpg"> -->
+  <!--       <a class="jd-credit" -->
+  <!--          href="https://www.peppercarrot.com/go/viewer/artworks__2022-12-18_Point-of-View_by-David-Revoy.html">“Point of View” by David Revoy – CC-BY 4.0</a> -->
+  <!--     </figure> -->
+
+  <!--     <img style="height: 252px; width: 309px; display: inline-block;" src="img/jpeg-demo-lossy.png"> -->
+  <!--   </div> -->
+  <!-- </div> -->
 
   <br>
-  <p class="fragment" data-fragment-index="2">Remember that it’s like a JPEG, approximating the details:</p>
+  <p class="fragment" data-fragment-index="3">An LLM learns the kinds of things people say, not exactly what they said.</p>
 
-  <div class="jpeg-demo fragment" data-fragment-index="2">
-    <div class="jd-wrap" style="width: 800px;">
-      <figure style="display: inline-block;">
-        <img style="height: 252px;" src="img/jpeg-demo-full-image.jpg">
-        <a class="jd-credit"
-           href="https://www.peppercarrot.com/go/viewer/artworks__2022-12-18_Point-of-View_by-David-Revoy.html">“Point of View” by David Revoy – CC-BY 4.0</a>
-      </figure>
-
-      <img style="height: 252px; width: 309px; display: inline-block;" src="img/jpeg-demo-lossy.png">
-    </div>
-  </div>
-
-  <br><br>
-  <p class="fragment" data-fragment-index="2">An LLM learns the kinds of things people say, not exactly what they said.</p>
+  <br>
+  <p class="fragment" data-fragment-index="4">However, 0.79 TB is a lot of text to potentially memorize…</p>
 </section>
 
 <section>
-  <h2>However, texts that get the most attention are in the 1%</h2>
+  <h2>Texts that get the most attention are in the 1%</h2>
   <div class="cite"><a href="https://doi.org/10.48550/arXiv.2505.12546" target="_blank" rel="noopener">A. F. Cooper et al., <i>Extracting memorized pieces of (copyrighted) books from open-weight language models</i> (2025).</a></div>
 
   <img style="height: 700px; display: block; margin: 0 auto;" src="img/harry-potter.png">
@@ -662,7 +689,7 @@
       </p>
 
       <br><br>
-      <p class="fragment">Correct every time for the famous first line, never right for a line<br>from <span class="italic">Book the Third, Chapter VI</span>.</p>
+      <p style="color: #1f6fb4;">Correct every time for the famous first line, never correct for a line<br>from <span class="italic">Book the Third, Chapter VI</span>.</p>
 
     </div>
     <div style="width: 60%;">
@@ -685,6 +712,17 @@
   </div>
 </section>
 
+<section>
+  <h2>A chatbot is not raw LLM autocomplete</h2>
+
+  <br><br>
+  <p class="fragment">An LLM trained only on arbitrary large-scale text can be coaxed into solving generic problems with few-shot learning.</p>
+
+  <br><br>
+  <p class="fragment">But to reliably answer questions, it needs to be further refined.</p>
+
+</section>
+
 <!-- this demo also needs ./serve-llm.sh running in another terminal -->
 <section data-background-iframe="demo5-few-shot/1-complete.html" data-background-interactive></section>
 
@@ -693,16 +731,13 @@
   <!-- each citation appears with the sentence it supports (same fragment index) -->
   <div class="cite"><a class="fragment" data-fragment-index="2" href="https://doi.org/10.48550/arXiv.2203.02155" target="_blank" rel="noopener">L. Ouyang et al., <i>Training language models to follow instructions with human feedback</i> (2022).</a><a class="fragment" data-fragment-index="3" href="https://doi.org/10.48550/arXiv.2411.15124" target="_blank" rel="noopener">N. Lambert et al., <i>Tülu 3: Pushing Frontiers in Open Language Model Post-Training</i> (2024).</a></div>
 
-  <br>
-  <p>The difference between this “raw” LLM and what you’ve used is refinement.</p>
+  <br><br>
+  <p class="fragment" data-fragment-index="1">After the first training, LLMs are trained on text in the form of stage directions between two characters, “Assistant” and “User”, with the LLM only completing the “Assistant” messages.</p>
 
-  <br>
-  <p class="fragment" data-fragment-index="1">Now nearly all LLMs are further trained on text in the form of stage directions between two characters, “Assistant” and “User”, with the LLM only completing the “Assistant” messages.</p>
-
-  <br>
+  <br><br>
   <p class="fragment" data-fragment-index="2">Humans rate the quality of the messages, and the optimizer maximizes that score.</p>
 
-  <br>
+  <br><br>
   <p class="fragment" data-fragment-index="3">Often, standardized tests will also be used, to increase the fraction of correct responses.</p>
 </section>
 
@@ -721,7 +756,7 @@
 <section>
   <h2>Modern chatbots also talk to “tools” like web search</h2>
 
-  <p>The web is a better source of correct facts than a lossy-compressed text corpus.</p>
+  <p>The web is a better source of correct facts than the neural network itself.</p>
 
   <img style="height: 640px; display: block; margin: 0 auto;" src="img/tool-web-search.png">
 </section>
@@ -787,7 +822,7 @@
 <section>
   <h2>Agents</h2>
 
-  <p>If these transcripts are interpreted by other programs as instructions to run, the chatbot can change real things. <span class="bold">Coding agents</span> are particularly useful.</p>
+  <p>If these transcripts are interpreted by other programs as instructions to run, the chatbot can change real things. <span class="bold">Coding agents</span> edit code and execute it.</p>
 
   <img style="height: 600px; display: block; margin: 0 auto;" src="img/tool-agent.png">
 </section>
@@ -815,43 +850,39 @@
 </section>
 
 <section>
-  <h2>Notice that only one piece is fundamentally new: the LLM</h2>
+  <h2>Only one piece is fundamentally new: the LLM</h2>
 
-  <br>
-  <p class="fragment">In my opinion, the only deeply surprising result was that a raw LLM can solve generic tasks through <span class="bold">few-shot learning</span>. Everything else is a corollary.</p>
-
-  <br>
-  <p class="fragment">Deep neural networks, the attention mechanism, and many other advancements of the past few decades are <span class="italic">detector technologies</span> that <span class="italic">discovered</span> this fact about human-generated text.</p>
-
-  <br>
-  <p class="fragment">If there’s an oracle—or golem—in modern chatbots, it’s something that had always been latent in our text, for thousands of years.</p>
-
-  <br>
-  <p class="fragment">What we’ve been doing since 2022 is working through the consequences of that discovery.</p>
+  <ul>
+    <li class="fragment" style="margin-top: 40px;">In my opinion, the only deeply surprising result was that a raw LLM can solve generic tasks through <span class="bold">few-shot learning</span>. Everything else is a corollary.
+    <li class="fragment" style="margin-top: 40px;">All the advancements in neural network technology went toward making LLMs a more faithful reproduction of the deep structure in human-generated text (not the literal text).
+    <li class="fragment" style="margin-top: 40px;">If there’s a “golem” in the chatbot, it’s something that had always been latent in the structure of human-generated text, since the origin of writing itself.
+    <li class="fragment" style="margin-top: 40px;">I would call this a <span class="italic">discovery</span>, like the discovery of the Higgs boson. The neural network technology enabled it, like the detector technology that enabled the Large Hadron Collider to discover the Higgs boson.
+    <li class="fragment" style="margin-top: 40px;">All the technological advancements since 2020 is working through the consequences of that discovery.
+  </ul>
 </section>
 
-<section>
-  <h2>Computers have come full-circle</h2>
+<!-- <section> -->
+<!--   <h2>Computers have come full-circle</h2> -->
 
-  <div>
-    <p>Cultural metaphors:</p>
-    <table class="timeline">
-      <tr class="timeline_orange2"><td>1950’s:</td><td><span class="bold">Oracle,</span> a giant brain you approach with questions</td></tr>
-      <tr class="timeline_blue2"><td>1960’s:</td><td><span class="bold">Bureaucracy,</span> a filing cabinet for big companies and government</td></tr>
-      <tr class="timeline_blue2"><td>1970’s:</td><td><span class="bold">Hobby,</span> homebrew, hacking, “computer lib,” video games</td></tr>
-      <tr class="timeline_blue2"><td>1980’s:</td><td><span class="bold">Personal desktop,</span> spreadsheets, tools, “bicycle of the mind”</td></tr>
-      <tr class="timeline_blue2"><td>1990’s:</td><td><span class="bold">Place,</span> cyberspace, superhighway, “my ’lil corner of the Internet”</td></tr>
-      <tr class="timeline_blue2"><td>2000’s:</td><td><span class="bold">Open mic,</span> decentralized communication, the bazaar, the commons</td></tr>
-      <tr class="timeline_blue2"><td>2010’s:</td><td><span class="bold">Platform,</span> the cloud, social mirror, the Feed/the Algorithm</td></tr>
-      <tr class="timeline_orange2"><td>2020’s:</td><td><span class="bold">Chatbot,</span> genie, copilot, stochastic parrot…</td></tr>
-    </table>
-  </div>
+<!--   <div> -->
+<!--     <p>Cultural metaphors:</p> -->
+<!--     <table class="timeline"> -->
+<!--       <tr class="timeline_orange2"><td>1950’s:</td><td><span class="bold">Oracle,</span> a giant brain you approach with questions</td></tr> -->
+<!--       <tr class="timeline_blue2"><td>1960’s:</td><td><span class="bold">Bureaucracy,</span> a filing cabinet for big companies and government</td></tr> -->
+<!--       <tr class="timeline_blue2"><td>1970’s:</td><td><span class="bold">Hobby,</span> homebrew, hacking, “computer lib,” video games</td></tr> -->
+<!--       <tr class="timeline_blue2"><td>1980’s:</td><td><span class="bold">Personal desktop,</span> spreadsheets, tools, “bicycle of the mind”</td></tr> -->
+<!--       <tr class="timeline_blue2"><td>1990’s:</td><td><span class="bold">Place,</span> cyberspace, superhighway, “my ’lil corner of the Internet”</td></tr> -->
+<!--       <tr class="timeline_blue2"><td>2000’s:</td><td><span class="bold">Open mic,</span> decentralized communication, the bazaar, the commons</td></tr> -->
+<!--       <tr class="timeline_blue2"><td>2010’s:</td><td><span class="bold">Platform,</span> the cloud, social mirror, the Feed/the Algorithm</td></tr> -->
+<!--       <tr class="timeline_orange2"><td>2020’s:</td><td><span class="bold">Chatbot,</span> genie, copilot, stochastic parrot…</td></tr> -->
+<!--     </table> -->
+<!--   </div> -->
 
-  <br><br>
-  <p>The oracle is a compressed copy of our own text.</p>
+<!--   <br><br> -->
+<!--   <p>The oracle is a compressed copy of our own text.</p> -->
 
-  <p class="fragment">Probably not what the old science fiction authors had in mind.</p>
-</section>
+<!--   <p class="fragment">Probably not what the old science fiction authors had in mind.</p> -->
+<!-- </section> -->
 
 <!-- this demo also needs ./serve-llm.sh running in another terminal -->
 <!-- <section data-background-iframe="demo5-few-shot/1-complete.html" data-background-interactive></section> -->

@@ -13,28 +13,35 @@
   // ---------------------------------------------------------------- data
   // A triangle wave on [-1, 1] made of `pieces` straight segments, alternating up and down
   // between -1 and +1, sampled at perPiece points per segment, plus Gaussian noise of width
-  // noise.sd (random numbers from noise.rng). With asym (an rng), each corner is moved sideways
-  // and made lower by a random amount, so the teeth are no longer all the same.
+  // noise.sd (random numbers from noise.rng). With asym (an rng), the teeth are made unequal: a
+  // few stay at full height, a few are cut down to small bumps, and the rest are in between, in a
+  // random order; each corner is also moved sideways by a random amount.
   function sawtooth(pieces, perPiece, noise, asym) {
     const corners = [];
     for (let k = 0; k <= pieces; k++) corners.push([-1 + 2 * k / pieces, k % 2 === 0 ? -1 : 1]);
     if (asym) {
-      const dx = 2 / pieces;
-      for (let k = 0; k <= pieces; k++) {
-        if (k > 0 && k < pieces) corners[k][0] += 0.3 * dx * (2 * asym() - 1);
-        corners[k][1] *= 1 - 0.55 * asym();
-      }
+      const dx = 2 / pieces, peaks = [];
+      for (let k = 1; k < pieces; k += 2) peaks.push([asym(), k]);
+      peaks.sort((a, b) => a[0] - b[0]);
+      const tall = Math.round(peaks.length * 3 / 16), short = Math.round(peaks.length * 4 / 16);
+      peaks.forEach(([, k], r) => {
+        const height = r < tall ? 1.9 + 0.1 * asym() : r < tall + short ? 0.45 + 0.15 * asym() : 0.85 + 0.35 * asym();
+        corners[k][1] = -1 + height;
+      });
+      for (let k = 1; k < pieces; k++) corners[k][0] += 0.3 * dx * (2 * asym() - 1);
     }
     const n = pieces * perPiece + 1, xs = new Float64Array(n), ys = new Float64Array(n);
-    let j = 0;
+    let j = 0, noiseLoss = 0;   // the loss of the noiseless triangle wave itself
     for (let i = 0; i < n; i++) {
       const x = -1 + 2 * i / (n - 1);
       while (j < pieces - 1 && x > corners[j + 1][0]) j++;
       const [x0, y0] = corners[j], [x1, y1] = corners[j + 1];
+      const e = noise ? noise.sd * noise.rng.normal() : 0;
       xs[i] = x;
-      ys[i] = y0 + (y1 - y0) * (x - x0) / (x1 - x0) + (noise ? noise.sd * noise.rng.normal() : 0);
+      ys[i] = y0 + (y1 - y0) * (x - x0) / (x1 - x0) + e;
+      noiseLoss += e * e / n;
     }
-    return { xs, ys, corners };
+    return { xs, ys, corners, noiseLoss };
   }
 
   // ---------------------------------------------------------------- network
