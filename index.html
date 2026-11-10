@@ -158,7 +158,7 @@
 
   <p class="fragment">When computers were first invented, the public thought of them in anthropomorphic terms: giant brains that scientists would ask questions, like HAL in 2001.</p>
 
-  <p class="fragment">After the widespread growth of personal computing and the Internet, we've come to think of them as a <span class="bold">thing</span> or a <span class="bold">place</span>: desktop, tool, game, cyberspace, platform, storefront, feed.</p>
+  <p class="fragment">After the widespread growth of personal computing and the Internet, we’ve come to think of them as a <span class="bold">thing</span> or a <span class="bold">place</span>: desktop, tool, game, cyberspace, platform, storefront, feed.</p>
 
   <p class="fragment">Now computers <span class="italic">actually can</span> hold a conversation, like HAL.</p>
 
@@ -474,8 +474,8 @@
   <br><br>
   <p>This means…
   <ul>
-    <li class="fragment">We'll need lots of data to fully map out the probability distribution.
-    <li class="fragment">We'll need to find <span class="italic">systematic patterns</span> within the data, rather than fitting every point exactly.
+    <li class="fragment">We’ll need lots of data to fully map out the probability distribution.
+    <li class="fragment">We’ll need to find <span class="italic">systematic patterns</span> within the data, rather than fitting every point exactly.
   </ul>
 </section>
 
@@ -539,12 +539,14 @@
   </ul>
 
   <br>
-  <p class="fragment">Character encodings like ASCII or word encodings like <span style="font-family: monospace;">apple = 1, ball = 2, cat = 3</span> don't capture the meanings of words or how words relate to other words.</p>
+  <p class="fragment">Character encodings like ASCII or word encodings like <span style="font-family: monospace;">apple = 1, ball = 2, cat = 3</span> don’t capture the meanings of words or how words relate to other words.</p>
 </section>
 
 <section data-background-iframe="demo4-attention/1-embedding.html" data-background-interactive></section>
 
 <section>
+  <div class="cite fragment" data-fragment-index="1"><a href="https://doi.org/10.1109/72.279181" target="_blank" rel="noopener">Y. Bengio, P. Simard, P. Frasconi, <i>Learning long-term dependencies with gradient descent is difficult</i> (1994).</a></div>
+
   <h2>Semantics → geometry</h2>
 
   <br><br><br>
@@ -564,8 +566,6 @@
 
   <br><br><br>
   <p class="fragment" data-fragment-index="1">But for years, the hardest part was maintaining coherence over long spans of text.</p>
-
-  <div class="cite bottom fragment" data-fragment-index="1"><a href="https://doi.org/10.1109/72.279181" target="_blank" rel="noopener">Y. Bengio, P. Simard, P. Frasconi, <i>Learning long-term dependencies with gradient descent is difficult</i> (1994).</a></div>
 </section>
 
 <section data-background-iframe="demo4-attention/2-translation.html" data-background-interactive></section>
@@ -574,7 +574,7 @@
   <h2>This “attention mechanism” solved the distance problem</h2>
   <div class="cite"><a href="https://doi.org/10.48550/arXiv.1706.03762" target="_blank" rel="noopener">A. Vaswani et al., <i>Attention Is All You Need</i> (2017).</a></div>
 
-  <p>With a grid of attention strengths between every pair of words, output word probabilities can depend on input words anywhere in the grid, which is called the <span class="bold">context window</span>.</p>
+  <p>With a grid of attention strengths between every pair of words, output word probabilities may depend on input words anywhere in the grid, called the <span class="bold">context window</span>.</p>
 
   <div class="r-hstack fragment" style="margin-top: -20px;">
     <div>
@@ -582,14 +582,14 @@
 
       <ul>
         <li class="fragment" style="margin-top: 70px;">The language model is a <span class="bold">compression</span> of the text data.
-        <li class="fragment" style="margin-top: 70px;">The deeply layered network seeks <span class="bold">cross-cutting structures</span> in the text, rather than surface-level details.
+        <li class="fragment" style="margin-top: 70px;">The deeply layered network models <span class="bold">cross-cutting structures</span> in the text, rather than individual words.
       </ul>
 
-      <p class="fragment" style="margin-top: 50px;">And then the model ended up with surprising capabilities…</p>
+      <p class="fragment" style="margin-top: 50px;">The resulting model ended up with surprising capabilities…</p>
     </div>
 
     <div>
-      <img style="height: 620px; display: block; margin-left: 50px;" src="img/trillions-of-words-and-parameters.svg">
+      <img style="height: 610px; display: block; margin-left: 50px;" src="img/trillions-of-words-and-parameters.svg">
     </div>
   </div>
 </section>
@@ -611,7 +611,7 @@
   <p>An LLM is optimized to predict the probability of the next word in a sequence using an enormous text dataset.</p>
 
   <div class="fragment">
-    <p>It can generate likely text by predicting the next word, then predicting the next with that word.</p>
+    <p>It generates likely text by predicting the next word, iteratively for many sentences.</p>
 
     <img style="height: 500px; display: block; margin: 0 auto;" src="img/llm-token-prediction.svg">
   </div>
@@ -748,7 +748,7 @@
 <section>
   <h2>Basic chatbot = LLM + transcript</h2>
 
-  <p>An LLM has no memory: it only knows what’s been said because it’s in the transcript.</p>
+  <p>An LLM has no memory and need not be a persistent entity.</p>
 
   <img style="height: 640px; display: block; margin: 0 auto;" src="img/basic-chatbot.png">
 </section>
@@ -804,7 +804,7 @@
   <br>
   <p class="fragment">Now it’s correct every time.</p>
 
-  <p class="fragment">We’re only relying on its ability to summarize what it found, which is much more accurate.</p>
+  <p class="fragment">We’re only relying on its ability to summarize the source, which is much more accurate.</p>
 
 </section>
 
@@ -814,8 +814,7 @@
 
   <p>A complex problem is more likely to be solved correctly if it’s a summary of a long transcript with the problem broken down into steps. Intermediate transcripts are not shown to the user.</p>
 
-  <p>This is the “reasoning effort” knob (low/medium/high) in typical chatbots.</p>
-
+  <br>
   <img style="height: 500px; display: block; margin: 0 auto;" src="img/tool-reasoning.png">
 </section>
 
@@ -854,10 +853,10 @@
 
   <ul>
     <li class="fragment" style="margin-top: 40px;">In my opinion, the only deeply surprising result was that a raw LLM can solve generic tasks through <span class="bold">few-shot learning</span>. Everything else is a corollary.
-    <li class="fragment" style="margin-top: 40px;">All the advancements in neural network technology went toward making LLMs a more faithful reproduction of the deep structure in human-generated text (not the literal text).
+    <li class="fragment" style="margin-top: 40px;">All the advancements in neural network technology went toward making an LLM a more faithful reproduction of the deep structure in human-generated text.
     <li class="fragment" style="margin-top: 40px;">If there’s a “golem” in the chatbot, it’s something that had always been latent in the structure of human-generated text, since the origin of writing itself.
     <li class="fragment" style="margin-top: 40px;">I would call this a <span class="italic">discovery</span>, like the discovery of the Higgs boson. The neural network technology enabled it, like the detector technology that enabled the Large Hadron Collider to discover the Higgs boson.
-    <li class="fragment" style="margin-top: 40px;">All the technological advancements since 2020 is working through the consequences of that discovery.
+    <li class="fragment" style="margin-top: 40px;">All of the technological advancements since 2020 are working through the consequences of that discovery.
   </ul>
 </section>
 

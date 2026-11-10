@@ -99,6 +99,7 @@ function draw() {
   for (let o = 0; o < 2; o++) D.arrow(c, OUT_X0, outY[o], OUT_X1, outY[o], NN.classColor(o));
   ["x", "y"].forEach((lab, i) => D.featureBox(c, IN_X, inY[i], xin, CFG.g, 2, i, lab, "left"));
   ["h1", "h2", "h3"].forEach((lab, j) => D.featureBox(c, HID_X, hidY[j], view.small, CFG.g, 3, j, lab));
+  D.tag(c, ["transform", "2D → 3D"], (IN_X + BOX + HID_X) / 2, MID);
 
   view3d.draw();
 }

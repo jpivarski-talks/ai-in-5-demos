@@ -168,6 +168,7 @@ function drawNetwork(c) {
   for (let o = 0; o < 3; o++) D.arrow(c, OUT_X0, outY[o], OUT_X1, outY[o], NN.classColor(o));
   ["x", "y"].forEach((lab, i) => D.featureBox(c, IN_X, inY[i], xin, CFG.g, 2, i, lab, "left"));
   ["u", "v"].forEach((lab, k) => D.featureBox(c, Z_X, zY[k], view.small, CFG.g, 2, k, lab));
+  D.tag(c, ["transform", "(x, y) → (u, v)"], HID_X, MID);
 }
 
 function draw() {

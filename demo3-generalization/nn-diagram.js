@@ -112,5 +112,19 @@
     nodeLabel(c, yl, x, y - L - 38);
   }
 
-  window.NNDiagram = { BOX, featureBox, nodeLabel, edge, arrow, stack, maxAbs, inputGrid, cornerAxes };
+  // centered lines of text on a white rounded rectangle, so they can sit on top of the connections
+  // (like the caption boxes in img/real_neuron_artificial_neurons.svg)
+  function tag(c, lines, cx, cy) {
+    const LH = 28, PX = 12, PY = 8;
+    c.font = `22px ${C.font}`;
+    const w = Math.max(...lines.map((t) => c.measureText(t).width)) + 2 * PX, h = lines.length * LH + 2 * PY;
+    c.fillStyle = "#fff";
+    c.beginPath(); c.roundRect(cx - w / 2, cy - h / 2, w, h, 10); c.fill();
+    c.fillStyle = C.ink;
+    c.textAlign = "center";
+    c.textBaseline = "middle";
+    lines.forEach((t, i) => c.fillText(t, cx, cy + (i - (lines.length - 1) / 2) * LH));
+  }
+
+  window.NNDiagram = { BOX, featureBox, nodeLabel, edge, arrow, stack, maxAbs, inputGrid, cornerAxes, tag };
 })();
