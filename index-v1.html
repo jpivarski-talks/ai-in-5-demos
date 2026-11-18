@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<title>AI in Five Demos</title>
+<!-- reveal.js 6.0.2, vendored in lib/reveal (no build step, works offline) -->
+<link rel="stylesheet" href="lib/reveal/reset.css">
+<link rel="stylesheet" href="lib/reveal/reveal.css">
+<!-- the demos' colors and fonts, then the slides' own typography -->
+<link rel="stylesheet" href="common/stage.css">
+<link rel="stylesheet" href="talk.css">
+</head>
+<body>
+<!--
+  HOW THIS WORKS
+  Serve the repository (python -m http.server) and open http://localhost:8000/.
+
+  Each <section> is one slide: a 1600 x 900 canvas, scaled as a whole to fit the screen.
+    * Ordinary content (headings, paragraphs, lists) flows from the top-left inside a margin.
+    * For exact placement, give an element class="at" and position it in slide pixels:
+        <div class="at" style="left: 900px; top: 300px; width: 600px">...</div>
+    * class="fragment" makes an element appear on the next key press (like \pause).
+    * <aside class="notes">...</aside> holds speaker notes: press S for the presenter window.
+    * A demo slide is a section with data-background-iframe="path/to/demo.html" and
+      data-background-interactive: the demo fills the slide and responds to the mouse.
+
+  Keys: → / PageDown next, ← / PageUp previous (also while a demo has the keyboard),
+        Esc or O overview, S speaker notes, F full screen, B black screen,
+        hold R to see the 1600 x 900 boundary and how far the window is from 16:9 (? lists Reveal's keys).
+  The URL ends in #/slide-id (or #/number), so reloading returns to the same slide.
+-->
+<div class="reveal">
+<div class="slides">
+
+  <style>
+    .reveal table.timeline {
+      border-collapse: separate;
+      border-spacing: 50px 0;   /* horizontal gap only */
+      margin: 0 -50px;
+    }
+
+    .reveal table.timeline td {
+      padding-block: 0.25em;    /* vertical space between rows, inside the cells */
+      border: none;
+    }
+
+    .reveal table.timeline tr > td:first-child {
+      border-left: 5px solid transparent;   /* colored by the rules below */
+      padding-left: 10px;
+    }
+
+    section:has(.timeline_lines.visible) table.timeline tr.timeline_blue > td:first-child {
+      border-left-color: #1f6fb4;
+      padding-left: 10px;
+    }
+
+    section:has(.timeline_lines.visible) table.timeline tr.timeline_orange > td:first-child {
+      border-left-color: #f28c28;
+      padding-left: 10px;
+    }
+
+    table.timeline tr.timeline_blue2 > td:first-child {
+      border-left-color: #1f6fb4;
+      padding-left: 10px;
+    }
+
+    table.timeline tr.timeline_orange2 > td:first-child {
+      border-left-color: #f28c28;
+      padding-left: 10px;
+    }
+
+    .reveal span.bold {
+      font-weight: bold;
+      color: #606060;
+    }
+
+    .reveal span.italic {
+      font-style: italic;
+    }
+
+    .jpeg-demo .jd-wrap { width: 700px; margin: 0 auto; }
+    .jpeg-demo figure { position: relative; margin: 0; }
+    .jpeg-demo img {
+      display: block; width: 100%; height: auto;
+      margin: 0; max-width: none; max-height: none;
+      border: none; box-shadow: none; background: none;
+    }
+    /* Red box marking the cropped region: 103x84 px at (274, 324) in the 960x512 image */
+    .jpeg-demo .jd-box {
+      position: absolute; box-sizing: border-box;
+      left: 28.542%; top: 63.281%; width: 10.729%; height: 16.406%;
+      border: 3px solid #db5b5b;
+    }
+    .jpeg-demo .jd-credit,
+    .jpeg-demo .jd-credit:hover {
+      position: absolute; left: 2.2%; top: 2.5%;
+      color: #fff; text-decoration: underline;
+      font: 700 19px/1.2 Helvetica, Arial, sans-serif;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+    }
+    .jpeg-demo .jd-crops {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-top: 13px;
+    }
+    .jpeg-demo .jd-crop { border: 3px solid #db5b5b; overflow: hidden; }
+    /* Uncomment to show individual pixels instead of smoothing them: */
+    /* .reveal .jpeg-demo .jd-crop img { image-rendering: pixelated; } */
+    .jpeg-demo figcaption {
+      position: absolute; left: 0; right: 0; bottom: 7%;
+      margin: 0; text-align: center; color: #fff;
+      font: 700 27px/1.2 Helvetica, Arial, sans-serif;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .reveal table.center_table {
+      margin: 0 auto;
+      border-spacing: 50px 40px;
+    }
+
+    .reveal table.center_table td {
+      text-align: center;
+    }
+  </style>
+
+<section>
+  <h1 class="at" style="left: 90px; top: 300px; width: 1400px">What is Generative AI, really?</h1>
+  <p class="at grey" style="left: 92px; top: 430px; font-size: 40px">From Optimization to Chatbots in Five Interactive Demos</p>
+  <p class="at" style="left: 92px; top: 600px">Jim Pivarski</p>
+  <p class="at grey" style="left: 92px; top: 655px; font-size: 28px">University of Chicago, Data Science Institute</p>
+</section>
+
+<!-- <section> -->
+<!--   <h2>Computers have come full-circle</h2> -->
+
+<!--   <div> -->
+<!--     <p>Cultural metaphors:</p> -->
+<!--     <table class="timeline"> -->
+<!--       <tr class="timeline_orange fragment"><td>1950’s:</td><td><span class="bold">Oracle,</span> a giant brain you approach with questions</td></tr> -->
+<!--       <tr class="timeline_blue fragment"><td>1960’s:</td><td><span class="bold">Bureaucracy,</span> a filing cabinet for big companies and government</td></tr> -->
+<!--       <tr class="timeline_blue fragment"><td>1970’s:</td><td><span class="bold">Hobby,</span> homebrew, hacking, “computer lib,” video games</td></tr> -->
+<!--       <tr class="timeline_blue fragment"><td>1980’s:</td><td><span class="bold">Personal desktop,</span> spreadsheets, tools, “bicycle of the mind”</td></tr> -->
+<!--       <tr class="timeline_blue fragment"><td>1990’s:</td><td><span class="bold">Place,</span> cyberspace, superhighway, “my ’lil corner of the Internet”</td></tr> -->
+<!--       <tr class="timeline_blue fragment"><td>2000’s:</td><td><span class="bold">Open mic,</span> decentralized communication, the bazaar, the commons</td></tr> -->
+<!--       <tr class="timeline_blue fragment"><td>2010’s:</td><td><span class="bold">Platform,</span> the cloud, social mirror, the Feed/the Algorithm</td></tr> -->
+<!--       <tr class="timeline_orange fragment"><td>2020’s:</td><td><span class="bold">Chatbot,</span> genie, copilot, stochastic parrot…</td></tr> -->
+<!--     </table> -->
+<!--   </div> -->
+
+<!--   <div class="timeline_lines fragment"> -->
+<!--     <br> -->
+<!--     <p><span style="font-weight: bold; color: #f28c28">Animate:</span> Someone you talk to.</p> -->
+<!--     <p><span style="font-weight: bold; color: #1f6fb4">Inanimate:</span> Something you use.</p> -->
+<!--   </div> -->
+<!-- </section> -->
+
+<section>
+  <h2>Computers are what our grandparents thought they’d be</h2>
+
+  <p class="fragment">When computers were first invented, the public thought of them in anthropomorphic terms: giant brains that scientists would ask questions, like HAL in 2001.</p>
+
+  <p class="fragment">After the widespread growth of personal computing and the Internet, we’ve come to think of them as a <span class="bold">thing</span> or a <span class="bold">place</span>: desktop, tool, game, cyberspace, platform, storefront, feed.</p>
+
+  <p class="fragment">Now computers <span class="italic">actually can</span> hold a conversation, like HAL.</p>
+
+  <div class="fragment">
+    <p>The purpose of this talk is to understand what happened, without anthropomorphizing.</p>
+
+    <div style="display: flex; justify-content: center; align-items: center; gap: 40px; height: 300px;">
+      <img style="height: 100%;" src="img/not-this-chatbot.jpg">
+      <img style="height: 100%;" src="img/not-a-brain.jpg">
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Five interactive demos</h2>
+
+  <ol style="padding-left: 150px; margin-top: 100px;">
+    <li style="margin-top: 30px;"><span class="bold">Optimization:</span> solving problems by “farming,” rather than “craftsmanship”
+    <li style="margin-top: 30px;"><span class="bold">Compression:</span> neural networks part 1: the first layer
+    <li style="margin-top: 30px;"><span class="bold">Generalization:</span> neural networks part 2: many layers
+    <li style="margin-top: 30px;"><span class="bold">Language Models:</span> semantic meaning in numerical form
+    <li style="margin-top: 30px;"><span class="bold">Few-Shot Learning:</span> the surprise discovery
+  </ol>
+</section>
+
+<section>
+  <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Optimization</h2>
+</section>
+
+<section>
+  <h2>“Craftsmanship” versus “farming”</h2>
+
+  <div class="r-hstack" style="align-items: flex-start;">
+    <div style="width: 40%;">
+      <p><span class="bold">Craftsmanship:</span> Writing instructions to tell a computer what to do</p>
+
+      <img style="height: 200px; display: block; margin: 0 auto;" src="img/metaphor-craftsmanship.png">
+
+      <br>
+      <ul>
+        <li class="fragment" data-fragment-index="1">All details are human choices
+        <li class="fragment" data-fragment-index="2">Complexity limited by human mental capacity and ability to communicate in large groups
+      </ul>
+    </div>
+
+    <div style="width: 5%;"></div>
+
+    <div style="width: 40%;">
+      <p><span class="bold">Farming:</span> Defining constraints and letting an optimization fit them</p>
+
+      <img style="height: 200px; display: block; margin: 0 auto;" src="img/metaphor-farming.png">
+
+      <br>
+      <ul>
+        <li class="fragment" data-fragment-index="1">Details from optimization process
+        <li class="fragment" data-fragment-index="2">Complexity limited by available data and computational resources
+      </ul>
+    </div>
+  </div>
+
+  <p class="fragment">Farmers don’t manually arrange the individual cells of the plants in their fields.</p>
+
+  <p class="fragment">They manipulate the conditions for growth so the plants can make themselves.</p>
+
+</section>
+
+<section data-background-iframe="demo1-optimization/1-simulation.html" data-background-interactive></section>
+<section data-background-iframe="demo1-optimization/2-random.html" data-background-interactive></section>
+<section data-background-iframe="demo1-optimization/3-optimize.html" data-background-interactive></section>
+
+<section>
+  <h2>Recipe for optimization</h2>
+
+  <br>
+  <ol>
+    <li class="fragment">Specify parameters that the optimizer is allowed to tune.
+    <li class="fragment">Define a goal as a numerical score.
+    <li class="fragment">Let the optimizer tune the parameters until the score is good enough.
+  </ol>
+
+  <br><br>
+  <div class="fragment">
+    <p>For the ball rolling down a slide (brachistochrone problem):</p>
+    <ol>
+      <li>The shape of the slide was specified in terms of 15 control points.
+      <li>The numerical goal was to minimize the rolling time.
+      <li>The optimization algorithm wiggled all parameters and favored combinations that reduced the rolling time.
+    </ol>
+  </div>
+
+  <!-- <div class="fragment"> -->
+  <!--   <p>Similar to “survival of the fittest,” but faster: an optimizer samples the rate of change and aims “downhill,” like this minimization of <span class="italic">f(x, y)</span> over 2 parameters, <span class="italic">x</span> and <span class="italic">y</span>: -->
+
+  <!--     <div style="display: flex; justify-content: center; align-items: center; gap: 40px; height: 380px;"> -->
+  <!--       <img style="height: 100%;" src="img/optimization-cat-3d.png"> -->
+  <!--       <img style="height: 100%;" src="img/optimization-cat-top.png"> -->
+  <!--     </div> -->
+  <!--   </p> -->
+  <!-- </div> -->
+</section>
+
+<!-- <section> -->
+<!--   <h2>Analytic solutions and “brute force” computing</h2> -->
+
+<!--   <p class="fragment">This optimization problem is an old one that can be solved with calculus of variations.</p> -->
+
+<!--   <p class="fragment">One can compute the optimal shape on paper by solving a differential equation.</p> -->
+
+<!--   <p class="fragment"><span class="bold">…For this problem.</span> Small modifications, like a ball on a slide with air resistance, results in equations without exact solutions.</p> -->
+
+<!--   <br><br> -->
+<!--   <div class="fragment"> -->
+<!--     <p>This is what computers made possible:</p> -->
+<!--     <ul> -->
+<!--       <li>solving <span class="italic">generic</span> optimization problems—any constraints -->
+<!--       <li>that may be very <span class="italic">complex</span>—number of parameters is limited only by computational power -->
+<!--     </ul> -->
+<!--   </div> -->
+<!-- </section> -->
+
+<section>
+  <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Compression</h2>
+</section>
+
+<section>
+  <h2>But first, fitting data</h2>
+
+  <p>This is a major application of optimization: fitting a <span style="color: #f28c28;">theoretical curve</span> to <span style="color: #1f6fb4;">experimental data</span>.</p>
+
+  <img style="height: 300px; display: block; margin: 0 auto;" src="img/curve_fit.svg">
+
+  <br>
+  <p class="fragment">As an optimization problem:</p>
+  <ol>
+    <li class="fragment">Parameters control the shape of the theoretical curve.
+    <li class="fragment">The numerical goal is to minimize the distance between the curve and the data points.
+    <li class="fragment">Let the optimizer do its thing!
+  </ol>
+
+  <!-- <p class="fragment">The data are: <span class="bold">finite in number</span> and <span class="bold">finite in range</span>.</p> -->
+
+  <!-- <div class="fragment"> -->
+  <!--   <p>The curve is:</p> -->
+  <!--   <ul> -->
+  <!--     <li><span class="bold">continuous</span>, filling in gaps between the data points -->
+  <!--     <li><span class="bold">infinite in extent</span>, extrapolating to the left and right of all data points -->
+  <!--   </ul> -->
+  <!-- </div> -->
+</section>
+
+<section>
+  <h2>Deep connections between</h2>
+  <!-- <div class="cite"><a href="https://doi.org/10.48550/arXiv.2309.10668" target="_blank" rel="noopener">G. Delétang et al., <i>Language Modeling Is Compression</i> (2023).</a></div> -->
+  <!-- Not really; that paper was about lossless compression. -->
+
+  <ul>
+    <li><span class="bold">Fitting:</span> finding a theoretical curve that explains experimental data.
+    <li class="fragment"><span class="bold">Generation:</span> producing synthetic data that are similar to real data.
+    <li class="fragment"><span class="bold">Prediction:</span> generating values and then comparing them to new measurements.
+    <li class="fragment"><span class="bold">Compression:</span> replacing the dataset with a curve that approximates it.
+  </ul>
+
+  <br><br>
+  <p class="fragment">Generative AI is <span class="bold">fitted</span> to human text and images, <span class="bold">generates</span> new text and images that are statistically like them, and the AI model is a <span class="bold">compressed</span> version of them.</p>
+</section>
+
+<!-- <section> -->
+<!--   <h2>Fitting arbitrary shapes</h2> -->
+
+<!--   <p>If the data can have any shape, we have to build arbitrary shapes by adding templates:</p> -->
+
+<!--   <img style="height: 400px; display: block; margin: 0 auto;" src="img/fourier_components.svg"> -->
+
+<!--   <br> -->
+<!--   <p class="fragment">The optimization process determines how much of each template to contribute.</p> -->
+
+<!--   <br> -->
+<!--   <p class="fragment">With enough sinusoidal waves, you can approximate any continuous shape.</p> -->
+<!-- </section> -->
+
+<!-- <section data-background-iframe="demo2-compression/1-fourier-1d.html" data-background-interactive></section> -->
+
+<!-- <section data-background-iframe="demo2-compression/2-fourier-image.html" data-background-interactive></section> -->
+
+<!-- <section> -->
+<!--   <h2>This is how JPEG compression works</h2> -->
+<!--   <div class="cite"><a href="https://www.newyorker.com/tech/annals-of-technology/chatgpt-is-a-blurry-jpeg-of-the-web" target="_blank" rel="noopener">T. Chiang, <i>ChatGPT Is a Blurry JPEG of the Web</i> (2023).</a></div> -->
+
+<!--   <div class="jpeg-demo"> -->
+<!--     <div class="jd-wrap"> -->
+<!--       <figure> -->
+<!--         <img src="img/jpeg-demo-full-image.jpg"> -->
+<!--         <span class="jd-box"></span> -->
+<!--         <a class="jd-credit" -->
+<!--            href="https://www.peppercarrot.com/go/viewer/artworks__2022-12-18_Point-of-View_by-David-Revoy.html">“Point of View” by David Revoy – CC-BY 4.0</a> -->
+<!--       </figure> -->
+
+<!--       <div class="jd-crops"> -->
+<!--         <figure class="jd-crop"> -->
+<!--           <img src="img/jpeg-demo-lossless.png"> -->
+<!--           <figcaption>Lossless compression</figcaption> -->
+<!--         </figure> -->
+<!--         <figure class="jd-crop"> -->
+<!--           <img src="img/jpeg-demo-lossy.png"> -->
+<!--           <figcaption>Lossy compression</figcaption> -->
+<!--         </figure> -->
+<!--       </div> -->
+<!--     </div> -->
+<!--   </div> -->
+<!-- </section> -->
+
+<!-- <section> -->
+<!--   <h2>The problem with templates</h2> -->
+
+<!--   <p>It’s common for real datasets to have localized detail and broad regions without much detail. Templates with fixed shapes struggle to fit data like that.</p> -->
+
+<!--   <img style="height: 300px; display: block; margin: 0 auto;" src="img/spike_fit.svg"> -->
+
+<!--   <br><br> -->
+<!--   <p class="fragment">The problem is even worse for high-dimensional data. Spaces with hundreds or thousands of dimensions are mostly empty.</p> -->
+<!-- </section> -->
+
+<section>
+  <h2>Building a fit function</h2>
+
+  <p>Let’s use the following building block: an S-shaped curve with 3 parameters.</p>
+
+  <img style="height: 220px; display: block; margin: 0 auto;" src="img/scaling_logistic.svg">
+
+  <div class="fragment">
+    <br>
+    <p>Add several of these building blocks together:</p>
+
+  <!-- a small demo in the lower part of the slide: data-src, so it loads (fresh, all unchecked) when the slide is shown -->
+    <iframe class="at" style="left: 90px; top: 548px; width: 1420px; height: 340px; border: none;" data-src="demo2-compression/logistic-terms.html"></iframe>
+  </div>
+
+  <!-- <div class="fragment" style="margin-top: 20px;"> -->
+  <!--   <p>Now we can fit localized detail better.</p> -->
+
+  <!--   <img style="height: 300px; display: block; margin: 0 auto;" src="img/logistic_components.svg"> -->
+  <!-- </div> -->
+</section>
+
+<section data-background-iframe="demo2-compression/3-logistic-1d.html" data-background-interactive></section>
+<section data-background-iframe="demo2-compression/4-adaptive-image.html" data-background-interactive></section>
+
+<section>
+  <h2>This kind of fit function is an artificial neuron</h2>
+  <div class="cite"><a href="https://doi.org/10.1007/BF02551274" target="_blank" rel="noopener">G. Cybenko, <i>Approximation by superpositions of a sigmoidal function</i> (1989).</a></div>
+
+  <img style="height: 700px; display: block; margin: 0 auto;" src="img/real_neuron_artificial_neurons-0.svg">
+</section>
+
+<section>
+  <h2>This kind of fit function is a neural network layer</h2>
+  <div class="cite"><a href="https://doi.org/10.1007/BF02551274" target="_blank" rel="noopener">G. Cybenko, <i>Approximation by superpositions of a sigmoidal function</i> (1989).</a></div>
+
+  <img style="height: 700px; display: block; margin: 0 auto;" src="img/real_neuron_artificial_neurons.svg">
+</section>
+
+<section>
+  <h2>Differences between a neural network and real neurons</h2>
+
+  <table class="center_table">
+    <tr><td><span class="bold" style="text-decoration: underline;">Neural network</span></td><td><span class="bold" style="text-decoration: underline;">Real neurons</span></td></tr>
+    <tr class="fragment"><td>data are floating-point numbers</td><td>data are pulses, timing carries information</td></tr>
+    <!-- <tr class="fragment"><td>output is a sum of adaptive fitting components</td><td>response is more complex than that</td></tr> -->
+    <tr class="fragment"><td>organized in layers</td><td>no layer structure</td></tr>
+    <tr class="fragment"><td>optimized by a global fit,<br>steered toward steepest descent</td><td>optimized by local rules,<br>chemical signals, and evolution</td></tr>
+    <tr class="fragment"><td>only connections matter</td><td>chemical signals bypass connections</td></tr>
+    <tr class="fragment"><td>stateless and deterministic</td><td>noisy, history-dependent, and chaotic</td></tr>
+  </table>
+
+  <br><br>
+  <p class="fragment">Neural networks are inspired by real neurons the way airplanes are inspired by birds.</p>
+</section>
+
+<section>
+  <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Generalization</h2>
+</section>
+
+<section>
+  <h2>Memorization versus generalization</h2>
+
+  <p>When we’re <span class="bold">compressing</span> a dataset, we want the fit function to <span class="bold">memorize</span> it exactly.</p>
+
+  <br>
+  <p class="fragment">When we’re <span class="bold">predicting</span> or <span class="bold">generating</span> new data, we want it to <span class="bold">generalize</span> from the given data to any new data <span class="italic">like</span> it.</p>
+
+  <div class="fragment">
+    <iframe class="at" style="left: 90px; top: 460px; width: 1420px; height: 428px; border: none;" data-src="demo3-generalization/generate-samples.html"></iframe>
+  </div>
+
+  <!-- <br> -->
+  <!-- <p>Data come from measurements of semi-random processes. New data points from the same process are not exactly equal to old data points. They have the same statistical patterns.</p> -->
+
+  <!-- <br> -->
+  <!-- <p class="fragment">An exact fit to one dataset that doesn’t fit new data from the same process is a good <span class="bold">compression</span> of the first dataset, but not a good <span class="bold">predictor</span> of the process.</p> -->
+
+  <!-- <br> -->
+  <!-- <p class="fragment">For <span class="bold">prediction</span> and <span class="bold">generation</span> of new data, we want models that generalize.</p> -->
+</section>
+
+<section>
+  <h2>Memorization versus generalization</h2>
+
+  <p>When we’re <span class="bold">compressing</span> a dataset, we want the fit function to <span class="bold">memorize</span> it exactly.</p>
+
+  <br>
+  <p>When we’re <span class="bold">predicting</span> or <span class="bold">generating</span> new data, we want it to <span class="bold">generalize</span> from the given data to any new data <span class="italic">like</span> it.</p>
+
+  <br><br>
+  <p>This means…
+  <ul>
+    <li class="fragment">We’ll need lots of data to fully map out the probability distribution.
+    <li class="fragment">We’ll need to find <span class="italic">systematic patterns</span> within the data, rather than fitting every point exactly.
+  </ul>
+</section>
+
+<section data-background-iframe="demo3-generalization/0a-sawtooth-wide.html" data-background-interactive></section>
+
+<section>
+  <h2>Chaining fit functions to find symmetries</h2>
+
+  <p>Layered neural network: send the output of one fit function into the input of the next.</p>
+
+  <img style="height: 450px; display: block; margin: 0 auto;" src="img/network_three_layers.svg">
+
+  <br>
+  <p>One layer fits an arbitrary pattern; two layers fits patterns of patterns; three layers fits patterns of patterns of patterns…</p>
+</section>
+
+<section data-background-iframe="demo3-generalization/0b-sawtooth-deep.html" data-background-interactive></section>
+
+<!-- <section data-background-iframe="demo3-generalization/1-overfit.html" data-background-interactive></section> -->
+
+<section>
+  <h2>Why do layers find symmetries?</h2>
+  <div class="cite"><a href="https://doi.org/10.48550/arXiv.1402.1869" target="_blank" rel="noopener">G. Montúfar, R. Pascanu, K. Cho, Y. Bengio, <i>On the Number of Linear Regions of Deep Neural Networks</i> (2014).</a></div>
+
+  <p class="fragment">Without layers, a fit function needs a building block for every wiggle in the data.</p>
+
+  <div class="fragment">
+    <p>With layers, the first layer folds space to line up symmetric elements for the next to fit.</p>
+
+    <img style="height: 300px; display: block; margin: 0 auto;" src="img/deep-learning-by-space-folding.svg">
+  </div>
+
+  <br><br>
+  <div class="fragment">
+    <p>The more layers a network has, the more cross-cutting structure it will find, rather than just matching building blocks to each bend and curve in the data.</p>
+
+    <p>Many-layer networks are called <span class="bold">deep learning</span>.</p>
+  </div>
+</section>
+
+<section data-background-iframe="demo3-generalization/2-circle.html" data-background-interactive></section>
+<section data-background-iframe="demo3-generalization/3-spirals.html" data-background-interactive></section>
+
+<section>
+  <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Language Models</h2>
+</section>
+
+<section>
+  <h2>Neural networks can fit any data composed of numbers</h2>
+
+  <p>Anything that can be a file in a computer can be an array of numbers.</p>
+
+  <ul>
+    <li><span class="bold">Images:</span> grids of pixel brightnesses
+    <li><span class="bold">Video:</span> stacks of images over time
+    <li><span class="bold">Audio:</span> air pressure, sampled thousands of times per second
+    <li><span class="bold">Tables and time series:</span> sensor readings, prices, medical records
+    <li><span class="bold">Board games:</span> positions of pieces on a grid
+    <li><span class="bold">DNA and proteins:</span> sequences of nucleotides or amino acids
+    <li><span class="bold">Natural language:</span> <span style="font-family: monospace;">a = 97, b = 98, c = 99</span>…
+  </ul>
+
+  <br>
+  <p class="fragment">Character encodings like ASCII or word encodings like <span style="font-family: monospace;">apple = 1, ball = 2, cat = 3</span> don’t capture the meanings of words or how words relate to other words.</p>
+</section>
+
+<section data-background-iframe="demo4-attention/1-embedding.html" data-background-interactive></section>
+
+<section>
+  <div class="cite fragment" data-fragment-index="1"><a href="https://doi.org/10.1109/72.279181" target="_blank" rel="noopener">Y. Bengio, P. Simard, P. Frasconi, <i>Learning long-term dependencies with gradient descent is difficult</i> (1994).</a></div>
+
+  <h2>Semantics → geometry</h2>
+
+  <br><br><br>
+  <p>Word embeddings express relationships between the meanings of words as geometric positions in space, and neural networks are great at finding geometric patterns (of patterns).</p>
+
+  <!-- <div class="fragment"> -->
+  <!--   <br> -->
+  <!--   <p>There are lots of applications:</p> -->
+  <!--   <ul> -->
+  <!--     <li><span class="bold">Text in, label out:</span> spam filtering, sentiment analysis, grammar checking</li> -->
+  <!--     <li><span class="bold">Text in, different text out:</span> language translation, human language → code, summarization</li> -->
+  <!--     <li><span class="bold">Text in, closest vectors out:</span> semantic search, recommendations, finding duplicates</li> -->
+  <!--     <li><span class="bold">Text in, next word out:</span> autocomplete, chatbots</li> -->
+  <!--     <li><span class="bold">Text paired with other data:</span> speech recognition, text-to-speech, image captioning</li> -->
+  <!--   </ul> -->
+  <!-- </div> -->
+
+  <br><br><br>
+  <p class="fragment" data-fragment-index="1">But for years, the hardest part was maintaining coherence over long spans of text.</p>
+</section>
+
+<section data-background-iframe="demo4-attention/2-translation.html" data-background-interactive></section>
+
+<section>
+  <h2>This “attention mechanism” solved the distance problem</h2>
+  <div class="cite"><a href="https://doi.org/10.48550/arXiv.1706.03762" target="_blank" rel="noopener">A. Vaswani et al., <i>Attention Is All You Need</i> (2017).</a></div>
+
+  <p>With a grid of attention strengths between every pair of words, output word probabilities may depend on input words anywhere in the grid, called the <span class="bold">context window</span>.</p>
+
+  <div class="r-hstack fragment" style="margin-top: -20px;">
+    <div>
+      <p>Now that they are no longer limited by short attention spans, language models can be fitted to Internet-scale datasets.</p>
+
+      <ul>
+        <li class="fragment" style="margin-top: 70px;">The language model is a <span class="bold">compression</span> of the text data.
+        <li class="fragment" style="margin-top: 70px;">The deeply layered network models <span class="bold">cross-cutting structures</span> in the text, rather than individual words.
+      </ul>
+
+      <p class="fragment" style="margin-top: 50px;">The resulting model ended up with surprising capabilities…</p>
+    </div>
+
+    <div>
+      <img style="height: 610px; display: block; margin-left: 50px;" src="img/trillions-of-words-and-parameters.svg">
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Few-Shot Learning</h2>
+</section>
+
+<!-- this demo also needs ./serve-llm.sh running in another terminal -->
+<section data-background-iframe="demo5-few-shot/1-complete.html" data-background-interactive></section>
+
+<section>
+  <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Large Language Models</h2>
+</section>
+
+<section>
+  <h2>Large Language Model (LLM)</h2>
+
+  <p>An LLM is optimized to predict the probability of the next word in a sequence using an enormous text dataset.</p>
+
+  <div class="fragment">
+    <p>It generates likely text by predicting the next word, iteratively for many sentences.</p>
+
+    <img style="height: 500px; display: block; margin: 0 auto;" src="img/llm-token-prediction.svg">
+  </div>
+</section>
+
+<!-- <section> -->
+<!--   <h2>Technicality: not always the best-fit word</h2> -->
+
+<!--   <p>For more natural output, LLMs are usually asked for less-perfect autocompletions, controlled by “temperature.” Analogy with physics: higher temperature → more high-energy atoms, higher temperature → more bizarre autocompletions.</p> -->
+
+<!--   <img style="height: 550px; display: block; margin: 0 auto;" src="img/temperature-and-autocomplete.svg"> -->
+
+<!-- </section> -->
+
+<section>
+  <h2>Does an LLM “contain” the training dataset?</h2>
+  <div class="cite fragment" data-fragment-index="2"><a href="https://doi.org/10.48550/arXiv.2505.24832" target="_blank" rel="noopener">J. X. Morris et al., <i>How much do language models memorize?</i> (2025).</a><a href="https://newsletter.semianalysis.com/p/gpt-4-architecture-infrastructure" target="_blank" rel="noopener">D. Patel, G. Wong, <i>GPT-4 Architecture, Infrastructure, Training Dataset, Costs, Vision, MoE</i> (2023).</a></div>
+
+  <div class="fragment" data-fragment-index="1">
+    <br>
+    <p data-fragment-index="1">Not all of it.</p>
+
+    <br>
+    <p class="fragment" data-fragment-index="2">GPT-style LLMs can memorize <span class="bold">3.6 bits/parameter</span> and GPT-4 has <span class="bold">1.76 trillion parameters</span>, so <span class="bold">0.79 TB</span>. However, it was trained with <span class="bold">52 TB</span> of data. It can only store <span class="bold">1%</span> of its training.</p>
+  </div>
+
+  <!-- <br> -->
+  <!-- <p class="fragment" data-fragment-index="2">Remember that it’s like a JPEG, approximating the details:</p> -->
+
+  <!-- <div class="jpeg-demo fragment" data-fragment-index="2"> -->
+  <!--   <div class="jd-wrap" style="width: 800px;"> -->
+  <!--     <figure style="display: inline-block;"> -->
+  <!--       <img style="height: 252px;" src="img/jpeg-demo-full-image.jpg"> -->
+  <!--       <a class="jd-credit" -->
+  <!--          href="https://www.peppercarrot.com/go/viewer/artworks__2022-12-18_Point-of-View_by-David-Revoy.html">“Point of View” by David Revoy – CC-BY 4.0</a> -->
+  <!--     </figure> -->
+
+  <!--     <img style="height: 252px; width: 309px; display: inline-block;" src="img/jpeg-demo-lossy.png"> -->
+  <!--   </div> -->
+  <!-- </div> -->
+
+  <br>
+  <p class="fragment" data-fragment-index="3">An LLM learns the kinds of things people say, not exactly what they said.</p>
+
+  <br>
+  <p class="fragment" data-fragment-index="4">However, 0.79 TB is a lot of text to potentially memorize…</p>
+</section>
+
+<section>
+  <h2>Texts that get the most attention are in the 1%</h2>
+  <div class="cite"><a href="https://doi.org/10.48550/arXiv.2505.12546" target="_blank" rel="noopener">A. F. Cooper et al., <i>Extracting memorized pieces of (copyrighted) books from open-weight language models</i> (2025).</a></div>
+
+  <img style="height: 700px; display: block; margin: 0 auto;" src="img/harry-potter.png">
+</section>
+
+<section>
+  <h2>Experiment: two lines from <span class="italic">A Tale of Two Cities</span></h2>
+  <div class="cite"><span>OpenAI gpt-5.4, temperature 1, no web search, no reasoning.</span></div>
+
+  <div class="r-hstack" style="align-items: flex-start;">
+    <div style="width: 40%;">
+      <p>What follows “It was the best of times”?</p>
+
+      <p style="font-size: 0.75em;">
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.
+      </p>
+
+      <br><br>
+      <p style="color: #1f6fb4;">Correct every time for the famous first line, never correct for a line<br>from <span class="italic">Book the Third, Chapter VI</span>.</p>
+
+    </div>
+    <div style="width: 60%;">
+      <p>What follows “His judges sat upon the Bench in feathered hats”?</p>
+
+      <p style="font-size: 0.75em;">
+→ and looked at Monsieur the Marquis as if they thought him too much above the common herd to be tried by such canaille.<br>
+→ and gold-laced coats.<br>
+→ but the whole Court was sufficiently covered, as to appearance, with black cloth and horse-hair, as to display an unnatural blotting out of day.<br>
+→ but not in furs, to mock the afflicted man.<br>
+→ but the roughest men at the Bar had no more emotion than if they had been so many rats.<br>
+→ but the red glare of the furnace shone upon them, stern and inexorable, as if they had all been so many fallen angels.<br>
+→ and gold-laced coats.<br>
+→ and were all in jewels but the axe was sharp, and the block was black.<br>
+→ and hanging robes.<br>
+→ and hoods; when a prisoner was tried, they had such an air of being all packed up somewhere for safe keeping, that one could have fancied they were all in several bags, and might at any time be brought out and squeezed dry.
+      </p>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>A chatbot is not raw LLM autocomplete</h2>
+
+  <br><br>
+  <p class="fragment">An LLM trained only on arbitrary large-scale text can be coaxed into solving generic problems with few-shot learning.</p>
+
+  <br><br>
+  <p class="fragment">But to reliably answer questions, it needs to be further refined.</p>
+
+</section>
+
+<!-- this demo also needs ./serve-llm.sh running in another terminal -->
+<section data-background-iframe="demo5-few-shot/1-complete.html" data-background-interactive></section>
+
+<section>
+  <h2>Reinforcement Learning from Human Feedback (RLHF)</h2>
+  <!-- each citation appears with the sentence it supports (same fragment index) -->
+  <div class="cite"><a class="fragment" data-fragment-index="2" href="https://doi.org/10.48550/arXiv.2203.02155" target="_blank" rel="noopener">L. Ouyang et al., <i>Training language models to follow instructions with human feedback</i> (2022).</a><a class="fragment" data-fragment-index="3" href="https://doi.org/10.48550/arXiv.2411.15124" target="_blank" rel="noopener">N. Lambert et al., <i>Tülu 3: Pushing Frontiers in Open Language Model Post-Training</i> (2024).</a></div>
+
+  <br><br>
+  <p class="fragment" data-fragment-index="1">After the first training, LLMs are trained on text in the form of stage directions between two characters, “Assistant” and “User”, with the LLM only completing the “Assistant” messages.</p>
+
+  <br><br>
+  <p class="fragment" data-fragment-index="2">Humans rate the quality of the messages, and the optimizer maximizes that score.</p>
+
+  <br><br>
+  <p class="fragment" data-fragment-index="3">Often, standardized tests will also be used, to increase the fraction of correct responses.</p>
+</section>
+
+<section>
+  <h2 style="text-align: center; margin-top: 300px; font-weight: bold;">Chatbots and Agents</h2>
+</section>
+
+<section>
+  <h2>Basic chatbot = LLM + transcript</h2>
+
+  <p>An LLM has no memory and need not be a persistent entity.</p>
+
+  <img style="height: 640px; display: block; margin: 0 auto;" src="img/basic-chatbot.png">
+</section>
+
+<section>
+  <h2>Modern chatbots also talk to “tools” like web search</h2>
+
+  <p>The web is a better source of correct facts than the neural network itself.</p>
+
+  <img style="height: 640px; display: block; margin: 0 auto;" src="img/tool-web-search.png">
+</section>
+
+<section>
+  <h2>Same lines from <span class="italic">A Tale of Two Cities</span>, with web-search</h2>
+  <div class="cite"><span>OpenAI gpt-5.4, temperature 1, <span style="text-decoration: underline;">with web search</span>, no reasoning.</span></div>
+
+  <div class="r-hstack" style="align-items: flex-start;">
+    <div style="width: 25%;">
+      <p>What follows “It was the best of times”?</p>
+
+      <p style="font-size: 0.75em;">
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.
+      </p>
+    </div>
+    <div style="width: 75%;">
+      <p>What follows “His judges sat upon the Bench in feathered hats”?<br>&nbsp;</p>
+
+      <p style="font-size: 0.75em;">
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.
+      </p>
+
+    </div>
+  </div>
+
+  <br>
+  <p class="fragment">Now it’s correct every time.</p>
+
+  <p class="fragment">We’re only relying on its ability to summarize the source, which is much more accurate.</p>
+
+</section>
+
+<section>
+  <h2>An internal tool: “reasoning”</h2>
+  <div class="cite"><a href="https://doi.org/10.48550/arXiv.2201.11903" target="_blank" rel="noopener">J. Wei et al., <i>Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</i> (2022).</a><a href="https://doi.org/10.1038/s41586-025-09422-z" target="_blank" rel="noopener">D. Guo et al., <i>DeepSeek-R1 incentivizes reasoning in LLMs through reinforcement learning</i> (2025).</a></div>
+
+  <p>A complex problem is more likely to be solved correctly if it’s a summary of a long transcript with the problem broken down into steps. Intermediate transcripts are not shown to the user.</p>
+
+  <br>
+  <img style="height: 500px; display: block; margin: 0 auto;" src="img/tool-reasoning.png">
+</section>
+
+<section>
+  <h2>Agents</h2>
+
+  <p>If these transcripts are interpreted by other programs as instructions to run, the chatbot can change real things. <span class="bold">Coding agents</span> edit code and execute it.</p>
+
+  <img style="height: 600px; display: block; margin: 0 auto;" src="img/tool-agent.png">
+</section>
+
+<section>
+  <h2>Two fronts for generative AI</h2>
+
+  <br>
+  <ul>
+    <li><span class="bold">Refinement:</span> frontier labs have been making bigger models, curating training data, improving RLHF techniques, and integrating LLMs with image recognition and generation.
+
+    <li style="margin-top: 30px;" class="fragment"><span class="bold">Agents:</span> everyone else has been building workflows of conventional code around LLMs.
+      <ul style="margin-top: 30px;">
+        <li>Integrating into search engines, retrieval over private documents
+        <li>Memory systems, LLM-accessible databases
+        <li>Coding agents that write, run, and test code in a loop
+        <li>New connectors through the Model Context Protocol (MCP)
+        <li>Browser and computer use: clicking and typing in applications designed for humans
+        <li>Orchestration: one agent delegating subtasks to others
+        <li>Statistical workflows with LLMs as classifiers or for structuring free-text data
+        <li>Guardrails: code that checks LLM output
+      </ul>
+      <img style="display: block; margin: -200px 0 0 auto; height: 200px;" src="img/redstone.png">
+  </ul>
+</section>
+
+<section>
+  <h2>Only one piece is fundamentally new: the LLM</h2>
+
+  <ul>
+    <li class="fragment" style="margin-top: 40px;">In my opinion, the only deeply surprising result was that a raw LLM can solve generic tasks through <span class="bold">few-shot learning</span>. Everything else is a corollary.
+    <li class="fragment" style="margin-top: 40px;">All the advancements in neural network technology went toward making an LLM a more faithful reproduction of the deep structure in human-generated text.
+    <li class="fragment" style="margin-top: 40px;">If there’s a “golem” in the chatbot, it’s something that had always been latent in the structure of human-generated text, since the origin of writing itself.
+    <li class="fragment" style="margin-top: 40px;">I would call this a <span class="italic">discovery</span>, like the discovery of the Higgs boson. The neural network technology enabled it, like the detector technology that enabled the Large Hadron Collider to discover the Higgs boson.
+    <li class="fragment" style="margin-top: 40px;">All of the technological advancements since 2020 are working through the consequences of that discovery.
+  </ul>
+</section>
+
+<!-- <section> -->
+<!--   <h2>Computers have come full-circle</h2> -->
+
+<!--   <div> -->
+<!--     <p>Cultural metaphors:</p> -->
+<!--     <table class="timeline"> -->
+<!--       <tr class="timeline_orange2"><td>1950’s:</td><td><span class="bold">Oracle,</span> a giant brain you approach with questions</td></tr> -->
+<!--       <tr class="timeline_blue2"><td>1960’s:</td><td><span class="bold">Bureaucracy,</span> a filing cabinet for big companies and government</td></tr> -->
+<!--       <tr class="timeline_blue2"><td>1970’s:</td><td><span class="bold">Hobby,</span> homebrew, hacking, “computer lib,” video games</td></tr> -->
+<!--       <tr class="timeline_blue2"><td>1980’s:</td><td><span class="bold">Personal desktop,</span> spreadsheets, tools, “bicycle of the mind”</td></tr> -->
+<!--       <tr class="timeline_blue2"><td>1990’s:</td><td><span class="bold">Place,</span> cyberspace, superhighway, “my ’lil corner of the Internet”</td></tr> -->
+<!--       <tr class="timeline_blue2"><td>2000’s:</td><td><span class="bold">Open mic,</span> decentralized communication, the bazaar, the commons</td></tr> -->
+<!--       <tr class="timeline_blue2"><td>2010’s:</td><td><span class="bold">Platform,</span> the cloud, social mirror, the Feed/the Algorithm</td></tr> -->
+<!--       <tr class="timeline_orange2"><td>2020’s:</td><td><span class="bold">Chatbot,</span> genie, copilot, stochastic parrot…</td></tr> -->
+<!--     </table> -->
+<!--   </div> -->
+
+<!--   <br><br> -->
+<!--   <p>The oracle is a compressed copy of our own text.</p> -->
+
+<!--   <p class="fragment">Probably not what the old science fiction authors had in mind.</p> -->
+<!-- </section> -->
+
+<!-- this demo also needs ./serve-llm.sh running in another terminal -->
+<!-- <section data-background-iframe="demo5-few-shot/1-complete.html" data-background-interactive></section> -->
+
+</div>
+</div>
+
+<script src="lib/reveal/reveal.js"></script>
+<script src="lib/reveal/plugin/notes.js"></script>
+<!-- one copy of TensorFlow.js, shared by the demos that use it (see common/tf-host.js) -->
+<script src="lib/tf.min.js"></script>
+<script src="common/tf-host.js"></script>
+<script>
+Reveal.initialize({
+  // a fixed 1600 x 900 canvas, like the demos, scaled to fit the window
+  width: 1600,
+  height: 900,
+  margin: 0,
+  minScale: 0.05,
+  maxScale: 10,
+  center: false,          // content starts at the top, where you put it (not vertically centered)
+  hash: true,             // the URL tracks the slide, so a reload returns to it
+  transition: "none",
+  backgroundTransition: "none",
+  controls: false,        // no on-screen arrows (they would sit on top of the demos)
+  progress: true,         // thin progress bar along the bottom
+  preloadIframes: false,  // a demo starts only when its slide is shown, and stops when you leave
+  plugins: [RevealNotes],
+});
+
+// On a demo slide, hand the keyboard to the demo (so its keys, like the space bar, work at
+// once); the demo passes ←, →, PageUp, and PageDown back here (see common/stage.js).
+// On any other slide, take the keyboard back.
+function focusSlide() {
+  const slide = Reveal.getCurrentSlide();
+  if (!slide.hasAttribute("data-background-iframe")) {
+    if (document.activeElement && document.activeElement.tagName === "IFRAME") document.activeElement.blur();
+    window.focus();
+    return;
+  }
+  let tries = 0;
+  const attempt = () => {
+    const frame = Reveal.getSlideBackground(slide).querySelector("iframe");
+    if (frame && frame.contentWindow) {
+      const give = () => { frame.focus(); frame.contentWindow.focus(); };
+      if (frame.contentDocument && frame.contentDocument.readyState === "complete") give();
+      else frame.addEventListener("load", give, { once: true });
+    } else if (tries++ < 50) setTimeout(attempt, 50);
+  };
+  attempt();
+}
+Reveal.on("ready", focusSlide);
+// compile the TensorFlow.js demos' GPU programs now, unseen, so they don't freeze on first use
+Reveal.on("ready", () => TFHost.warmUp([
+  "demo2-compression/4-adaptive-image.html",
+  "demo3-generalization/1-overfit.html",
+  "demo3-generalization/2-circle.html",
+  "demo3-generalization/3-spirals.html",
+]));
+Reveal.on("slidechanged", focusSlide);
+
+// While R is held down, outline the 1600 x 900 slide, shade the rest of the window, and say how
+// far the window is from 16:9, to help size a window when not in full screen. A demo that has the
+// keyboard passes R up as a {aspectFrame: true/false} message (see common/stage.js).
+const aspectFrame = document.createElement("div");
+aspectFrame.id = "aspect-frame";
+aspectFrame.appendChild(document.createElement("div"));
+document.body.appendChild(aspectFrame);
+function showAspectFrame(on) {
+  aspectFrame.classList.toggle("on", on);
+  if (!on) return;
+  const r = document.querySelector(".reveal .slides").getBoundingClientRect();
+  const ww = window.innerWidth, wh = window.innerHeight;
+  Object.assign(aspectFrame.style, { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px" });
+  const tall = Math.round(wh - ww * 9 / 16), wide = Math.round(ww - wh * 16 / 9);
+  const fix = tall > 0 ? `${tall} px too tall` : wide > 0 ? `${wide} px too wide` : "16:9 exactly";
+  aspectFrame.firstChild.textContent = `window ${ww} × ${wh}: ${fix}`;
+}
+const isTyping = (t) => t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
+const isR = (e) => e.key.toLowerCase() === "r" && !e.ctrlKey && !e.metaKey && !e.altKey;
+document.addEventListener("keydown", (e) => { if (isR(e) && !isTyping(e.target)) showAspectFrame(true); });
+document.addEventListener("keyup", (e) => { if (e.key.toLowerCase() === "r") showAspectFrame(false); });
+window.addEventListener("message", (e) => {
+  if (e.data && typeof e.data === "object" && "aspectFrame" in e.data) showAspectFrame(!!e.data.aspectFrame);
+});
+window.addEventListener("blur", () => { if (!document.querySelector("iframe:focus")) showAspectFrame(false); });
+window.addEventListener("resize", () => { if (aspectFrame.classList.contains("on")) showAspectFrame(true); });
+</script>
+</body>
+</html>
