@@ -1,0 +1,105 @@
+microclass,description,verbnet_class,verb,template,sentence,grammatical
+touch,Pure contact,touch-20,touch,body,Kim touched Bill on the arm.,yes
+touch,Pure contact,touch-20,touch,conative,Kim touched at the branch.,no
+touch,Pure contact,touch-20,touch,middle,This branch touches easily.,no
+touch,Pure contact,touch-20,touch,inchoative,The branch touched.,no
+touch,Pure contact,touch-20,caress,body,Kim caressed Bill on the arm.,yes
+touch,Pure contact,touch-20,caress,conative,Kim caressed at the branch.,no
+touch,Pure contact,touch-20,caress,middle,This branch caresses easily.,no
+touch,Pure contact,touch-20,caress,inchoative,The branch caressed.,no
+touch,Pure contact,touch-20,graze,body,Kim grazed Bill on the arm.,yes
+touch,Pure contact,touch-20,graze,conative,Kim grazed at the branch.,no
+touch,Pure contact,touch-20,graze,middle,This branch grazes easily.,no
+touch,Pure contact,touch-20,graze,inchoative,The branch grazed.,no
+touch,Pure contact,touch-20,kiss,body,Kim kissed Bill on the arm.,yes
+touch,Pure contact,touch-20,kiss,conative,Kim kissed at the branch.,no
+touch,Pure contact,touch-20,kiss,middle,This branch kisses easily.,no
+touch,Pure contact,touch-20,kiss,inchoative,The branch kissed.,no
+touch,Pure contact,touch-20,pet,body,Kim petted Bill on the arm.,yes
+touch,Pure contact,touch-20,pet,conative,Kim petted at the branch.,no
+touch,Pure contact,touch-20,pet,middle,This branch pets easily.,no
+touch,Pure contact,touch-20,pet,inchoative,The branch petted.,no
+touch,Pure contact,touch-20,squeeze,body,Kim squeezed Bill on the arm.,yes
+touch,Pure contact,touch-20,squeeze,conative,Kim squeezed at the branch.,no
+touch,Pure contact,touch-20,squeeze,middle,This branch squeezes easily.,no
+touch,Pure contact,touch-20,squeeze,inchoative,The branch squeezed.,no
+touch,Pure contact,touch-20,stroke,body,Kim stroked Bill on the arm.,yes
+touch,Pure contact,touch-20,stroke,conative,Kim stroked at the branch.,no
+touch,Pure contact,touch-20,stroke,middle,This branch strokes easily.,no
+touch,Pure contact,touch-20,stroke,inchoative,The branch stroked.,no
+hit,Contact by motion,hit-18.1,hit,body,Kim hit Bill on the arm.,yes
+hit,Contact by motion,hit-18.1,hit,conative,Kim hit at the branch.,yes
+hit,Contact by motion,hit-18.1,hit,middle,This branch hits easily.,no
+hit,Contact by motion,hit-18.1,hit,inchoative,The branch hit.,no
+hit,Contact by motion,hit-18.1,bash,body,Kim bashed Bill on the arm.,yes
+hit,Contact by motion,hit-18.1,bash,conative,Kim bashed at the branch.,yes
+hit,Contact by motion,hit-18.1,bash,middle,This branch bashes easily.,no
+hit,Contact by motion,hit-18.1,bash,inchoative,The branch bashed.,no
+hit,Contact by motion,hit-18.1,beat,body,Kim beat Bill on the arm.,yes
+hit,Contact by motion,hit-18.1,beat,conative,Kim beat at the branch.,yes
+hit,Contact by motion,hit-18.1,beat,middle,This branch beats easily.,no
+hit,Contact by motion,hit-18.1,beat,inchoative,The branch beat.,no
+hit,Contact by motion,hit-18.1,hammer,body,Kim hammered Bill on the arm.,yes
+hit,Contact by motion,hit-18.1,hammer,conative,Kim hammered at the branch.,yes
+hit,Contact by motion,hit-18.1,hammer,middle,This branch hammers easily.,no
+hit,Contact by motion,hit-18.1,hammer,inchoative,The branch hammered.,no
+hit,Contact by motion,hit-18.1,jab,body,Kim jabbed Bill on the arm.,yes
+hit,Contact by motion,hit-18.1,jab,conative,Kim jabbed at the branch.,yes
+hit,Contact by motion,hit-18.1,jab,middle,This branch jabs easily.,no
+hit,Contact by motion,hit-18.1,jab,inchoative,The branch jabbed.,no
+hit,Contact by motion,hit-18.1,kick,body,Kim kicked Bill on the arm.,yes
+hit,Contact by motion,hit-18.1,kick,conative,Kim kicked at the branch.,yes
+hit,Contact by motion,hit-18.1,kick,middle,This branch kicks easily.,no
+hit,Contact by motion,hit-18.1,kick,inchoative,The branch kicked.,no
+hit,Contact by motion,hit-18.1,pound,body,Kim pounded Bill on the arm.,yes
+hit,Contact by motion,hit-18.1,pound,conative,Kim pounded at the branch.,yes
+hit,Contact by motion,hit-18.1,pound,middle,This branch pounds easily.,no
+hit,Contact by motion,hit-18.1,pound,inchoative,The branch pounded.,no
+hit,Contact by motion,hit-18.1,slap,body,Kim slapped Bill on the arm.,yes
+hit,Contact by motion,hit-18.1,slap,conative,Kim slapped at the branch.,yes
+hit,Contact by motion,hit-18.1,slap,middle,This branch slaps easily.,no
+hit,Contact by motion,hit-18.1,slap,inchoative,The branch slapped.,no
+hit,Contact by motion,hit-18.1,smack,body,Kim smacked Bill on the arm.,yes
+hit,Contact by motion,hit-18.1,smack,conative,Kim smacked at the branch.,yes
+hit,Contact by motion,hit-18.1,smack,middle,This branch smacks easily.,no
+hit,Contact by motion,hit-18.1,smack,inchoative,The branch smacked.,no
+hit,Contact by motion,hit-18.1,strike,body,Kim struck Bill on the arm.,yes
+hit,Contact by motion,hit-18.1,strike,conative,Kim struck at the branch.,yes
+hit,Contact by motion,hit-18.1,strike,middle,This branch strikes easily.,no
+hit,Contact by motion,hit-18.1,strike,inchoative,The branch struck.,no
+hit,Contact by motion,hit-18.1,whack,body,Kim whacked Bill on the arm.,yes
+hit,Contact by motion,hit-18.1,whack,conative,Kim whacked at the branch.,yes
+hit,Contact by motion,hit-18.1,whack,middle,This branch whacks easily.,no
+hit,Contact by motion,hit-18.1,whack,inchoative,The branch whacked.,no
+cut,Change of state by contact and motion,cut-21.1,cut,body,Kim cut Bill on the arm.,yes
+cut,Change of state by contact and motion,cut-21.1,cut,conative,Kim cut at the branch.,yes
+cut,Change of state by contact and motion,cut-21.1,cut,middle,This branch cuts easily.,yes
+cut,Change of state by contact and motion,cut-21.1,cut,inchoative,The branch cut.,no
+cut,Change of state by contact and motion,cut-21.1,chop,body,Kim chopped Bill on the arm.,yes
+cut,Change of state by contact and motion,cut-21.1,chop,conative,Kim chopped at the branch.,yes
+cut,Change of state by contact and motion,cut-21.1,chop,middle,This branch chops easily.,yes
+cut,Change of state by contact and motion,cut-21.1,chop,inchoative,The branch chopped.,no
+cut,Change of state by contact and motion,cut-21.1,clip,body,Kim clipped Bill on the arm.,yes
+cut,Change of state by contact and motion,cut-21.1,clip,conative,Kim clipped at the branch.,yes
+cut,Change of state by contact and motion,cut-21.1,clip,middle,This branch clips easily.,yes
+cut,Change of state by contact and motion,cut-21.1,clip,inchoative,The branch clipped.,no
+cut,Change of state by contact and motion,cut-21.1,slice,body,Kim sliced Bill on the arm.,yes
+cut,Change of state by contact and motion,cut-21.1,slice,conative,Kim sliced at the branch.,yes
+cut,Change of state by contact and motion,cut-21.1,slice,middle,This branch slices easily.,yes
+cut,Change of state by contact and motion,cut-21.1,slice,inchoative,The branch sliced.,no
+break,Pure change of state,break-45.1,break,body,Kim broke Bill on the arm.,no
+break,Pure change of state,break-45.1,break,conative,Kim broke at the branch.,no
+break,Pure change of state,break-45.1,break,middle,This branch breaks easily.,yes
+break,Pure change of state,break-45.1,break,inchoative,The branch broke.,yes
+break,Pure change of state,break-45.1,fracture,body,Kim fractured Bill on the arm.,no
+break,Pure change of state,break-45.1,fracture,conative,Kim fractured at the branch.,no
+break,Pure change of state,break-45.1,fracture,middle,This branch fractures easily.,yes
+break,Pure change of state,break-45.1,fracture,inchoative,The branch fractured.,yes
+break,Pure change of state,break-45.1,splinter,body,Kim splintered Bill on the arm.,no
+break,Pure change of state,break-45.1,splinter,conative,Kim splintered at the branch.,no
+break,Pure change of state,break-45.1,splinter,middle,This branch splinters easily.,yes
+break,Pure change of state,break-45.1,splinter,inchoative,The branch splintered.,yes
+break,Pure change of state,break-45.1,split,body,Kim split Bill on the arm.,no
+break,Pure change of state,break-45.1,split,conative,Kim split at the branch.,no
+break,Pure change of state,break-45.1,split,middle,This branch splits easily.,yes
+break,Pure change of state,break-45.1,split,inchoative,The branch split.,yes
