@@ -25,6 +25,9 @@ Keys: → / PageDown next, ← / PageUp previous, also while a demo has the keyb
 
 | page | what's on it | controls |
 |---|---|---|
+| 0.1 `demo0-space/1-ocean-data.html` | 658 Argo floats' sea-surface temperatures on a latitude/longitude map; hover over a float for its temperature, salinity, pressure, place, and date | hover |
+| 0.2 `…/2-ocean-model.html` | a smooth model of temperature as a function of (longitude, latitude), TF.js network 2 → 32 → 32 → 1 (tanh), fit by Adam from a random start; the land is painted over it or (**over land**) shows the model's extrapolation | **new start**, **optimize**, **model**, **over land** |
+| 0.3 `…/3-projections.html` | the continents, a 30° grid, identical circles on the globe (Tissot), and the floats, morphed smoothly between projections; **drift** keeps transforming the map at random (a random walk, low-pass filtered twice), with **folds** it also folds over itself (translucent land: overlaps look darker) | projections, **drift** (space), **folds**, **grid**, **circles**, **floats** |
 | 1.1 `demo1-optimization/1-simulation.html` | frictionless ball on a 15-node slide, timer, bar history | presets, **release** (space); drag nodes by hand |
 | 1.2 `…/2-random.html` | random smooth slides (Chebyshev), time computed without animation | **random** (space) |
 | 1.3 `…/3-optimize.html` | gradient-free (1+1) evolution strategy on the 15 heights | **randomize**, **optimize** (space; starts from the current slide), **show optimal** (the cycloid) |
@@ -37,8 +40,10 @@ Keys: → / PageDown next, ← / PageUp previous, also while a demo has the keyb
 | 3.1 `demo3-generalization/1-overfit.html` | 1 hidden layer × 1000 neurons overfitting noisy XOR; loss on this data vs new data | **resample data**, **reset model**, **optimize** |
 | 3.2 `…/2-circle.html` | 2 → 3 → 1 network with live weights; the fit, the hidden layer's 3D space (drag to rotate), and the network | **new start**, **optimize** |
 | 3.3 `…/3-spirals.html` | the gist's 2 → 100 → 2 → 3 network; the fit, the warped (u, v) space of the 2D layer, and the network | **new start**, **optimize** |
+| 3.4 `demo3-generalization/4-snowflake.html` | a paper snowflake (cuts in the 1/8 wedge, unfolded by the square's 8 symmetries), fit by two one-hidden-layer networks of the same size: directly from (x, y), and from the paper folded three times (a fixed transformation); the folded fit, drawn in the wedge and unfolded over the square, is much better. **fold** animates the folding | **new snowflake**, **new start**, **fold**, **optimize**, number of **hidden nodes** |
 | 4.1 `demo4-attention/1-embedding.html` | type a word + Enter: its 100-d vector and the nearest words around it. Each word's distance from the center is its dissimilarity (1 − cosine similarity, minus the nearest word's) and the angles come from radius-constrained multidimensional scaling, so the plot is a crop of the whole vocabulary laid out that way, zoomed to about 40 readable words. Or type a sum/difference such as *king − man + woman*: the words' vectors are added (`-` or `−` subtracts) and the plot is centered on the result | text field |
 | 4.2 `…/2-translation.html` | type an English sentence + Enter: French translation and the attention matrix ("hot" colormap) | text field |
+| 4.3 `demo4-attention/3-verb-classes.html` | four verb microclasses (pure contact, contact through motion, change of state by contact and motion, pure change of state) in four sentence frames: blue grammatical, orange not; clicking a verb swaps in another member of its class (from VerbNet), and the pattern stays the same | verb buttons, **next verbs** (space) |
 | 5 `demo5-few-shot/1-complete.html` | base LLM completes the text box (completion in blue); starts empty, temperature 1 | presets (they only fill in the text box), **complete** (Ctrl/⌘-Enter; runs until **stop** unless max tokens is set in ⚙), temperature, ⚙ settings |
 
 Good Demo 4.2 sentences: *My older sister bought a beautiful blue car yesterday.* · *The white car is new.* · *He has a red bicycle and a black car.* · *The old man reads a book.*
@@ -73,6 +78,8 @@ Use Chrome. A page served from GitHub Pages (https) may call `http://localhost:8
 
 ## Credits
 
+- Demo 0 data: Argo float data and metadata from the Global Data Assembly Centre (Argo GDAC), [SEANOE, doi:10.17882/42182](https://doi.org/10.17882/42182), via Ifremer's ERDDAP server; land outlines from [Natural Earth](https://www.naturalearthdata.com) (public domain). `demo0-space/make-data.py` (Python standard library only) downloads both and writes `argo.js` and `world.js`. Projections follow J. P. Snyder, *Map Projections: A Working Manual* (USGS Professional Paper 1395, 1987).
+- Demo 4.3 verb classes: Gropen, Pinker, Hollander, Goldberg & Wilson, *Language* 65 (1989); B. Levin, *English Verb Classes and Alternations* (1993); [VerbNet](https://verbs.colorado.edu/verbnet/) classes touch-20, hit-18.1, cut-21.1, break-45.1 (verbs in `prep/verb_microclass_sentences.csv`).
 - Demo 2 image: Preston Foster in *Kansas City Confidential* (1952), public domain, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Preston_Foster_in_Kansas_City_Confidential.jpg). Cropped, greyscale, 128×128.
 - Demo 4 training data: [Tatoeba](https://tatoeba.org) sentence pairs via [manythings.org/anki](https://www.manythings.org/anki/), CC-BY 2.0 (France). The word vectors are [GloVe](https://nlp.stanford.edu/projects/glove/) (Pennington, Socher & Manning 2014), Public Domain Dedication and License.
 - Demo 3.3 follows [this notebook](https://gist.github.com/jpivarski/f99371614ecaa48ace90a6025d430247), adapted from [Atcold/pytorch-Deep-Learning](https://github.com/Atcold/pytorch-Deep-Learning). The colors follow the [TensorFlow Playground](https://playground.tensorflow.org).

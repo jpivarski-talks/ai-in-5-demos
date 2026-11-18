@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<title>A model: a smooth function from place to temperature</title>
+<link rel="stylesheet" href="../common/stage.css">
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/tf.js"></script>
+<script src="../common/stage.js"></script>
+<script src="../common/optim.js"></script>
+<script src="../demo3-generalization/nn-common.js"></script>
+<script src="world.js"></script>
+<script src="argo.js"></script>
+<script src="map-common.js"></script>
+<script>
+"use strict";
+// A model of sea-surface temperature as a function of longitude and latitude: a small neural
+// network (2 -> 32 -> 32 -> 1, tanh), fit to the Argo floats by Adam. It starts random, and
+// wherever there are no floats (between them, and over the land) it fills in or extrapolates.
+const CFG = { hidden: 32, lr: 0.004, perFrame: 2, initScale: 3.5, GX: 288, GY: 144 };
+const u = Optim.rng();
+const MAP = { x: 70, y: 70, w: 1460, h: 730 };
+const panel = new Stage.Panel(MAP);
+const R = { x: 0, y: 0, w: MAP.w, h: MAP.h };
+
+const temps = MapC.temps();
+const lonlat = MapC.floatsLonLat();
+const xy = new Float32Array(lonlat.length);
+for (let i = 0; i < lonlat.length; i += 2) { xy[i] = MapC.mapX(R, lonlat[i]); xy[i + 1] = MapC.mapY(R, lonlat[i + 1]); }
+
+// inputs scaled to [-1, 1], temperature standardized
+const MEAN = temps.reduce((a, b) => a + b, 0) / temps.length;
+const STD = Math.sqrt(temps.reduce((a, t) => a + (t - MEAN) ** 2, 0) / temps.length);
+const xin = new Float32Array(lonlat.length);
+for (let i = 0; i < lonlat.length; i += 2) { xin[i] = lonlat[i] / 180; xin[i + 1] = lonlat[i + 1] / 90; }
+const X = tf.tensor(xin, [temps.length, 2]);
+const Y = tf.tensor(temps.map((t) => (t - MEAN) / STD), [temps.length, 1]);
+// grid covering the whole map (cell centers), row 0 at the top
+const ga = new Float32Array(CFG.GX * CFG.GY * 2);
+for (let j = 0; j < CFG.GY; j++) for (let i = 0; i < CFG.GX; i++) {
+  ga[2 * (j * CFG.GX + i)] = -1 + 2 * (i + 0.5) / CFG.GX;
+  ga[2 * (j * CFG.GX + i) + 1] = 1 - 2 * (j + 0.5) / CFG.GY;
+}
+const GRID = tf.tensor(ga, [CFG.GX * CFG.GY, 2]);
+
+let model = null, opt = null, running = false, field = null, rms = null, steps = 0;
+
+// Random start: large enough first-layer weights that the untrained model is a visibly
+// random smooth landscape of temperatures, not a flat color.
+function newModel() {
+  if (model) model.dispose();
+  const H = CFG.hidden;
+  model = new NN.MLP([
+    { W: NN.randn([2, H], CFG.initScale, u), b: NN.randn([H], 1.0, u), act: "tanh" },
+    { W: NN.randn([H, H], 1.2 / Math.sqrt(H), u), b: NN.randn([H], 0.3, u), act: "tanh" },
+    { W: NN.randn([H, 1], 1.6 / Math.sqrt(H), u), b: tf.zeros([1]) },
+  ]);
+  if (opt) opt.dispose();
+  opt = tf.train.adam(CFG.lr);
+  steps = 0;
+  update();
+}
+const lossFn = () => tf.losses.meanSquaredError(Y, model.forward(X));
+
+function update() {
+  field = tf.tidy(() => model.forward(GRID).dataSync());
+  rms = Math.sqrt(tf.tidy(() => lossFn().dataSync()[0])) * STD;
+  errText.textContent = `typical error: ${rms.toFixed(1)} °C`;
+}
+
+// paint the model's temperatures into an offscreen canvas, then stretch it over the map
+const off = document.createElement("canvas");
+off.width = CFG.GX; off.height = CFG.GY;
+const offc = off.getContext("2d"), img = offc.createImageData(CFG.GX, CFG.GY);
+function paintField(c) {
+  for (let p = 0; p < CFG.GX * CFG.GY; p++) {
+    const rgb = MapC.tempRGB(MEAN + STD * field[p]);
+    img.data[4 * p] = rgb[0]; img.data[4 * p + 1] = rgb[1]; img.data[4 * p + 2] = rgb[2]; img.data[4 * p + 3] = 255;
+  }
+  offc.putImageData(img, 0, 0);
+  c.imageSmoothingEnabled = true;
+  c.drawImage(off, R.x, R.y, R.w, R.h);
+}
+
+function draw() {
+  const c = panel.clear();
+  if (showModel.checked && field) paintField(c);
+  MapC.drawLand(c, R, !overLand.checked || !showModel.checked);
+  MapC.drawFloats(c, xy, temps);
+  c.strokeStyle = "#bbb"; c.lineWidth = 1.5; c.strokeRect(0.75, 0.75, R.w - 1.5, R.h - 1.5);
+}
+
+function stop() { running = false; trainButton.textContent = "optimize"; trainButton.classList.remove("on"); }
+function train() {
+  if (running) { stop(); return; }
+  if (!showModel.checked) { showModel.checked = true; }
+  running = true;
+  trainButton.textContent = "stop";
+  trainButton.classList.add("on");
+}
+
+// controls: buttons, checkboxes, the error, and the color bar on the right
+const bar = Stage.controls({ x: 70, y: 815, w: 900, h: 70 });
+Stage.button("new start", () => { stop(); newModel(); draw(); }, bar);
+const trainButton = Stage.button("optimize", train, bar, { cls: "primary" });
+function checkbox(text, on) {
+  const l = Stage.el("label", { class: "field" }, bar);
+  const box = Stage.el("input", { type: "checkbox" }, l);
+  box.checked = on;
+  l.appendChild(document.createTextNode(text));
+  box.addEventListener("change", () => { box.blur(); draw(); });
+  return box;
+}
+const showModel = checkbox("model", true);
+const overLand = checkbox("over land", false);
+const errText = Stage.el("div", {}, bar);
+Object.assign(errText.style, { fontSize: "22px", color: Stage.COLORS.grey, marginLeft: "12px", fontVariantNumeric: "tabular-nums" });
+
+const barPanel = new Stage.Panel({ x: 890, y: 830, w: 640, h: 44 });
+barPanel.onresize = () => MapC.colorBar(barPanel.clear(), { x: 120, y: 2, w: 500, h: 18 }, "°C");
+barPanel.onresize();
+panel.onresize = draw;
+
+newModel();
+Stage.loop(() => {
+  if (running) {
+    for (let k = 0; k < CFG.perFrame; k++) opt.minimize(lossFn);
+    steps += CFG.perFrame;
+    update();
+  }
+  draw();
+});
+
+Stage.cite([
+  ["Data: Argo Global Data Assembly Centre (SEANOE).", "https://doi.org/10.17882/42182"],
+  ["Land: Natural Earth.", "https://www.naturalearthdata.com"],
+], { x: 510, y: 16, w: 1000 });
+Stage.nav("1-ocean-data.html", "3-projections.html");
+window.demo = { CFG, train, stop, newModel, get rms() { return rms; }, get steps() { return steps; }, get model() { return model; } };
+</script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<title>Fold, then fit: a paper snowflake</title>
+<link rel="stylesheet" href="../common/stage.css">
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/tf.js"></script>
+<script src="../common/stage.js"></script>
+<script src="../common/plots.js"></script>
+<script src="../common/optim.js"></script>
+<script src="nn-common.js"></script>
+<script src="nn-diagram.js"></script>
+<script>
+"use strict";
+// A paper snowflake: fold a square of paper in half three times, cut shapes out of the folded
+// wedge, unfold. The data are points on the paper: blue where there is paper, orange where it
+// was cut away. Two models with one hidden layer each (same size) learn it:
+//   left:   directly, from (x, y);
+//   middle: from the folded (x, y), i.e. the paper folded the same way (a fixed transformation,
+//           not learned), which only has to learn one eighth of the pattern;
+//   right:  the middle model unfolded, which is the same model, drawn on the whole square.
+const CFG = { n: 2000, hidden: 12, lr: 0.05, perFrame: 3, G: 120, w1: 4.0, b1: 2.0 };
+let u = Optim.rng();
+const C = Stage.COLORS;
+const M = Stage.L.main, P = 500, GAP = 30;
+const panel = new Stage.Panel({ x: 20, y: 90, w: 1560, h: 710 });
+const R1 = { x: 0, y: 0, w: P, h: P }, R2 = { x: P + GAP, y: 0, w: P, h: P }, R3 = { x: 2 * (P + GAP), y: 0, w: P, h: P };
+const ax1 = new Plots.Axes(panel, R1, [-1, 1], [-1, 1]);
+const ax3 = new Plots.Axes(panel, R3, [-1, 1], [-1, 1]);
+// the middle panel has the same scale as the others, so the folded paper is visibly 1/8 of the square
+const VIEW2 = [-1, 1];
+const ax2 = new Plots.Axes(panel, R2, VIEW2.slice(), VIEW2.slice());
+
+// ---------------------------------------------------------------- the fold: in half, in half, along the diagonal
+function fold(x, y) {
+  const a = Math.abs(x), b = Math.abs(y);
+  return a >= b ? [a, b] : [b, a];
+}
+
+// ---------------------------------------------------------------- the snowflake
+// Cuts are made in the folded wedge 0 <= y <= x <= 1, like scissors on folded paper: notches into
+// the two folded edges and the outer edge, and maybe a hole or two in the middle.
+let cuts = [];
+function newCuts() {
+  cuts = [];
+  const add = (cx, cy, rmin, rmax) => cuts.push({ cx, cy, a: rmin + (rmax - rmin) * u(), b: rmin + (rmax - rmin) * u(), t: Math.PI * u() });
+  const nEdge = 2 + Math.floor(3 * u());
+  for (let k = 0; k < nEdge; k++) {
+    const side = Math.floor(3 * u()), s = 0.15 + 0.8 * u();
+    if (side === 0) add(s, 0, 0.05, 0.16);                // the first fold (bottom edge of the wedge)
+    else if (side === 1) add(s, s, 0.05, 0.14);           // the diagonal fold
+    else add(1, s * 0.95, 0.06, 0.2);                     // the outer edge
+  }
+  if (u() < 0.7) add(0, 0, 0.08, 0.2);                    // the center
+  const nIn = Math.floor(2 * u());
+  for (let k = 0; k <= nIn; k++) { const x = 0.35 + 0.5 * u(); add(x, (0.15 + 0.7 * u()) * x, 0.04, 0.1); }
+  // the outer corner
+  if (u() < 0.6) add(1, 1, 0.12, 0.35);
+}
+function isCut(x, y) {
+  const [fx, fy] = fold(x, y);
+  for (const c of cuts) {
+    const dx = fx - c.cx, dy = fy - c.cy, ct = Math.cos(c.t), st = Math.sin(c.t);
+    const p = (dx * ct + dy * st) / c.a, q = (-dx * st + dy * ct) / c.b;
+    if (p * p + q * q < 1) return true;
+  }
+  return false;
+}
+
+let data, X1, X2, Y;
+function newData() {
+  for (let attempt = 0; attempt < 50; attempt++) {
+    newCuts();
+    const xs = [], ys = [];
+    for (let i = 0; i < CFG.n; i++) {
+      const x = 2 * u() - 1, y = 2 * u() - 1;
+      xs.push([x, y]);
+      ys.push(isCut(x, y) ? 0 : 1);   // 0: cut away (orange), 1: paper (blue)
+    }
+    const frac = ys.filter((v) => v === 0).length / ys.length;
+    data = { xs, ys, folded: xs.map(([x, y]) => fold(x, y)) };
+    if (frac > 0.2 && frac < 0.45) break;
+  }
+  for (const t of [X1, X2, Y]) if (t) t.dispose();
+  X1 = tf.tensor(data.xs);
+  X2 = tf.tensor(data.folded);
+  Y = tf.tensor(data.ys.map((v) => [v]));
+}
+
+// ---------------------------------------------------------------- the two models
+const G = CFG.G;
+const gridFull = NN.grid(G, -1, 1);                          // the whole square
+const gridWedge = NN.grid(G, VIEW2[0], VIEW2[1]);            // the folded view (middle panel)
+const gridFolded = tf.tidy(() => {                           // the whole square, folded
+  const a = gridFull.dataSync(), out = new Float32Array(a.length);
+  for (let i = 0; i < a.length; i += 2) { const [p, q] = fold(a[i], a[i + 1]); out[i] = p; out[i + 1] = q; }
+  return tf.tensor(out, [G * G, 2]);
+});
+let direct = null, folded = null, optA = null, optB = null, running = false, view = null, steps = 0;
+function oneLayer() {
+  return new NN.MLP([
+    { W: NN.randn([2, CFG.hidden], CFG.w1, u), b: NN.randn([CFG.hidden], CFG.b1, u), act: "tanh" },
+    { W: NN.randn([CFG.hidden, 1], 0.3, u), b: tf.zeros([1]) },
+  ]);
+}
+function newModels() {
+  for (const m of [direct, folded]) if (m) m.dispose();
+  for (const o of [optA, optB]) if (o) o.dispose();
+  direct = oneLayer(); folded = oneLayer();
+  optA = tf.train.adam(CFG.lr); optB = tf.train.adam(CFG.lr);
+  steps = 0;
+  computeView();
+}
+const lossA = () => tf.losses.sigmoidCrossEntropy(Y, direct.forward(X1));
+const lossB = () => tf.losses.sigmoidCrossEntropy(Y, folded.forward(X2));
+function accuracy(model, X) {
+  return tf.tidy(() => {
+    const pred = tf.greater(model.forward(X), 0).cast("float32");
+    return tf.mean(tf.equal(pred, Y).cast("float32")).dataSync()[0];
+  });
+}
+function computeView() {
+  view = tf.tidy(() => ({
+    direct: tf.sigmoid(direct.forward(gridFull)).dataSync(),
+    wedge: tf.sigmoid(folded.forward(gridWedge)).dataSync(),
+    unfolded: tf.sigmoid(folded.forward(gridFolded)).dataSync(),
+    accA: accuracy(direct, X1), accB: accuracy(folded, X2),
+  }));
+}
+
+// ---------------------------------------------------------------- the folding animation (middle panel)
+// Each fold turns half of the paper over in 3D about the fold line; seen from above, the distance
+// from the fold line shrinks by cos(pi s) as the turn s goes from 0 to 1.
+const FOLD_T = 1.1, PAUSE = 0.35;
+let anim = null;   // {t0} while playing
+function foldStep(k, x, y, s) {
+  const c = Math.cos(Math.PI * s);
+  if (k === 0) return y < 0 ? [x, y * c] : [x, y];
+  if (k === 1) return x < 0 ? [x * c, y] : [x, y];
+  if (y > x) { const d = (y - x) * (c - 1) / 2; return [x - d, y + d]; }
+  return [x, y];
+}
+// which fold is happening at time t into the animation, and how far it has gone
+function animState(t) {
+  const per = FOLD_T + PAUSE;
+  const k = Math.min(3, Math.floor(t / per)), s = k < 3 ? Math.min(1, (t - k * per) / FOLD_T) : 1;
+  return { k, s: s * s * (3 - 2 * s) };
+}
+function animPoint(x, y, st) {
+  let p = [x, y];
+  for (let j = 0; j < 3; j++) {
+    if (j < st.k) p = foldStep(j, p[0], p[1], 1);
+    else if (j === st.k) p = foldStep(j, p[0], p[1], st.s);
+  }
+  return p;
+}
+// the paper as 8 triangles (one per layer once it's folded); each moves as a whole through every fold
+const TRIS = [];
+for (let k = 0; k < 8; k++) {
+  const a0 = k * Math.PI / 4, a1 = (k + 1) * Math.PI / 4;
+  const corner = (a) => { const c = Math.cos(a), s = Math.sin(a), m = Math.max(Math.abs(c), Math.abs(s)); return [c / m, s / m]; };
+  TRIS.push([[0, 0], corner(a0), corner(a1)]);
+}
+function animTriangle(tri, st) {
+  // decide each fold by the triangle's center, so the whole triangle turns over together
+  let pts = tri.map((p) => p.slice());
+  for (let j = 0; j < 3 && j <= st.k; j++) {
+    const s = j < st.k ? 1 : st.s;
+    const cx = (pts[0][0] + pts[1][0] + pts[2][0]) / 3, cy = (pts[0][1] + pts[1][1] + pts[2][1]) / 3;
+    const flips = j === 0 ? cy < 0 : j === 1 ? cx < 0 : cy > cx;
+    if (flips) pts = pts.map(([x, y]) => j === 0 ? [x, y * Math.cos(Math.PI * s)] : j === 1 ? [x * Math.cos(Math.PI * s), y] : foldStep(2, x, y, s));
+  }
+  return pts;
+}
+const animLength = () => 3 * (FOLD_T + PAUSE) - PAUSE;
+
+// ---------------------------------------------------------------- drawing
+function frame(c, r) { c.strokeStyle = "#bbb"; c.lineWidth = 1.5; c.strokeRect(r.x + 0.75, r.y + 0.75, r.w - 1.5, r.h - 1.5); }
+function drawWedgeOutline(c, ax) {
+  c.beginPath(); c.moveTo(ax.X(0), ax.Y(0)); c.lineTo(ax.X(1), ax.Y(0)); c.lineTo(ax.X(1), ax.Y(1)); c.closePath();
+}
+function drawMiddle(c, now) {
+  const t = anim ? (now - anim.t0) / 1000 : Infinity;
+  if (anim && t > animLength()) anim = null;
+  if (!anim) {
+    // the folded paper: a triangle, 1/8 of the square and eight layers thick, with the folded
+    // model's fit inside it; the dashed lines are the folds
+    c.save();
+    c.beginPath(); c.rect(R2.x, R2.y, R2.w, R2.h); c.clip();
+    c.fillStyle = C.faint; c.fillRect(R2.x, R2.y, R2.w, R2.h);
+    c.setLineDash([6, 6]); c.strokeStyle = "#c4c4c4"; c.lineWidth = 1.5;
+    c.beginPath();
+    c.moveTo(ax2.X(-1), ax2.Y(0)); c.lineTo(ax2.X(1), ax2.Y(0));
+    c.moveTo(ax2.X(0), ax2.Y(-1)); c.lineTo(ax2.X(0), ax2.Y(1));
+    c.moveTo(ax2.X(-1), ax2.Y(-1)); c.lineTo(ax2.X(1), ax2.Y(1));
+    c.moveTo(ax2.X(-1), ax2.Y(1)); c.lineTo(ax2.X(1), ax2.Y(-1));
+    c.stroke(); c.setLineDash([]);
+    drawWedgeOutline(c, ax2); c.save(); c.clip();
+    NN.paintRegions(c, R2, view.wedge, G, 1);
+    c.restore();
+    NN.drawPoints(ax2, data.folded, data.ys, { r: 2.4, lw: 0.6 });
+    drawWedgeOutline(c, ax2); c.strokeStyle = "#999"; c.lineWidth = 1.5; c.stroke();
+    c.restore();
+    return;
+  }
+  const st = animState(t);
+  c.save();
+  c.beginPath(); c.rect(R2.x, R2.y, R2.w, R2.h); c.clip();
+  // the layers of paper (translucent, so stacked layers look darker)
+  for (const tri of TRIS) {
+    const p = animTriangle(tri, st);
+    c.beginPath(); c.moveTo(ax2.X(p[0][0]), ax2.Y(p[0][1])); c.lineTo(ax2.X(p[1][0]), ax2.Y(p[1][1])); c.lineTo(ax2.X(p[2][0]), ax2.Y(p[2][1])); c.closePath();
+    c.fillStyle = "rgba(8, 119, 189, 0.07)"; c.fill();
+    c.strokeStyle = "rgba(0, 0, 0, 0.25)"; c.lineWidth = 1; c.stroke();
+  }
+  const moved = data.xs.map(([x, y]) => animPoint(x, y, st));
+  NN.drawPoints(ax2, moved, data.ys, { r: 3.5 - 1.1 * (st.k + st.s) / 3, lw: 0.8 });
+  c.restore();
+}
+
+function caption(c, lines, cx, y) {
+  c.textAlign = "center"; c.textBaseline = "top";
+  lines.forEach(([text, size, color], i) => {
+    c.font = `${size}px ${C.font}`; c.fillStyle = color || C.ink;
+    c.fillText(text, cx, y + i * 38);
+  });
+}
+function draw(now) {
+  const c = panel.clear();
+  if (!view) return;
+  NN.paintRegions(c, R1, view.direct, G, 1);
+  NN.drawPoints(ax1, data.xs, data.ys, { r: 3.5, lw: 0.9 });
+  frame(c, R1);
+  drawMiddle(c, now);
+  frame(c, R2);
+  NN.paintRegions(c, R3, view.unfolded, G, 1);
+  NN.drawPoints(ax3, data.xs, data.ys, { r: 3.5, lw: 0.9 });
+  frame(c, R3);
+
+  const H = CFG.hidden, pct = (a) => `${(100 * a).toFixed(1)}% correct`;
+  const y0 = P + 26;
+  caption(c, [["fit the paper directly", 26], [`2 → ${H} → 1`, 22, C.grey], [pct(view.accA), 30]], R1.x + P / 2, y0);
+  caption(c, [["fold it three times, then fit", 26], [`fold, fold, fold → 2 → ${H} → 1`, 22, C.grey], [pct(view.accB), 30]], R2.x + P / 2, y0);
+  caption(c, [["unfold the fit", 26], ["(the same model)", 22, C.grey]], R3.x + P / 2, y0);
+  NNDiagram.arrow(c, R2.x + P - 30, P + 46, R3.x + 120, P + 46, C.grey);
+}
+
+// ---------------------------------------------------------------- controls
+function stop() { running = false; trainButton.textContent = "optimize"; trainButton.classList.remove("on"); }
+function train() {
+  if (running) { stop(); return; }
+  running = true;
+  trainButton.textContent = "stop";
+  trainButton.classList.add("on");
+}
+const bar = Stage.controls();
+Stage.button("new snowflake", () => { stop(); newData(); newModels(); }, bar);
+Stage.button("new start", () => { stop(); newModels(); }, bar);
+Stage.button("fold", () => { anim = { t0: performance.now() }; }, bar);
+const trainButton = Stage.button("optimize", train, bar, { cls: "primary" });
+const nl = Stage.el("label", { class: "field" }, bar);
+nl.appendChild(document.createTextNode("hidden nodes"));
+const knob = Stage.el("input", { class: "knob", type: "number", min: "1", max: "200", step: "1", value: String(CFG.hidden) }, nl);
+knob.style.width = "90px";
+knob.addEventListener("change", () => {
+  const v = Math.max(1, Math.min(200, Math.round(+knob.value) || CFG.hidden));
+  knob.value = String(v);
+  CFG.hidden = v;
+  stop(); newModels();
+  knob.blur();
+});
+
+newData();
+newModels();
+Stage.loop((dt, now) => {
+  if (running) {
+    for (let k = 0; k < CFG.perFrame; k++) { optA.minimize(lossA); optB.minimize(lossB); }
+    steps += CFG.perFrame;
+    computeView();
+  }
+  draw(now);
+});
+
+Stage.cite([
+  ["G. Montúfar, R. Pascanu, K. Cho, Y. Bengio, <i>On the Number of Linear Regions of Deep Neural Networks</i> (2014).", "https://doi.org/10.48550/arXiv.1402.1869"],
+  ["G. Cybenko, <i>Approximation by superpositions of a sigmoidal function</i> (1989).", "https://doi.org/10.1007/BF02551274"],
+], { x: 310, y: 16, w: 1200 });
+Stage.nav("../demo0-space/3-projections.html", "2-circle.html");
+window.demo = { CFG, train, stop, newData, newModels, get view() { return view; }, get steps() { return steps; }, fold: () => { anim = { t0: performance.now() }; } };
+</script>
+</body>
+</html>

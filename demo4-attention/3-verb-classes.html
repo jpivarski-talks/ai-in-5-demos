@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<title>Verb classes: which sentences work depends on what kind of event the verb describes</title>
+<link rel="stylesheet" href="../common/stage.css">
+<style>
+  #grid { position: absolute; left: 40px; top: 92px; width: 1520px; border-collapse: separate; border-spacing: 8px; table-layout: fixed; }
+  #grid col.lab { width: 300px; }
+  #grid th, #grid td { vertical-align: middle; text-align: left; font-weight: normal; }
+  #grid thead th { vertical-align: bottom; padding: 0 0 6px 0; }
+  #grid .cls { display: block; font-size: 21px; line-height: 1.25; color: var(--grey); min-height: 2.5em; margin-bottom: 10px; }
+  #grid .verb { display: block; width: 100%; box-sizing: border-box; text-align: left; font-size: 32px; padding: 8px 16px; }
+  #grid .count { display: block; font-size: 17px; color: #aaa; margin-top: 6px; }
+  #grid tbody th { font-size: 24px; line-height: 1.3; color: var(--ink); padding: 0 12px 0 0; }
+  #grid td { font-size: 26px; line-height: 1.3; border-radius: 10px; padding: 0 18px; height: 116px; color: var(--ink); }
+  #grid td.ok { background: rgb(166, 206, 231); }
+  #grid td.bad { background: rgb(251, 214, 172); }
+  #grid td b { font-weight: inherit; border-radius: 4px; padding: 0 2px; margin: 0 -2px; transition: background-color 0.8s ease; }
+  #grid td b.flash { background: rgba(255, 255, 255, 0.95); transition: none; }
+  .legend { display: flex; gap: 28px; align-items: center; font-size: 22px; color: var(--ink); margin-left: 24px; }
+  .legend .sw { display: inline-block; width: 22px; height: 22px; border-radius: 5px; vertical-align: -4px; margin-right: 8px; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/stage.js"></script>
+<script>
+"use strict";
+// Four small classes of English verbs (from VerbNet, following Levin 1993). Every verb in a class
+// fits the same sentence frames, and the pattern follows from what kind of event the verb describes:
+// contact, motion, a change of state. Click a verb to swap in another member of its class:
+// the sentences change, but which of them work does not. Space swaps all four.
+const TEMPLATES = ["Kim {past} Bill on the arm.", "Kim {past} at the branch.", "The branch {pres} easily.", "The branch {past}."];
+const CLASSES = [
+  { name: "pure contact", vn: "touch-20", pattern: [1, 0, 0, 0], verbs: [
+    ["touch", "touched", "touches"], ["caress", "caressed", "caresses"], ["graze", "grazed", "grazes"], ["kiss", "kissed", "kisses"],
+    ["pet", "petted", "pets"], ["squeeze", "squeezed", "squeezes"], ["stroke", "stroked", "strokes"]] },
+  { name: "contact through motion", vn: "hit-18.1", pattern: [1, 1, 0, 0], verbs: [
+    ["hit", "hit", "hits"], ["bash", "bashed", "bashes"], ["beat", "beat", "beats"], ["hammer", "hammered", "hammers"],
+    ["jab", "jabbed", "jabs"], ["kick", "kicked", "kicks"], ["pound", "pounded", "pounds"], ["slap", "slapped", "slaps"],
+    ["smack", "smacked", "smacks"], ["strike", "struck", "strikes"], ["whack", "whacked", "whacks"]] },
+  { name: "change of state brought about by contact and motion", vn: "cut-21.1", pattern: [1, 1, 1, 0], verbs: [
+    ["cut", "cut", "cuts"], ["chop", "chopped", "chops"], ["clip", "clipped", "clips"], ["slice", "sliced", "slices"]] },
+  { name: "pure change of state", vn: "break-45.1", pattern: [0, 0, 1, 1], verbs: [
+    ["break", "broke", "breaks"], ["fracture", "fractured", "fractures"], ["splinter", "splintered", "splinters"], ["split", "split", "splits"]] },
+];
+const idx = CLASSES.map(() => 0);
+
+const table = Stage.el("table", { id: "grid" });
+table.innerHTML =
+  `<colgroup><col class="lab"><col><col><col><col></colgroup>` +
+  `<thead><tr><th></th>${CLASSES.map((c, i) =>
+    `<th><span class="cls">${c.name}</span><button class="btn verb" data-col="${i}"></button><span class="count" id="count${i}"></span></th>`).join("")}</tr></thead>` +
+  `<tbody>${TEMPLATES.map((t, r) =>
+    `<tr><th>${t.replace(/\{past\}|\{pres\}/, "___")}</th>${CLASSES.map((c, i) => `<td class="${c.pattern[r] ? "ok" : "bad"}" id="c${r}-${i}"></td>`).join("")}</tr>`).join("")}</tbody>`;
+table.querySelectorAll(".verb").forEach((b) => b.addEventListener("click", () => { b.blur(); next(+b.dataset.col); }));
+
+function render(i, flash) {
+  const c = CLASSES[i], [base, past, pres] = c.verbs[idx[i]];
+  table.querySelector(`.verb[data-col="${i}"]`).textContent = base;
+  document.getElementById("count" + i).textContent = `${idx[i] + 1} of ${c.verbs.length}`;
+  TEMPLATES.forEach((t, r) => {
+    const form = t.includes("{pres}") ? pres : past;
+    const [a, b] = t.split(/\{past\}|\{pres\}/);
+    const cell = document.getElementById(`c${r}-${i}`);
+    cell.innerHTML = `${a}<b>${form}</b>${b}`;
+    if (flash) {
+      const m = cell.querySelector("b");
+      m.classList.add("flash");
+      requestAnimationFrame(() => requestAnimationFrame(() => m.classList.remove("flash")));
+    }
+  });
+}
+function next(i) { idx[i] = (idx[i] + 1) % CLASSES[i].verbs.length; render(i, true); }
+function nextAll() { CLASSES.forEach((_, i) => next(i)); }
+CLASSES.forEach((_, i) => render(i, false));
+
+const bar = Stage.controls({ x: 40, y: 815, w: 1000, h: 70 });
+Stage.button("next verbs", nextAll, bar, { cls: "primary" });
+const legend = Stage.el("div", { class: "legend", html:
+  `<span><span class="sw" style="background: rgb(166, 206, 231)"></span>grammatical</span>` +
+  `<span><span class="sw" style="background: rgb(251, 214, 172)"></span>ungrammatical</span>` }, bar);
+document.addEventListener("keydown", (e) => { if (e.key === " " && !e.repeat) { e.preventDefault(); nextAll(); } });
+
+Stage.cite([
+  ["J. Gropen, S. Pinker, M. Hollander, R. Goldberg, R. Wilson, <i>The learnability and acquisition of the dative alternation in English</i>, Language <b>65</b> (1989).", "https://doi.org/10.2307/415332"],
+  ["B. Levin, <i>English Verb Classes and Alternations</i> (1993).", "https://press.uchicago.edu/ucp/books/book/chicago/E/bo3684144.html"],
+  ["VerbNet: touch-20, hit-18.1, cut-21.1, break-45.1.", "https://verbs.colorado.edu/verbnet/"],
+], { x: 310, y: 16, w: 1200 });
+Stage.nav("2-translation.html", "../demo5-few-shot/1-complete.html");
+window.demo = { CLASSES, TEMPLATES, idx, next, nextAll };
+</script>
+</body>
+</html>

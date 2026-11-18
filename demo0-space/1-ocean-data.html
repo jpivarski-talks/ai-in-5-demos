@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<title>Data as points in space: ocean temperatures</title>
+<link rel="stylesheet" href="../common/stage.css">
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/stage.js"></script>
+<script src="world.js"></script>
+<script src="argo.js"></script>
+<script src="map-common.js"></script>
+<script>
+"use strict";
+// Each dot is one Argo float's measurement at the sea surface; hover over a dot to see what it measured.
+const MAP = { x: 70, y: 70, w: 1460, h: 730 };
+const panel = new Stage.Panel(MAP);
+const R = { x: 0, y: 0, w: MAP.w, h: MAP.h };
+const temps = MapC.temps();
+const lonlat = MapC.floatsLonLat();
+const xy = new Float32Array(lonlat.length);
+for (let i = 0; i < lonlat.length; i += 2) { xy[i] = MapC.mapX(R, lonlat[i]); xy[i + 1] = MapC.mapY(R, lonlat[i + 1]); }
+let hover = null;
+
+function draw() {
+  const c = panel.clear();
+  MapC.drawLand(c, R, true);
+  MapC.drawFloats(c, xy, temps, hover);
+  c.strokeStyle = "#bbb"; c.lineWidth = 1.5; c.strokeRect(0.75, 0.75, R.w - 1.5, R.h - 1.5);
+}
+
+// color bar, in the controls row
+const barPanel = new Stage.Panel({ x: 70, y: 816, w: 760, h: 70 });
+function drawBar() {
+  const c = barPanel.clear();
+  MapC.colorBar(c, { x: 240, y: 8, w: 500, h: 22 }, "temperature (°C)");
+}
+barPanel.onresize = drawBar;
+panel.onresize = draw;
+
+const tip = MapC.tooltip();
+panel.canvas.addEventListener("mousemove", (e) => {
+  const m = panel.pos(e);
+  let best = null, bd = (MapC.DOT_R + 4) ** 2;
+  for (let i = 0; i < temps.length; i++) {
+    const d = (xy[2 * i] - m.x) ** 2 + (xy[2 * i + 1] - m.y) ** 2;
+    if (d < bd) { bd = d; best = i; }
+  }
+  if (best !== hover) { hover = best; draw(); }
+  if (best == null) tip.hide();
+  else tip.show(ARGO[best], MAP.x + xy[2 * best], MAP.y + xy[2 * best + 1]);
+});
+panel.canvas.addEventListener("mouseleave", () => { hover = null; tip.hide(); draw(); });
+
+draw();
+drawBar();
+Stage.label(`${ARGO.length} floats, at the sea surface, March 1–2, 2025`, { x: 870, y: 826, w: 660, h: 30 }, { textAlign: "right", fontSize: "22px" });
+Stage.cite([
+  ["Argo float data, Argo Global Data Assembly Centre (SEANOE, 2000–).", "https://doi.org/10.17882/42182"],
+  ["Land: Natural Earth.", "https://www.naturalearthdata.com"],
+], { x: 510, y: 16, w: 1000 });
+Stage.nav(null, "2-ocean-model.html");
+window.demo = { draw, temps, xy };
+</script>
+</body>
+</html>

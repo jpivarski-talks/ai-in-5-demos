@@ -12,19 +12,65 @@
 <link rel="stylesheet" href="talk.css">
 </head>
 <body>
+<!--
+  HOW THIS WORKS
+  Serve the repository (python -m http.server) and open http://localhost:8000/.
 
+  Each <section> is one slide: a 1600 x 900 canvas, scaled as a whole to fit the screen.
+    * Ordinary content (headings, paragraphs, lists) flows from the top-left inside a margin.
+    * For exact placement, give an element class="at" and position it in slide pixels:
+        <div class="at" style="left: 900px; top: 300px; width: 600px">...</div>
+    * class="fragment" makes an element appear on the next key press (like \pause).
+    * <aside class="notes">...</aside> holds speaker notes: press S for the presenter window.
+    * A demo slide is a section with data-background-iframe="path/to/demo.html" and
+      data-background-interactive: the demo fills the slide and responds to the mouse.
+
+  Keys: → / PageDown next, ← / PageUp previous (also while a demo has the keyboard),
+        Esc or O overview, S speaker notes, F full screen, B black screen,
+        hold R to see the 1600 x 900 boundary and how far the window is from 16:9 (? lists Reveal's keys).
+  The URL ends in #/slide-id (or #/number), so reloading returns to the same slide.
+-->
 <div class="reveal">
 <div class="slides">
 
 <section>
   <h1 class="at" style="left: 90px; top: 300px; width: 1400px">How Chatbots Work</h1>
-  <p class="at grey" style="left: 92px; top: 430px; font-size: 40px">Understanding through Interactive Demos</p>
+  <p class="at grey" style="left: 92px; top: 430px; font-size: 40px">Understanding AI through Interactive Demos</p>
   <p class="at" style="left: 92px; top: 600px">Jim Pivarski</p>
   <p class="at grey" style="left: 92px; top: 655px; font-size: 28px">University of Chicago, Data Science Institute</p>
 </section>
 
+<!-- 1. data as points in space -->
+<section data-background-iframe="demo0-space/1-ocean-data.html" data-background-interactive></section>
+<!-- 2. a model: a smooth function from the data's space to the prediction -->
+<section data-background-iframe="demo0-space/2-ocean-model.html" data-background-interactive></section>
+<!-- 3. transformations: smooth functions from space to space -->
+<section data-background-iframe="demo0-space/3-projections.html" data-background-interactive></section>
+<!-- 4. a neural network: a chain of transformations, then a model -->
+<section data-background-iframe="demo3-generalization/4-snowflake.html" data-background-interactive></section>
+<section data-background-iframe="demo3-generalization/2-circle.html" data-background-interactive></section>
+<section data-background-iframe="demo3-generalization/3-spirals.html" data-background-interactive></section>
+<!-- 5. meanings of words as points in space -->
+<section data-background-iframe="demo4-attention/1-embedding.html" data-background-interactive></section>
+<!-- 6. relationships between words in a sequence: attention -->
+<section data-background-iframe="demo4-attention/2-translation.html" data-background-interactive></section>
+<!-- 7. higher-order patterns: syntax models generic aspects of the world -->
+<section data-background-iframe="demo4-attention/3-verb-classes.html" data-background-interactive></section>
+<!-- 8. a base LLM: knowledge and few-shot problem solving -->
+<section data-background-iframe="demo5-few-shot/1-complete.html" data-background-interactive></section>
+<!-- 9. RLHF (no demo) -->
+<!-- 10. chatbots and agents: transcripts passed between LLMs, users, and tools -->
 <section>
-HERE
+  <img class="at" style="left: 0; top: 0; width: 1600px; height: 900px; object-fit: contain;" src="img/basic-chatbot.png">
+</section>
+<section>
+  <img class="at" style="left: 0; top: 0; width: 1600px; height: 900px; object-fit: contain;" src="img/tool-web-search.png">
+</section>
+<section>
+  <img class="at" style="left: 0; top: 0; width: 1600px; height: 900px; object-fit: contain;" src="img/tool-reasoning.png">
+</section>
+<section>
+  <img class="at" style="left: 0; top: 0; width: 1600px; height: 900px; object-fit: contain;" src="img/tool-agent.png">
 </section>
 
 </div>
@@ -77,8 +123,8 @@ function focusSlide() {
 Reveal.on("ready", focusSlide);
 // compile the TensorFlow.js demos' GPU programs now, unseen, so they don't freeze on first use
 Reveal.on("ready", () => TFHost.warmUp([
-  "demo2-compression/4-adaptive-image.html",
-  "demo3-generalization/1-overfit.html",
+  "demo0-space/2-ocean-model.html",
+  "demo3-generalization/4-snowflake.html",
   "demo3-generalization/2-circle.html",
   "demo3-generalization/3-spirals.html",
 ]));
