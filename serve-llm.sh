@@ -8,6 +8,7 @@
 #   ./serve-llm.sh          Qwen3-8B-Base (same as `qwen`; needs ~6 GB of free memory)
 #   ./serve-llm.sh qwen     Qwen3-8B-Base (its pretraining included instruction datasets)
 #   ./serve-llm.sh llama    Llama-3.1-8B, the base model (~6 GB)
+#   ./serve-llm.sh llama2   Llama-2-13B, the base model (~9 GB; trained on pre-ChatGPT data, so no chatbot habits)
 #   ./serve-llm.sh big      Qwen3-30B-A3B-Base (needs ~20 GB; better at the harder prompts, but
 #                           slow, ~5 words/s, on a GPU too small for it, e.g. a 12 GB RTX 3060)
 #
@@ -28,12 +29,17 @@ case "${1:-qwen}" in
     REPO=mradermacher/Meta-Llama-3.1-8B-GGUF    # revision ab71df44c1fd2e0ac7fbf0e5da902636f7f0bfbf
     FILE=Meta-Llama-3.1-8B.Q4_K_M.gguf
     ;;
+  llama2)
+    # Meta's Llama 2 Community License; an ungated GGUF conversion of meta-llama/Llama-2-13b-hf
+    REPO=TheBloke/Llama-2-13B-GGUF              # revision b106d1c018ac999af9130b83134fb6b7c5331dea
+    FILE=llama-2-13b.Q4_K_M.gguf
+    ;;
   big)
     REPO=mradermacher/Qwen3-30B-A3B-Base-GGUF   # revision c8063198732762d149f728f1e05021eeb3df95d1
     FILE=Qwen3-30B-A3B-Base.Q4_K_M.gguf
     ;;
   *)
-    echo "usage: $0 [qwen | llama | big]   (default: qwen)" >&2
+    echo "usage: $0 [qwen | llama | llama2 | big]   (default: qwen)" >&2
     exit 1
     ;;
 esac

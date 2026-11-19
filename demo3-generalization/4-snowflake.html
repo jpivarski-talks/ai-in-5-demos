@@ -13,25 +13,24 @@
 <script src="../common/plots.js"></script>
 <script src="../common/optim.js"></script>
 <script src="nn-common.js"></script>
-<script src="nn-diagram.js"></script>
 <script>
 "use strict";
 // A paper snowflake: fold a square of paper in half three times, cut shapes out of the folded
 // wedge, unfold. The data are points on the paper: blue where there is paper, orange where it
 // was cut away. Two models with one hidden layer each (same size) learn it:
-//   left:   directly, from (x, y);
-//   middle: from the folded (x, y), i.e. the paper folded the same way (a fixed transformation,
-//           not learned), which only has to learn one eighth of the pattern;
-//   right:  the middle model unfolded, which is the same model, drawn on the whole square.
-const CFG = { n: 2000, hidden: 12, lr: 0.05, perFrame: 3, G: 120, w1: 4.0, b1: 2.0 };
+//   left:  directly, from (x, y);
+//   right: from the folded (x, y), i.e. the paper folded the same way (a fixed transformation,
+//          not learned), which only has to learn one eighth of the pattern.
+// Click the right square to fold the paper (see the fit in the folded wedge) or unfold it (see
+// the same fit on the whole paper, where it has the snowflake's symmetries).
+const CFG = { n: 2000, hidden: 14, lr: 0.05, perFrame: 6, G: 120, w1: 4.0, b1: 2.0 };
 let u = Optim.rng();
 const C = Stage.COLORS;
-const M = Stage.L.main, P = 500, GAP = 30;
-const panel = new Stage.Panel({ x: 20, y: 90, w: 1560, h: 710 });
-const R1 = { x: 0, y: 0, w: P, h: P }, R2 = { x: P + GAP, y: 0, w: P, h: P }, R3 = { x: 2 * (P + GAP), y: 0, w: P, h: P };
+const P = 720, GAP = 100;
+const panel = new Stage.Panel({ x: (Stage.W - 2 * P - GAP) / 2, y: 76, w: 2 * P + GAP, h: P });
+const R1 = { x: 0, y: 0, w: P, h: P }, R2 = { x: P + GAP, y: 0, w: P, h: P };
 const ax1 = new Plots.Axes(panel, R1, [-1, 1], [-1, 1]);
-const ax3 = new Plots.Axes(panel, R3, [-1, 1], [-1, 1]);
-// the middle panel has the same scale as the others, so the folded paper is visibly 1/8 of the square
+// the right square has the same scale as the left, so the folded paper is visibly 1/8 of the square
 const VIEW2 = [-1, 1];
 const ax2 = new Plots.Axes(panel, R2, VIEW2.slice(), VIEW2.slice());
 
@@ -136,7 +135,8 @@ function computeView() {
 // Each fold turns half of the paper over in 3D about the fold line; seen from above, the distance
 // from the fold line shrinks by cos(pi s) as the turn s goes from 0 to 1.
 const FOLD_T = 1.1, PAUSE = 0.35;
-let anim = null;   // {t0} while playing
+let paperFolded = false;   // the right square: is the paper folded (or unfolded)?
+let anim = null;      // while folding or unfolding: {t0, from, dir}
 function foldStep(k, x, y, s) {
   const c = Math.cos(Math.PI * s);
   if (k === 0) return y < 0 ? [x, y * c] : [x, y];
@@ -167,112 +167,151 @@ for (let k = 0; k < 8; k++) {
 }
 function animTriangle(tri, st) {
   // decide each fold by the triangle's center, so the whole triangle turns over together
-  let pts = tri.map((p) => p.slice());
+  let pts = tri.map((p) => p.slice()), nflips = 0;
   for (let j = 0; j < 3 && j <= st.k; j++) {
     const s = j < st.k ? 1 : st.s;
     const cx = (pts[0][0] + pts[1][0] + pts[2][0]) / 3, cy = (pts[0][1] + pts[1][1] + pts[2][1]) / 3;
     const flips = j === 0 ? cy < 0 : j === 1 ? cx < 0 : cy > cx;
-    if (flips) pts = pts.map(([x, y]) => j === 0 ? [x, y * Math.cos(Math.PI * s)] : j === 1 ? [x * Math.cos(Math.PI * s), y] : foldStep(2, x, y, s));
+    if (flips) {
+      pts = pts.map(([x, y]) => j === 0 ? [x, y * Math.cos(Math.PI * s)] : j === 1 ? [x * Math.cos(Math.PI * s), y] : foldStep(2, x, y, s));
+      nflips += s;
+    }
   }
+  pts.flips = nflips;   // how many times this layer has been turned over (layers turned over more lie on top)
   return pts;
 }
 const animLength = () => 3 * (FOLD_T + PAUSE) - PAUSE;
 
+// the folded model's fit on the whole paper, as a G x G image (for the folding animation)
+const heat = document.createElement("canvas");
+heat.width = heat.height = CFG.G;
+function paintHeat() { NN.paintRegions(heat.getContext("2d"), { x: 0, y: 0, w: CFG.G, h: CFG.G }, view.unfolded, CFG.G, 1); }
+// the affine map [a, b, c, d, e, f] (as for ctx.transform) taking 3 source points to 3 destinations
+function affine(src, dst) {
+  const [[u0, v0], [u1, v1], [u2, v2]] = src;
+  const det = (u1 - u0) * (v2 - v0) - (u2 - u0) * (v1 - v0);
+  const [[x0, y0], [x1, y1], [x2, y2]] = dst;
+  const ddet = (x1 - x0) * (y2 - y0) - (x2 - x0) * (y1 - y0);
+  if (Math.abs(det) < 1e-9 || Math.abs(ddet) < 1e-3) return null;
+  // solve for each output coordinate: out = A u + B v + C
+  const solve = (w0, w1, w2) => {
+    const A = ((w1 - w0) * (v2 - v0) - (w2 - w0) * (v1 - v0)) / det;
+    const B = ((u1 - u0) * (w2 - w0) - (u2 - u0) * (w1 - w0)) / det;
+    return [A, B, w0 - A * u0 - B * v0];
+  };
+  const [a, cc, e] = solve(x0, x1, x2), [b, d, f] = solve(y0, y1, y2);
+  return [a, b, cc, d, e, f];
+}
+
 // ---------------------------------------------------------------- drawing
 function frame(c, r) { c.strokeStyle = "#bbb"; c.lineWidth = 1.5; c.strokeRect(r.x + 0.75, r.y + 0.75, r.w - 1.5, r.h - 1.5); }
+// dashed lines where the paper is folded: in half, in half again, and along the diagonals
+function drawFoldLines(c) {
+  c.save();
+  c.setLineDash([7, 7]); c.strokeStyle = "rgba(0, 0, 0, 0.3)"; c.lineWidth = 1.5;
+  c.beginPath();
+  c.moveTo(ax2.X(-1), ax2.Y(0)); c.lineTo(ax2.X(1), ax2.Y(0));
+  c.moveTo(ax2.X(0), ax2.Y(-1)); c.lineTo(ax2.X(0), ax2.Y(1));
+  c.moveTo(ax2.X(-1), ax2.Y(-1)); c.lineTo(ax2.X(1), ax2.Y(1));
+  c.moveTo(ax2.X(-1), ax2.Y(1)); c.lineTo(ax2.X(1), ax2.Y(-1));
+  c.stroke();
+  c.restore();
+}
 function drawWedgeOutline(c, ax) {
   c.beginPath(); c.moveTo(ax.X(0), ax.Y(0)); c.lineTo(ax.X(1), ax.Y(0)); c.lineTo(ax.X(1), ax.Y(1)); c.closePath();
 }
-function drawMiddle(c, now) {
-  const t = anim ? (now - anim.t0) / 1000 : Infinity;
-  if (anim && t > animLength()) anim = null;
+// time into the folding animation (0: unfolded, animLength(): folded)
+function animTime(now) { return Math.max(0, Math.min(animLength(), anim.from + anim.dir * (now - anim.t0) / 1000)); }
+function toggleFold() {
+  const now = performance.now();
+  const from = anim ? animTime(now) : paperFolded ? animLength() : 0;   // a second click mid-way turns back
+  const dir = (anim ? anim.dir : paperFolded ? 1 : -1) > 0 ? -1 : 1;
+  anim = { t0: now, from, dir };
+}
+const R_BIG = 4.2, R_SMALL = 2.8;   // point sizes on the whole paper and in the folded wedge
+function drawRight(c, now) {
+  let t = null;
+  if (anim) {
+    t = animTime(now);
+    if ((anim.dir > 0 && t >= animLength()) || (anim.dir < 0 && t <= 0)) { paperFolded = anim.dir > 0; anim = null; t = null; }
+  }
+  if (!anim && !paperFolded) {
+    // unfolded: the folded model's fit, drawn on the whole paper
+    NN.paintRegions(c, R2, view.unfolded, G, 1);
+    drawFoldLines(c);
+    NN.drawPoints(ax2, data.xs, data.ys, { r: R_BIG, lw: 0.9 });
+    return;
+  }
   if (!anim) {
     // the folded paper: a triangle, 1/8 of the square and eight layers thick, with the folded
     // model's fit inside it; the dashed lines are the folds
     c.save();
     c.beginPath(); c.rect(R2.x, R2.y, R2.w, R2.h); c.clip();
-    c.fillStyle = C.faint; c.fillRect(R2.x, R2.y, R2.w, R2.h);
-    c.setLineDash([6, 6]); c.strokeStyle = "#c4c4c4"; c.lineWidth = 1.5;
-    c.beginPath();
-    c.moveTo(ax2.X(-1), ax2.Y(0)); c.lineTo(ax2.X(1), ax2.Y(0));
-    c.moveTo(ax2.X(0), ax2.Y(-1)); c.lineTo(ax2.X(0), ax2.Y(1));
-    c.moveTo(ax2.X(-1), ax2.Y(-1)); c.lineTo(ax2.X(1), ax2.Y(1));
-    c.moveTo(ax2.X(-1), ax2.Y(1)); c.lineTo(ax2.X(1), ax2.Y(-1));
-    c.stroke(); c.setLineDash([]);
+    drawFoldLines(c);
     drawWedgeOutline(c, ax2); c.save(); c.clip();
     NN.paintRegions(c, R2, view.wedge, G, 1);
     c.restore();
-    NN.drawPoints(ax2, data.folded, data.ys, { r: 2.4, lw: 0.6 });
+    NN.drawPoints(ax2, data.folded, data.ys, { r: R_SMALL, lw: 0.6 });
     drawWedgeOutline(c, ax2); c.strokeStyle = "#999"; c.lineWidth = 1.5; c.stroke();
     c.restore();
     return;
   }
   const st = animState(t);
+  c.fillStyle = "#fff"; c.fillRect(R2.x, R2.y, R2.w, R2.h);
   c.save();
   c.beginPath(); c.rect(R2.x, R2.y, R2.w, R2.h); c.clip();
-  // the layers of paper (translucent, so stacked layers look darker)
-  for (const tri of TRIS) {
-    const p = animTriangle(tri, st);
-    c.beginPath(); c.moveTo(ax2.X(p[0][0]), ax2.Y(p[0][1])); c.lineTo(ax2.X(p[1][0]), ax2.Y(p[1][1])); c.lineTo(ax2.X(p[2][0]), ax2.Y(p[2][1])); c.closePath();
-    c.fillStyle = "rgba(8, 119, 189, 0.07)"; c.fill();
-    c.strokeStyle = "rgba(0, 0, 0, 0.25)"; c.lineWidth = 1; c.stroke();
+  // The layers of paper, each carrying its piece of the model's fit: every fold moves a layer
+  // rigidly (turning it over, seen from above), so each one is the fit on the whole paper, clipped
+  // to that layer's triangle and moved by the same (affine) map as the layer's corners.
+  paintHeat();
+  const layers = TRIS.map((tri) => ({ tri, p: animTriangle(tri, st) })).sort((a, b) => a.p.flips - b.p.flips);
+  const img = ([x, y]) => [(x + 1) / 2 * G, (1 - y) / 2 * G];   // paper coordinates -> heat-image pixels
+  for (const { tri, p } of layers) {
+    const src = tri.map(img), dst = p.map(([x, y]) => [ax2.X(x), ax2.Y(y)]);
+    const m = affine(src, dst);
+    if (!m) continue;   // a layer seen exactly edge-on
+    c.save();
+    c.transform(...m);
+    c.beginPath(); c.moveTo(...src[0]); c.lineTo(...src[1]); c.lineTo(...src[2]); c.closePath();
+    c.clip();
+    c.imageSmoothingEnabled = true;
+    c.drawImage(heat, 0, 0);
+    c.restore();
+    c.beginPath(); c.moveTo(...dst[0]); c.lineTo(...dst[1]); c.lineTo(...dst[2]); c.closePath();
+    c.strokeStyle = "rgba(0, 0, 0, 0.3)"; c.lineWidth = 1; c.stroke();
   }
+  drawFoldLines(c);
   const moved = data.xs.map(([x, y]) => animPoint(x, y, st));
-  NN.drawPoints(ax2, moved, data.ys, { r: 3.5 - 1.1 * (st.k + st.s) / 3, lw: 0.8 });
+  NN.drawPoints(ax2, moved, data.ys, { r: R_BIG - (R_BIG - R_SMALL) * (st.k + st.s) / 3, lw: 0.8 });
   c.restore();
 }
 
-function caption(c, lines, cx, y) {
-  c.textAlign = "center"; c.textBaseline = "top";
-  lines.forEach(([text, size, color], i) => {
-    c.font = `${size}px ${C.font}`; c.fillStyle = color || C.ink;
-    c.fillText(text, cx, y + i * 38);
-  });
-}
 function draw(now) {
   const c = panel.clear();
   if (!view) return;
   NN.paintRegions(c, R1, view.direct, G, 1);
-  NN.drawPoints(ax1, data.xs, data.ys, { r: 3.5, lw: 0.9 });
+  NN.drawPoints(ax1, data.xs, data.ys, { r: R_BIG, lw: 0.9 });
   frame(c, R1);
-  drawMiddle(c, now);
+  drawRight(c, now);
   frame(c, R2);
-  NN.paintRegions(c, R3, view.unfolded, G, 1);
-  NN.drawPoints(ax3, data.xs, data.ys, { r: 3.5, lw: 0.9 });
-  frame(c, R3);
-
-  const H = CFG.hidden, pct = (a) => `${(100 * a).toFixed(1)}% correct`;
-  const y0 = P + 26;
-  caption(c, [["fit the paper directly", 26], [`2 → ${H} → 1`, 22, C.grey], [pct(view.accA), 30]], R1.x + P / 2, y0);
-  caption(c, [["fold it three times, then fit", 26], [`fold, fold, fold → 2 → ${H} → 1`, 22, C.grey], [pct(view.accB), 30]], R2.x + P / 2, y0);
-  caption(c, [["unfold the fit", 26], ["(the same model)", 22, C.grey]], R3.x + P / 2, y0);
-  NNDiagram.arrow(c, R2.x + P - 30, P + 46, R3.x + 120, P + 46, C.grey);
 }
 
 // ---------------------------------------------------------------- controls
-function stop() { running = false; trainButton.textContent = "optimize"; trainButton.classList.remove("on"); }
+function stop() { running = false; trainButton.textContent = "optimize model"; trainButton.classList.remove("on"); }
 function train() {
   if (running) { stop(); return; }
   running = true;
   trainButton.textContent = "stop";
   trainButton.classList.add("on");
 }
-const bar = Stage.controls();
-Stage.button("new snowflake", () => { stop(); newData(); newModels(); }, bar);
-Stage.button("new start", () => { stop(); newModels(); }, bar);
-Stage.button("fold", () => { anim = { t0: performance.now() }; }, bar);
-const trainButton = Stage.button("optimize", train, bar, { cls: "primary" });
-const nl = Stage.el("label", { class: "field" }, bar);
-nl.appendChild(document.createTextNode("hidden nodes"));
-const knob = Stage.el("input", { class: "knob", type: "number", min: "1", max: "200", step: "1", value: String(CFG.hidden) }, nl);
-knob.style.width = "90px";
-knob.addEventListener("change", () => {
-  const v = Math.max(1, Math.min(200, Math.round(+knob.value) || CFG.hidden));
-  knob.value = String(v);
-  CFG.hidden = v;
-  stop(); newModels();
-  knob.blur();
-});
+const bar = Stage.controls({ x: panel.x, y: 815, w: 1000, h: 70 });
+Stage.button("new data", () => { stop(); newData(); newModels(); }, bar);
+Stage.button("random model", () => { stop(); newModels(); }, bar);
+const trainButton = Stage.button("optimize model", train, bar, { cls: "primary" });
+// clicking the right square folds or unfolds the paper
+const onRight = (e) => { const m = panel.pos(e); return m.x >= R2.x && m.x <= R2.x + R2.w && m.y >= R2.y && m.y <= R2.y + R2.h; };
+panel.canvas.addEventListener("click", (e) => { if (onRight(e)) toggleFold(); });
+panel.canvas.addEventListener("mousemove", (e) => { panel.canvas.style.cursor = onRight(e) ? "pointer" : ""; });
 
 newData();
 newModels();
@@ -290,7 +329,7 @@ Stage.cite([
   ["G. Cybenko, <i>Approximation by superpositions of a sigmoidal function</i> (1989).", "https://doi.org/10.1007/BF02551274"],
 ], { x: 310, y: 16, w: 1200 });
 Stage.nav("../demo0-space/3-projections.html", "2-circle.html");
-window.demo = { CFG, train, stop, newData, newModels, get view() { return view; }, get steps() { return steps; }, fold: () => { anim = { t0: performance.now() }; } };
+window.demo = { CFG, train, stop, newData, newModels, get view() { return view; }, get steps() { return steps; }, toggleFold, get folded() { return paperFolded; } };
 </script>
 </body>
 </html>

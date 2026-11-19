@@ -17,14 +17,14 @@
 "use strict";
 // A transformation is a smooth function from space to space. Every map projection is one, from
 // the globe to the page: each button smoothly moves every point of the current map to where the
-// chosen projection puts it. "drift" keeps transforming the map at random; with "folds", the
+// chosen projection puts it. "random drift" keeps transforming the map at random; "with folds", the
 // transformation also folds the space, so that different places land on top of each other.
 const C = Stage.COLORS;
 // tau: how long the random walk takes to wander; smooth: the time constant of the two low-pass
 // filters it goes through before it moves the map (without them, the motion looks jittery)
-const CFG = { morph: 1.6, modes: 8, tau: 4, smooth: 1.5, gentle: 0.08, wild: 0.12, eps: 0.04 };
+const CFG = { spin: 4, morph: 1.6, modes: 8, tau: 4, smooth: 1.5, gentle: 0.08, wild: 0.12, eps: 0.04 };
 const u = Optim.rng();
-const MAIN = { x: 20, y: 70, w: 1560, h: 725 };
+const MAIN = { x: 20, y: 50, w: 1560, h: 745 };
 const panel = new Stage.Panel(MAIN);
 const FIT = { x: 20, y: 20, w: MAIN.w - 40, h: MAIN.h - 40 };
 
@@ -56,11 +56,11 @@ const temps = MapC.temps();
 const NAMES = ["latlon", "mercator", "equalArea", "equidistant", "globe"];
 const LABELS = { latlon: "latitude & longitude", mercator: "Mercator", equalArea: "equal area", equidistant: "equidistant", globe: "globe" };
 const CAPTIONS = {
-  latlon: "keeps north–south distances",
-  mercator: "keeps shapes (angles), not areas",
-  equalArea: "keeps areas, not shapes",
-  equidistant: "keeps distances from the North Pole",
-  globe: "the globe seen from far away: the far side folds onto the near side",
+  latlon: "",
+  mercator: "maintains shapes (angles), not areas",
+  equalArea: "maintains areas, not shapes",
+  equidistant: "maintains distances from a chosen point (North Pole)",
+  globe: "transparent, the far side folds onto the near side",
 };
 const TARGET = {};
 for (const n of NAMES) TARGET[n] = MapC.project(n, LONLAT, FIT);
@@ -138,6 +138,10 @@ function warp(src, out) {
 let view = null, lastDt = 1 / 60;
 
 // ---------------------------------------------------------------- drawing
+// what the current projection keeps, on the same line as the citation, like the buttons' text
+const captionEl = Stage.el("div");
+Object.assign(captionEl.style, { position: "absolute", left: "20px", top: "13px", fontSize: "22px", lineHeight: "1.2", color: C.ink, whiteSpace: "nowrap" });
+
 function pathOf(c, p, close) {
   const a = cur, s = 2 * p.start;
   c.moveTo(a[s], a[s + 1]);
@@ -162,9 +166,7 @@ function draw() {
     for (const p of parts) if (p.kind === "circle") { c.beginPath(); pathOf(c, p, true); c.fillStyle = C.accentFill; c.fill(); c.strokeStyle = C.accent; c.lineWidth = 1.5; c.stroke(); }
   }
   if (floats.checked) MapC.drawFloats(c, cur.subarray(2 * floatStart), temps);
-  c.font = `22px ${C.font}`; c.fillStyle = C.grey; c.textAlign = "left"; c.textBaseline = "top";
-  c.fillText(caption, 12, 10);
-  c.strokeStyle = "#bbb"; c.lineWidth = 1.5; c.strokeRect(0.75, 0.75, MAIN.w - 1.5, MAIN.h - 1.5);
+  if (captionEl.textContent !== caption) captionEl.textContent = caption;
 }
 
 // ---------------------------------------------------------------- controls
@@ -177,7 +179,7 @@ function goTo(name) {
 }
 function stopDrift() {
   drifting = false;
-  driftButton.textContent = "drift"; driftButton.classList.remove("on");
+  driftButton.textContent = "random drift"; driftButton.classList.remove("on");
 }
 function startDrift() {
   if (drifting) { stopDrift(); return; }
@@ -193,7 +195,7 @@ function startDrift() {
 const bar = Stage.controls({ x: 20, y: 812, w: 1560, h: 70 });
 const projButtons = {};
 for (const n of NAMES) projButtons[n] = Stage.button(LABELS[n], () => goTo(n), bar);
-const driftButton = Stage.button("drift", startDrift, bar, { cls: "primary" });
+const driftButton = Stage.button("random drift", startDrift, bar, { cls: "primary" });
 function checkbox(text, on, onchange) {
   const l = Stage.el("label", { class: "field" }, bar);
   const box = Stage.el("input", { type: "checkbox" }, l);
@@ -202,12 +204,14 @@ function checkbox(text, on, onchange) {
   box.addEventListener("change", () => { box.blur(); if (onchange) onchange(); draw(); });
   return box;
 }
-const folds = checkbox("folds", false, () => {
+const folds = checkbox("with folds", false, () => {
   if (drifting) caption = folds.checked ? "a random smooth transformation that folds" : "a random smooth transformation";
 });
+// what to show: at the right end of the controls
+Stage.el("div", { style: { flex: "1" } }, bar);
 const grid = checkbox("grid", true);
 const circles = checkbox("circles", false);
-const floats = checkbox("floats", false);
+const floats = checkbox("data", false);
 setActive("latlon");
 panel.onresize = draw;
 document.addEventListener("keydown", (e) => { if (e.key === " " && !e.repeat) { e.preventDefault(); startDrift(); } });
@@ -217,6 +221,11 @@ Stage.loop((dt, now) => {
     const s = Math.min(1, (now - t0) / 1000 / CFG.morph), e = s * s * (3 - 2 * s);
     for (let i = 0; i < N; i++) cur[i] = from[i] + (to[i] - from[i]) * e;
     if (s >= 1) { cur.set(to); from = to = null; }
+  } else if (current === "globe") {
+    // the globe turns slowly (west to east, as the Earth does)
+    MapC.ORTHO.lon0 -= CFG.spin * Math.PI / 180 * dt;
+    MapC.project("globe", LONLAT, FIT, cur);
+    TARGET.globe.set(cur);
   } else if (drifting) {
     lastDt = dt;
     stepDrift(dt);
@@ -227,7 +236,6 @@ Stage.loop((dt, now) => {
 
 Stage.cite([
   ["J. P. Snyder, <i>Map Projections: A Working Manual</i>, USGS Professional Paper 1395 (1987).", "https://doi.org/10.3133/pp1395"],
-  ["Land: Natural Earth.", "https://www.naturalearthdata.com"],
 ], { x: 510, y: 16, w: 1000 });
 Stage.nav("2-ocean-model.html", "../demo3-generalization/4-snowflake.html");
 window.demo = { CFG, goTo, startDrift, stopDrift, TARGET, get cur() { return cur; }, get current() { return current; }, get moving() { return !!to; } };

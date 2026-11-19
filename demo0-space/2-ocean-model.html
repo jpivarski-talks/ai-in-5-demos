@@ -22,7 +22,7 @@
 // wherever there are no floats (between them, and over the land) it fills in or extrapolates.
 const CFG = { hidden: 32, lr: 0.004, perFrame: 2, initScale: 3.5, GX: 288, GY: 144 };
 const u = Optim.rng();
-const MAP = { x: 70, y: 70, w: 1460, h: 730 };
+const MAP = { x: 50, y: 50, w: 1500, h: 750 };
 const panel = new Stage.Panel(MAP);
 const R = { x: 0, y: 0, w: MAP.w, h: MAP.h };
 
@@ -93,33 +93,36 @@ function draw() {
   c.strokeStyle = "#bbb"; c.lineWidth = 1.5; c.strokeRect(0.75, 0.75, R.w - 1.5, R.h - 1.5);
 }
 
-function stop() { running = false; trainButton.textContent = "optimize"; trainButton.classList.remove("on"); }
+function stop() { running = false; trainButton.textContent = "optimize model"; trainButton.classList.remove("on"); }
 function train() {
   if (running) { stop(); return; }
-  if (!showModel.checked) { showModel.checked = true; }
+  if (!showModel.checked) { showModel.checked = true; showError(); }
   running = true;
   trainButton.textContent = "stop";
   trainButton.classList.add("on");
 }
 
 // controls: buttons, checkboxes, the error, and the color bar on the right
-const bar = Stage.controls({ x: 70, y: 815, w: 900, h: 70 });
-Stage.button("new start", () => { stop(); newModel(); draw(); }, bar);
-const trainButton = Stage.button("optimize", train, bar, { cls: "primary" });
+const bar = Stage.controls({ x: 50, y: 815, w: 900, h: 70 });
+Stage.button("random model", () => { stop(); newModel(); draw(); }, bar);
+const trainButton = Stage.button("optimize model", train, bar, { cls: "primary" });
 function checkbox(text, on) {
   const l = Stage.el("label", { class: "field" }, bar);
   const box = Stage.el("input", { type: "checkbox" }, l);
   box.checked = on;
   l.appendChild(document.createTextNode(text));
-  box.addEventListener("change", () => { box.blur(); draw(); });
+  box.addEventListener("change", () => { box.blur(); showError(); draw(); });
   return box;
 }
-const showModel = checkbox("model", true);
+const showModel = checkbox("model", false);
 const overLand = checkbox("over land", false);
 const errText = Stage.el("div", {}, bar);
 Object.assign(errText.style, { fontSize: "22px", color: Stage.COLORS.grey, marginLeft: "12px", fontVariantNumeric: "tabular-nums" });
+// the error is only shown along with the model
+function showError() { errText.style.visibility = showModel.checked ? "visible" : "hidden"; }
+showError();
 
-const barPanel = new Stage.Panel({ x: 890, y: 830, w: 640, h: 44 });
+const barPanel = new Stage.Panel({ x: 930, y: 830, w: 640, h: 44 });
 barPanel.onresize = () => MapC.colorBar(barPanel.clear(), { x: 120, y: 2, w: 500, h: 18 }, "°C");
 barPanel.onresize();
 panel.onresize = draw;
@@ -135,8 +138,7 @@ Stage.loop(() => {
 });
 
 Stage.cite([
-  ["Data: Argo Global Data Assembly Centre (SEANOE).", "https://doi.org/10.17882/42182"],
-  ["Land: Natural Earth.", "https://www.naturalearthdata.com"],
+  ["Argo Global Data Assembly Centre (SEANOE).", "https://doi.org/10.17882/42182"],
 ], { x: 510, y: 16, w: 1000 });
 Stage.nav("1-ocean-data.html", "3-projections.html");
 window.demo = { CFG, train, stop, newModel, get rms() { return rms; }, get steps() { return steps; }, get model() { return model; } };

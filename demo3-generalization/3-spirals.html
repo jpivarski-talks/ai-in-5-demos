@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <link rel="icon" href="data:,">
-<title>Demo 3.3: spirals</title>
+<title>Spirals: a transformation of the plane, then a linear model</title>
 <link rel="stylesheet" href="../common/stage.css">
 </head>
 <body>
@@ -16,21 +16,31 @@
 <script src="nn-diagram.js"></script>
 <script>
 "use strict";
+// The network 2 -> 100 -> 2 -> 3: the first two layers transform the plane (x, y) into a new plane
+// (u, v), drawn on the right with the input grid's lines carried along, where straight lines
+// separate the three spirals. (The version of the original talk, with the loss plot, is
+// 3-spirals-v1.html.)
 const CFG = { nPer: 300, H: 100, lr: 0.004, l2: 1e-5, perFrame: 2, noise: 0.05, G: 128, g: 36, lines: 21 };
 const u = Optim.rng();
 const C = Stage.COLORS;
-const P = 480;
 const D = NNDiagram, BOX = D.BOX;
-const panel = new Stage.Panel(Stage.L.main);
-const left = { x: 0, y: 0, w: P, h: P }, right = { x: 1060 - P, y: 0, w: P, h: P };
+// the two views, side by side and centered; below them, the buttons and the network
+const S = 620, GAP = 80, X0 = (Stage.W - 2 * S - GAP) / 2, Y0 = 56;
+const panel = new Stage.Panel({ x: 0, y: 0, w: Stage.W, h: Stage.H });
+const left = { x: X0, y: Y0, w: S, h: S }, right = { x: X0 + S + GAP, y: Y0, w: S, h: S };
 const axL = new Plots.Axes(panel, left, [-1.1, 1.1], [-1.1, 1.1]);
 const axR = new Plots.Axes(panel, right, [-1.1, 1.1], [-1.1, 1.1]);
-const readout = new Plots.Readout({ label: "loss" });
-const history = new Plots.History({ mode: "line", xSpan: 300, yLabel: "loss", xLabel: "iteration" });
+const NET = { x: X0 + 250, y: Y0 + S + 12, w: 2 * S + GAP - 250, h: Stage.H - (Y0 + S + 12) - 8 };
 
-const data = NN.spirals(CFG.nPer, Optim.rng(12345));
+// the first data set is always the same; "new data" draws new spirals
+let data = NN.spirals(CFG.nPer, Optim.rng(12345));
 const N = data.xs.length;
-const X = tf.tensor(data.xs), Yoh = tf.oneHot(tf.tensor1d(data.ys, "int32"), 3);
+let X = tf.tensor(data.xs), Yoh = tf.oneHot(tf.tensor1d(data.ys, "int32"), 3);
+function newData() {
+  data = NN.spirals(CFG.nPer, u);
+  X.dispose(); Yoh.dispose();
+  X = tf.tensor(data.xs); Yoh = tf.oneHot(tf.tensor1d(data.ys, "int32"), 3);
+}
 const gridT = NN.grid(CFG.G, -1.1, 1.1), gridSmall = NN.grid(CFG.g, -1.1, 1.1);
 const xin = D.inputGrid(CFG.g);
 // input-space grid lines, sampled densely so they can bend
@@ -65,7 +75,6 @@ function newModel() {
   ]);
   if (opt) opt.dispose();
   opt = tf.train.adam(CFG.lr);
-  history.clear();
   box = null;
   computeView();
 }
@@ -129,7 +138,7 @@ function drawRight(c) {
     }
     const zs = [];
     for (let i = 0; i < N; i++) zs.push([view.z[2 * i], view.z[2 * i + 1]]);
-    NN.drawPoints(axR, zs, data.ys, { r: 3.5, lw: 0.8 });
+    NN.drawPoints(axR, zs, data.ys, { r: 4, lw: 0.8 });
   });
   D.cornerAxes(c, right, "u", "v");
   c.strokeStyle = "#bbb"; c.lineWidth = 1.5; c.strokeRect(right.x, right.y, right.w, right.h);
@@ -145,18 +154,20 @@ function drawLeft(c) {
       c.beginPath(); c.moveTo(axL.X(v), axL.Y(-1.1)); c.lineTo(axL.X(v), axL.Y(1.1)); c.stroke();
       c.beginPath(); c.moveTo(axL.X(-1.1), axL.Y(v)); c.lineTo(axL.X(1.1), axL.Y(v)); c.stroke();
     }
-    NN.drawPoints(axL, data.xs, data.ys, { r: 3.5, lw: 0.8 });
+    NN.drawPoints(axL, data.xs, data.ys, { r: 4, lw: 0.8 });
   });
   D.cornerAxes(c, left, "x", "y");
   c.strokeStyle = "#bbb"; c.lineWidth = 1.5; c.strokeRect(left.x, left.y, left.w, left.h);
 }
 
-// the network, drawn like the previous page: x, y -> 100 ReLUs -> u, v -> three classes
-const MID = (P + 780) / 2 + 4;
-const IN_X = 110, HID_X = 390, Z_X = 640, OUT_X0 = 900, OUT_X1 = 990;
+// the network, drawn like the previous page: x, y -> 100 ReLUs -> u, v -> three classes,
+// in its own coordinates (scaled into NET when drawn)
+const MID = 140;
+const IN_X = 110, HID_X = 420, Z_X = 700, OUT_X0 = 980, OUT_X1 = 1080;
+const NETBOX = { x: 70, y: MID - 125, w: 1020, h: 250 };
 const inY = D.stack(2, MID, BOX + 30).map((y) => y - BOX / 2);
 const zY = D.stack(2, MID, BOX + 30).map((y) => y - BOX / 2);
-const hidY = D.stack(CFG.H, MID, 2.6);
+const hidY = D.stack(CFG.H, MID, 2.1);
 const outY = D.stack(3, MID, 80);
 function drawNetwork(c) {
   const { w1, w2, w3 } = view, m1 = D.maxAbs(w1), m2 = D.maxAbs(w2), m3 = D.maxAbs(w3);
@@ -171,47 +182,52 @@ function drawNetwork(c) {
   D.tag(c, ["transform", "(x, y) → (u, v)"], HID_X, MID);
 }
 
+function drawScaledNetwork(c) {
+  const k = Math.min(NET.w / NETBOX.w, NET.h / NETBOX.h);
+  c.save();
+  c.translate(NET.x + (NET.w - NETBOX.w * k) / 2, NET.y + (NET.h - NETBOX.h * k) / 2);
+  c.scale(k, k);
+  c.translate(-NETBOX.x, -NETBOX.y);
+  drawNetwork(c);
+  c.restore();
+}
+
 function draw() {
   const c = panel.clear();
   if (!view) return;
   drawLeft(c);
   drawRight(c);
-  drawNetwork(c);
+  drawScaledNetwork(c);
 }
 
-function stop() { running = false; trainButton.textContent = "optimize"; trainButton.classList.remove("on"); }
+function stop() { running = false; trainButton.textContent = "optimize model"; trainButton.classList.remove("on"); }
 function train() {
   if (running) { stop(); return; }
-  if (history.length === 0) history.push(loss());
   running = true;
   trainButton.textContent = "stop";
   trainButton.classList.add("on");
 }
 
-const bar = Stage.controls({ x: 20, y: 815, w: 1060, h: 70 });
-Stage.button("new start", () => { stop(); newModel(); readout.set(loss().toFixed(3)); }, bar);
-const trainButton = Stage.button("optimize", train, bar, { cls: "primary" });
+// the buttons, stacked, to the left of the network
+const bar = Stage.controls({ x: X0, y: NET.y + 14, w: 230, h: NET.h - 28 });
+Object.assign(bar.style, { flexDirection: "column", alignItems: "stretch", justifyContent: "center" });
+Stage.button("new data", () => { stop(); newData(); newModel(); }, bar);
+Stage.button("random model", () => { stop(); newModel(); }, bar);
+const trainButton = Stage.button("optimize model", train, bar, { cls: "primary" });
 
 newModel();
-readout.set(loss().toFixed(3));
 Stage.loop(() => {
   if (running) {
-    for (let k = 0; k < CFG.perFrame; k++) {
-      const L = opt.minimize(lossFn, true);   // returns the loss (before this step)
-      history.push(L.dataSync()[0]);
-      L.dispose();
-    }
+    for (let k = 0; k < CFG.perFrame; k++) opt.minimize(lossFn);
     computeView();
-    readout.set(history.a[history.length - 1].toFixed(3));
-    history.draw();
   }
   draw();
 });
 
 Stage.cite([["Adapted from A. Canziani, Y. LeCun, <i>NYU Deep Learning</i> (2020).", "https://github.com/Atcold/NYU-DLSP20"]],
-  { x: 20, w: 1560, bottom: 884 });
+  { x: 310, y: 16, w: 1200 });
 Stage.nav("2-circle.html", "../demo4-attention/1-embedding.html");
-window.demo = { draw, CFG, get model() { return model; }, history, train, newModel, loss, get acc() { return view.acc; } };
+window.demo = { draw, CFG, get model() { return model; }, train, stop, newModel, newData, loss, get acc() { return view.acc; } };
 </script>
 </body>
 </html>

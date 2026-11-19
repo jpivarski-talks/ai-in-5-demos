@@ -6,21 +6,35 @@
 <title>Verb classes: which sentences work depends on what kind of event the verb describes</title>
 <link rel="stylesheet" href="../common/stage.css">
 <style>
-  #grid { position: absolute; left: 40px; top: 92px; width: 1520px; border-collapse: separate; border-spacing: 8px; table-layout: fixed; }
-  #grid col.lab { width: 300px; }
+  #grid { position: absolute; left: 40px; top: 130px; width: 1520px; border-collapse: separate; border-spacing: 8px; table-layout: fixed; }
+  #grid col.lab { width: 330px; }
   #grid th, #grid td { vertical-align: middle; text-align: left; font-weight: normal; }
-  #grid thead th { vertical-align: bottom; padding: 0 0 6px 0; }
-  #grid .cls { display: block; font-size: 21px; line-height: 1.25; color: var(--grey); min-height: 2.5em; margin-bottom: 10px; }
-  #grid .verb { display: block; width: 100%; box-sizing: border-box; text-align: left; font-size: 32px; padding: 8px 16px; }
-  #grid .count { display: block; font-size: 17px; color: #aaa; margin-top: 6px; }
-  #grid tbody th { font-size: 24px; line-height: 1.3; color: var(--ink); padding: 0 12px 0 0; }
-  #grid td { font-size: 26px; line-height: 1.3; border-radius: 10px; padding: 0 18px; height: 116px; color: var(--ink); }
-  #grid td.ok { background: rgb(166, 206, 231); }
+  #grid [data-col] { cursor: pointer; }
+  /* the verb at the top of each column (not a button: the whole column is clickable) */
+  #grid thead th { vertical-align: bottom; text-align: center; padding: 0 10px 24px 10px; font-size: 40px; font-weight: bold; color: #000; }
+  #grid thead th.hover, #grid tfoot th.hover { color: var(--accent); }
+  /* what kind of event the column's verbs describe, under the column */
+  #grid tfoot th { vertical-align: top; text-align: center; padding: 8px 10px 0 10px; font-size: 26px; line-height: 1.3; color: var(--ink); }
+  /* a rule under the four columns (not the row headings), between the sentences and the class names;
+     each piece reaches across half of the 8px gap on either side, so the pieces join into one line */
+  #grid tfoot th[data-col] { position: relative; padding-top: 26px; }
+  #grid tfoot th[data-col]::before { content: ""; position: absolute; top: 8px; left: -4px; right: -4px; border-top: 1.5px solid #999; }
+  #grid tfoot th[data-col="0"]::before { left: 0; }
+  #grid tfoot th[data-col="3"]::before { right: 0; }
+  /* the same rule between the verbs at the top and the sentences */
+  #grid thead th[data-col] { position: relative; }
+  #grid thead th[data-col]::after { content: ""; position: absolute; bottom: 8px; left: -4px; right: -4px; border-top: 1.5px solid #999; }
+  #grid thead th[data-col="0"]::after { left: 0; }
+  #grid thead th[data-col="3"]::after { right: 0; }
+  /* the key, under the sentence templates, on the same line as the last line of the class names */
+  #grid tfoot th.key { vertical-align: bottom; text-align: left; padding: 8px 12px 0 0; }
+  #grid .sw { display: inline-block; width: 26px; height: 26px; border-radius: 6px; vertical-align: -5px; margin-right: 10px; background: rgb(251, 214, 172); }
+  #grid tbody th { font-weight: bold; white-space: nowrap; font-size: 26px; line-height: 1.3; color: var(--ink); padding: 0 12px 0 0; }
+  #grid td { font-size: 28px; line-height: 1.3; border-radius: 10px; padding: 0 18px; height: 120px; color: var(--ink); }
+  #grid td.ok { background: none; }
   #grid td.bad { background: rgb(251, 214, 172); }
-  #grid td b { font-weight: inherit; border-radius: 4px; padding: 0 2px; margin: 0 -2px; transition: background-color 0.8s ease; }
+  #grid td b { font-weight: bold; border-radius: 4px; padding: 0 2px; margin: 0 -2px; transition: background-color 0.8s ease; }
   #grid td b.flash { background: rgba(255, 255, 255, 0.95); transition: none; }
-  .legend { display: flex; gap: 28px; align-items: center; font-size: 22px; color: var(--ink); margin-left: 24px; }
-  .legend .sw { display: inline-block; width: 22px; height: 22px; border-radius: 5px; vertical-align: -4px; margin-right: 8px; }
 </style>
 </head>
 <body>
@@ -30,8 +44,8 @@
 "use strict";
 // Four small classes of English verbs (from VerbNet, following Levin 1993). Every verb in a class
 // fits the same sentence frames, and the pattern follows from what kind of event the verb describes:
-// contact, motion, a change of state. Click a verb to swap in another member of its class:
-// the sentences change, but which of them work does not. Space swaps all four.
+// contact, motion, a change of state. Click anywhere in a column to swap in another member of
+// its class: the sentences change, but which of them work does not. Space swaps all four.
 const TEMPLATES = ["Kim {past} Bill on the arm.", "Kim {past} at the branch.", "The branch {pres} easily.", "The branch {past}."];
 const CLASSES = [
   { name: "pure contact", vn: "touch-20", pattern: [1, 0, 0, 0], verbs: [
@@ -51,16 +65,29 @@ const idx = CLASSES.map(() => 0);
 const table = Stage.el("table", { id: "grid" });
 table.innerHTML =
   `<colgroup><col class="lab"><col><col><col><col></colgroup>` +
-  `<thead><tr><th></th>${CLASSES.map((c, i) =>
-    `<th><span class="cls">${c.name}</span><button class="btn verb" data-col="${i}"></button><span class="count" id="count${i}"></span></th>`).join("")}</tr></thead>` +
+  `<thead><tr><th></th>${CLASSES.map((c, i) => `<th data-col="${i}" id="verb${i}"></th>`).join("")}</tr></thead>` +
   `<tbody>${TEMPLATES.map((t, r) =>
-    `<tr><th>${t.replace(/\{past\}|\{pres\}/, "___")}</th>${CLASSES.map((c, i) => `<td class="${c.pattern[r] ? "ok" : "bad"}" id="c${r}-${i}"></td>`).join("")}</tr>`).join("")}</tbody>`;
-table.querySelectorAll(".verb").forEach((b) => b.addEventListener("click", () => { b.blur(); next(+b.dataset.col); }));
+    `<tr><th>${t.replace(/\{past\}|\{pres\}/, "___")}</th>${CLASSES.map((c, i) => `<td data-col="${i}" class="${c.pattern[r] ? "ok" : "bad"}" id="c${r}-${i}"></td>`).join("")}</tr>`).join("")}</tbody>` +
+  `<tfoot><tr><th class="key"><span class="sw"></span>ungrammatical</th>${CLASSES.map((c, i) => `<th data-col="${i}" id="name${i}">${c.name}</th>`).join("")}</tr></tfoot>`;
+// the whole column is clickable, including the gaps between its cells
+function columnAt(e) {
+  for (let i = 0; i < CLASSES.length; i++) {
+    const r = document.getElementById("verb" + i).getBoundingClientRect(), pad = 8 * Stage.scale;
+    if (e.clientX >= r.left - pad / 2 && e.clientX <= r.right + pad / 2) return i;
+  }
+  return null;
+}
+table.addEventListener("click", (e) => { const i = columnAt(e); if (i != null) next(i); });
+table.addEventListener("mousemove", (e) => {
+  const i = columnAt(e);
+  CLASSES.forEach((_, k) => { for (const id of ["verb", "name"]) document.getElementById(id + k).classList.toggle("hover", k === i); });
+  table.style.cursor = i == null ? "" : "pointer";
+});
+table.addEventListener("mouseleave", () => CLASSES.forEach((_, k) => { for (const id of ["verb", "name"]) document.getElementById(id + k).classList.remove("hover"); }));
 
 function render(i, flash) {
   const c = CLASSES[i], [base, past, pres] = c.verbs[idx[i]];
-  table.querySelector(`.verb[data-col="${i}"]`).textContent = base;
-  document.getElementById("count" + i).textContent = `${idx[i] + 1} of ${c.verbs.length}`;
+  document.getElementById("verb" + i).textContent = base;
   TEMPLATES.forEach((t, r) => {
     const form = t.includes("{pres}") ? pres : past;
     const [a, b] = t.split(/\{past\}|\{pres\}/);
@@ -77,11 +104,6 @@ function next(i) { idx[i] = (idx[i] + 1) % CLASSES[i].verbs.length; render(i, tr
 function nextAll() { CLASSES.forEach((_, i) => next(i)); }
 CLASSES.forEach((_, i) => render(i, false));
 
-const bar = Stage.controls({ x: 40, y: 815, w: 1000, h: 70 });
-Stage.button("next verbs", nextAll, bar, { cls: "primary" });
-const legend = Stage.el("div", { class: "legend", html:
-  `<span><span class="sw" style="background: rgb(166, 206, 231)"></span>grammatical</span>` +
-  `<span><span class="sw" style="background: rgb(251, 214, 172)"></span>ungrammatical</span>` }, bar);
 document.addEventListener("keydown", (e) => { if (e.key === " " && !e.repeat) { e.preventDefault(); nextAll(); } });
 
 Stage.cite([
