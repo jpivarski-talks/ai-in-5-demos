@@ -308,6 +308,24 @@ const bar = Stage.controls({ x: panel.x, y: 815, w: 1000, h: 70 });
 Stage.button("new data", () => { stop(); newData(); newModels(); }, bar);
 Stage.button("random model", () => { stop(); newModels(); }, bar);
 const trainButton = Stage.button("optimize model", train, bar, { cls: "primary" });
+// a note at the bottom right, under the right square, in the slides' body text style; it has the
+// same box as the controls row, and is nudged so that the middle of its lowercase letters (half the
+// x-height above the baseline) is level with the middle of the buttons' lowercase letters
+const note = Stage.label("The model on the right fits only the folded triangle.",
+  { x: R2.x + panel.x + R2.w - 950, y: 815, w: 950, h: 70 },
+  { fontSize: "34px", color: C.ink, display: "flex", alignItems: "center", justifyContent: "flex-end",
+    whiteSpace: "nowrap", pointerEvents: "none", boxSizing: "border-box" });
+{
+  // a line of text centered in a box has its baseline (ascent - descent) / 2 below the center
+  const midline = (el) => {
+    const cs = getComputedStyle(el), c = document.createElement("canvas").getContext("2d");
+    c.font = `${cs.fontSize} ${cs.fontFamily}`;
+    const m = c.measureText("x");
+    return (m.fontBoundingBoxAscent - m.fontBoundingBoxDescent) / 2 - m.actualBoundingBoxAscent / 2;
+  };
+  const shift = midline(note) - midline(bar.querySelector(".btn"));   // how far the note's middle is below the buttons'
+  note.style.paddingBottom = 2 * shift + "px";
+}
 // clicking the right square folds or unfolds the paper
 const onRight = (e) => { const m = panel.pos(e); return m.x >= R2.x && m.x <= R2.x + R2.w && m.y >= R2.y && m.y <= R2.y + R2.h; };
 panel.canvas.addEventListener("click", (e) => { if (onRight(e)) toggleFold(); });

@@ -224,16 +224,39 @@
 
   <p>The output of each artificial neuron is the input to the next.</p>
 
+  <br>
   <img style="height: 450px; display: block; margin: 0 auto;" src="img/network_three_layers.svg">
 
-  <br>
-  <p>Each artificial neuron is called a layer. One layer fits an arbitrary pattern; two layers fits patterns of patterns; three layers fits patterns of patterns of patterns…</p>
+  <br><br>
+  <p>Each artificial neuron is called a layer.</p>
+</section>
+
+<section>
+  <h2>Why build layers when one artificial neuron approximates any function?</h2>
+
+  <br><br>
+  <div class="fragment">
+    <p>All layers except the last transform the space from a set of coordinates <span class="italic">(x, y)</span> to another <span class="italic">(u, v)</span>.</p>
+
+    <p>The last layer fits the data in a highly warped space.</p>
+  </div>
+
+  <br><br><br>
+  <p class="fragment">Transformations that fold space along lines of symmetry make the next step easier to fit.</p>
+
+  <br><br><br>
+  <p class="fragment">Thus, fitting a deep neural network means searching for the data's hidden symmetries.</p>
 </section>
 
 <!-- 4. a neural network: a chain of transformations, then a model -->
 <section data-background-iframe="demo3-generalization/4-snowflake.html" data-background-interactive></section>
 <section data-background-iframe="demo3-generalization/2-circle.html" data-background-interactive></section>
 <section data-background-iframe="demo3-generalization/3-spirals.html" data-background-interactive></section>
+
+<section>
+
+</section>
+
 <!-- 5. meanings of words as points in space -->
 <section data-background-iframe="demo4-attention/1-embedding.html" data-background-interactive></section>
 <!-- 6. relationships between words in a sequence: attention -->
