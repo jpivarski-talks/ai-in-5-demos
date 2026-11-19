@@ -367,10 +367,32 @@
 <!-- 5. meanings of words as points in space -->
 <section data-background-iframe="demo4-attention/1-embedding.html" data-background-interactive></section>
 
+<section>
+  <h2>What about relationships between words?</h2>
 
+  <p class="fragment">Words that are very far from each other in a text can have important connections.</p>
+
+  <div class="fragment">
+    <p>To learn these relationships, the neural network in a language model computes an <span class="bold">attention matrix</span> between every pair of words in the sequence and uses that to make predictions.</p>
+
+    <div style="height: 420px; display: flex; justify-content: center; align-items: flex-end; gap: 60px; margin-bottom: 14px;">
+      <img style="height: calc(100% * 422 / 534);" src="img/self-attention.gif">
+      <img style="height: 100%;" src="img/self-attention-matrix.svg">
+    </div>
+  </div>
+
+  <br>
+  <p class="fragment">The length of each side of the attention matrix is called the <span class="bold">context window</span>.</p>
+</section>
 
 <!-- 6. relationships between words in a sequence: attention -->
 <section data-background-iframe="demo4-attention/2-translation.html" data-background-interactive></section>
+
+<section>
+  <h2></h2>
+
+</section>
+
 <!-- 7. higher-order patterns: syntax models generic aspects of the world -->
 <section data-background-iframe="demo4-attention/3-verb-classes.html" data-background-interactive></section>
 

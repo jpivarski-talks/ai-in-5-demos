@@ -1,0 +1,1719 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="564"
+   height="534"
+   viewBox="0 0 564 534"
+   font-family="&quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif"
+   font-size="24px"
+   version="1.1"
+   id="svg238"
+   sodipodi:docname="self-attention-matrix.svg"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs238" />
+  <sodipodi:namedview
+     id="namedview238"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="1.4044944"
+     inkscape:cx="281.952"
+     inkscape:cy="267"
+     inkscape:current-layer="svg238" />
+  <rect
+     x="112"
+     y="112"
+     width="29"
+     height="29"
+     fill="rgb(132,0,0)"
+     id="rect1" />
+  <rect
+     x="142"
+     y="112"
+     width="29"
+     height="29"
+     fill="rgb(222,0,0)"
+     id="rect2" />
+  <rect
+     x="172"
+     y="112"
+     width="29"
+     height="29"
+     fill="rgb(50,0,0)"
+     id="rect3" />
+  <rect
+     x="202"
+     y="112"
+     width="29"
+     height="29"
+     fill="rgb(50,0,0)"
+     id="rect4" />
+  <rect
+     x="232"
+     y="112"
+     width="29"
+     height="29"
+     fill="rgb(70,0,0)"
+     id="rect5" />
+  <rect
+     x="262"
+     y="112"
+     width="29"
+     height="29"
+     fill="rgb(43,0,0)"
+     id="rect6" />
+  <rect
+     x="292"
+     y="112"
+     width="29"
+     height="29"
+     fill="rgb(64,0,0)"
+     id="rect7" />
+  <rect
+     x="322"
+     y="112"
+     width="29"
+     height="29"
+     fill="rgb(55,0,0)"
+     id="rect8" />
+  <rect
+     x="352"
+     y="112"
+     width="29"
+     height="29"
+     fill="rgb(77,0,0)"
+     id="rect9" />
+  <rect
+     x="382"
+     y="112"
+     width="29"
+     height="29"
+     fill="rgb(48,0,0)"
+     id="rect10" />
+  <rect
+     x="412"
+     y="112"
+     width="29"
+     height="29"
+     fill="rgb(36,0,0)"
+     id="rect11" />
+  <rect
+     x="442"
+     y="112"
+     width="29"
+     height="29"
+     fill="rgb(43,0,0)"
+     id="rect12" />
+  <rect
+     x="472"
+     y="112"
+     width="29"
+     height="29"
+     fill="rgb(36,0,0)"
+     id="rect13" />
+  <rect
+     x="502"
+     y="112"
+     width="29"
+     height="29"
+     fill="rgb(36,0,0)"
+     id="rect14" />
+  <rect
+     x="532"
+     y="112"
+     width="29"
+     height="29"
+     fill="rgb(55,0,0)"
+     id="rect15" />
+  <rect
+     x="112"
+     y="142"
+     width="29"
+     height="29"
+     fill="rgb(34,0,0)"
+     id="rect16" />
+  <rect
+     x="142"
+     y="142"
+     width="29"
+     height="29"
+     fill="rgb(44,0,0)"
+     id="rect17" />
+  <rect
+     x="172"
+     y="142"
+     width="29"
+     height="29"
+     fill="rgb(67,0,0)"
+     id="rect18" />
+  <rect
+     x="202"
+     y="142"
+     width="29"
+     height="29"
+     fill="rgb(148,0,0)"
+     id="rect19" />
+  <rect
+     x="232"
+     y="142"
+     width="29"
+     height="29"
+     fill="rgb(92,0,0)"
+     id="rect20" />
+  <rect
+     x="262"
+     y="142"
+     width="29"
+     height="29"
+     fill="rgb(52,0,0)"
+     id="rect21" />
+  <rect
+     x="292"
+     y="142"
+     width="29"
+     height="29"
+     fill="rgb(86,0,0)"
+     id="rect22" />
+  <rect
+     x="322"
+     y="142"
+     width="29"
+     height="29"
+     fill="rgb(106,0,0)"
+     id="rect23" />
+  <rect
+     x="352"
+     y="142"
+     width="29"
+     height="29"
+     fill="rgb(64,0,0)"
+     id="rect24" />
+  <rect
+     x="382"
+     y="142"
+     width="29"
+     height="29"
+     fill="rgb(51,0,0)"
+     id="rect25" />
+  <rect
+     x="412"
+     y="142"
+     width="29"
+     height="29"
+     fill="rgb(34,0,0)"
+     id="rect26" />
+  <rect
+     x="442"
+     y="142"
+     width="29"
+     height="29"
+     fill="rgb(56,0,0)"
+     id="rect27" />
+  <rect
+     x="472"
+     y="142"
+     width="29"
+     height="29"
+     fill="rgb(45,0,0)"
+     id="rect28" />
+  <rect
+     x="502"
+     y="142"
+     width="29"
+     height="29"
+     fill="rgb(78,0,0)"
+     id="rect29" />
+  <rect
+     x="532"
+     y="142"
+     width="29"
+     height="29"
+     fill="rgb(60,0,0)"
+     id="rect30" />
+  <rect
+     x="112"
+     y="172"
+     width="29"
+     height="29"
+     fill="rgb(101,0,0)"
+     id="rect31" />
+  <rect
+     x="142"
+     y="172"
+     width="29"
+     height="29"
+     fill="rgb(116,0,0)"
+     id="rect32" />
+  <rect
+     x="172"
+     y="172"
+     width="29"
+     height="29"
+     fill="rgb(36,0,0)"
+     id="rect33" />
+  <rect
+     x="202"
+     y="172"
+     width="29"
+     height="29"
+     fill="rgb(68,0,0)"
+     id="rect34" />
+  <rect
+     x="232"
+     y="172"
+     width="29"
+     height="29"
+     fill="rgb(112,0,0)"
+     id="rect35" />
+  <rect
+     x="262"
+     y="172"
+     width="29"
+     height="29"
+     fill="rgb(122,0,0)"
+     id="rect36" />
+  <rect
+     x="292"
+     y="172"
+     width="29"
+     height="29"
+     fill="rgb(73,0,0)"
+     id="rect37" />
+  <rect
+     x="322"
+     y="172"
+     width="29"
+     height="29"
+     fill="rgb(76,0,0)"
+     id="rect38" />
+  <rect
+     x="352"
+     y="172"
+     width="29"
+     height="29"
+     fill="rgb(48,0,0)"
+     id="rect39" />
+  <rect
+     x="382"
+     y="172"
+     width="29"
+     height="29"
+     fill="rgb(36,0,0)"
+     id="rect40" />
+  <rect
+     x="412"
+     y="172"
+     width="29"
+     height="29"
+     fill="rgb(43,0,0)"
+     id="rect41" />
+  <rect
+     x="442"
+     y="172"
+     width="29"
+     height="29"
+     fill="rgb(34,0,0)"
+     id="rect42" />
+  <rect
+     x="472"
+     y="172"
+     width="29"
+     height="29"
+     fill="rgb(54,0,0)"
+     id="rect43" />
+  <rect
+     x="502"
+     y="172"
+     width="29"
+     height="29"
+     fill="rgb(43,0,0)"
+     id="rect44" />
+  <rect
+     x="532"
+     y="172"
+     width="29"
+     height="29"
+     fill="rgb(58,0,0)"
+     id="rect45" />
+  <rect
+     x="112"
+     y="202"
+     width="29"
+     height="29"
+     fill="rgb(103,0,0)"
+     id="rect46" />
+  <rect
+     x="142"
+     y="202"
+     width="29"
+     height="29"
+     fill="rgb(168,0,0)"
+     id="rect47" />
+  <rect
+     x="172"
+     y="202"
+     width="29"
+     height="29"
+     fill="rgb(117,0,0)"
+     id="rect48" />
+  <rect
+     x="202"
+     y="202"
+     width="29"
+     height="29"
+     fill="rgb(130,0,0)"
+     id="rect49" />
+  <rect
+     x="232"
+     y="202"
+     width="29"
+     height="29"
+     fill="rgb(73,0,0)"
+     id="rect50" />
+  <rect
+     x="262"
+     y="202"
+     width="29"
+     height="29"
+     fill="rgb(73,0,0)"
+     id="rect51" />
+  <rect
+     x="292"
+     y="202"
+     width="29"
+     height="29"
+     fill="rgb(42,0,0)"
+     id="rect52" />
+  <rect
+     x="322"
+     y="202"
+     width="29"
+     height="29"
+     fill="rgb(43,0,0)"
+     id="rect53" />
+  <rect
+     x="352"
+     y="202"
+     width="29"
+     height="29"
+     fill="rgb(37,0,0)"
+     id="rect54" />
+  <rect
+     x="382"
+     y="202"
+     width="29"
+     height="29"
+     fill="rgb(36,0,0)"
+     id="rect55" />
+  <rect
+     x="412"
+     y="202"
+     width="29"
+     height="29"
+     fill="rgb(56,0,0)"
+     id="rect56" />
+  <rect
+     x="442"
+     y="202"
+     width="29"
+     height="29"
+     fill="rgb(26,0,0)"
+     id="rect57" />
+  <rect
+     x="472"
+     y="202"
+     width="29"
+     height="29"
+     fill="rgb(36,0,0)"
+     id="rect58" />
+  <rect
+     x="502"
+     y="202"
+     width="29"
+     height="29"
+     fill="rgb(36,0,0)"
+     id="rect59" />
+  <rect
+     x="532"
+     y="202"
+     width="29"
+     height="29"
+     fill="rgb(42,0,0)"
+     id="rect60" />
+  <rect
+     x="112"
+     y="232"
+     width="29"
+     height="29"
+     fill="rgb(42,0,0)"
+     id="rect61" />
+  <rect
+     x="142"
+     y="232"
+     width="29"
+     height="29"
+     fill="rgb(48,0,0)"
+     id="rect62" />
+  <rect
+     x="172"
+     y="232"
+     width="29"
+     height="29"
+     fill="rgb(102,0,0)"
+     id="rect63" />
+  <rect
+     x="202"
+     y="232"
+     width="29"
+     height="29"
+     fill="rgb(47,0,0)"
+     id="rect64" />
+  <rect
+     x="232"
+     y="232"
+     width="29"
+     height="29"
+     fill="rgb(54,0,0)"
+     id="rect65" />
+  <rect
+     x="262"
+     y="232"
+     width="29"
+     height="29"
+     fill="rgb(142,0,0)"
+     id="rect66" />
+  <rect
+     x="292"
+     y="232"
+     width="29"
+     height="29"
+     fill="rgb(36,0,0)"
+     id="rect67" />
+  <rect
+     x="322"
+     y="232"
+     width="29"
+     height="29"
+     fill="rgb(36,0,0)"
+     id="rect68" />
+  <rect
+     x="352"
+     y="232"
+     width="29"
+     height="29"
+     fill="rgb(81,0,0)"
+     id="rect69" />
+  <rect
+     x="382"
+     y="232"
+     width="29"
+     height="29"
+     fill="rgb(34,0,0)"
+     id="rect70" />
+  <rect
+     x="412"
+     y="232"
+     width="29"
+     height="29"
+     fill="rgb(252,0,0)"
+     id="rect71" />
+  <rect
+     x="442"
+     y="232"
+     width="29"
+     height="29"
+     fill="rgb(34,0,0)"
+     id="rect72" />
+  <rect
+     x="472"
+     y="232"
+     width="29"
+     height="29"
+     fill="rgb(34,0,0)"
+     id="rect73" />
+  <rect
+     x="502"
+     y="232"
+     width="29"
+     height="29"
+     fill="rgb(36,0,0)"
+     id="rect74" />
+  <rect
+     x="532"
+     y="232"
+     width="29"
+     height="29"
+     fill="rgb(42,0,0)"
+     id="rect75" />
+  <rect
+     x="112"
+     y="262"
+     width="29"
+     height="29"
+     fill="rgb(48,0,0)"
+     id="rect76" />
+  <rect
+     x="142"
+     y="262"
+     width="29"
+     height="29"
+     fill="rgb(52,0,0)"
+     id="rect77" />
+  <rect
+     x="172"
+     y="262"
+     width="29"
+     height="29"
+     fill="rgb(84,0,0)"
+     id="rect78" />
+  <rect
+     x="202"
+     y="262"
+     width="29"
+     height="29"
+     fill="rgb(52,0,0)"
+     id="rect79" />
+  <rect
+     x="232"
+     y="262"
+     width="29"
+     height="29"
+     fill="rgb(72,0,0)"
+     id="rect80" />
+  <rect
+     x="262"
+     y="262"
+     width="29"
+     height="29"
+     fill="rgb(37,0,0)"
+     id="rect81" />
+  <rect
+     x="292"
+     y="262"
+     width="29"
+     height="29"
+     fill="rgb(60,0,0)"
+     id="rect82" />
+  <rect
+     x="322"
+     y="262"
+     width="29"
+     height="29"
+     fill="rgb(57,0,0)"
+     id="rect83" />
+  <rect
+     x="352"
+     y="262"
+     width="29"
+     height="29"
+     fill="rgb(115,0,0)"
+     id="rect84" />
+  <rect
+     x="382"
+     y="262"
+     width="29"
+     height="29"
+     fill="rgb(49,0,0)"
+     id="rect85" />
+  <rect
+     x="412"
+     y="262"
+     width="29"
+     height="29"
+     fill="rgb(226,0,0)"
+     id="rect86" />
+  <rect
+     x="442"
+     y="262"
+     width="29"
+     height="29"
+     fill="rgb(37,0,0)"
+     id="rect87" />
+  <rect
+     x="472"
+     y="262"
+     width="29"
+     height="29"
+     fill="rgb(48,0,0)"
+     id="rect88" />
+  <rect
+     x="502"
+     y="262"
+     width="29"
+     height="29"
+     fill="rgb(37,0,0)"
+     id="rect89" />
+  <rect
+     x="532"
+     y="262"
+     width="29"
+     height="29"
+     fill="rgb(46,0,0)"
+     id="rect90" />
+  <rect
+     x="112"
+     y="292"
+     width="29"
+     height="29"
+     fill="rgb(70,0,0)"
+     id="rect91" />
+  <rect
+     x="142"
+     y="292"
+     width="29"
+     height="29"
+     fill="rgb(98,0,0)"
+     id="rect92" />
+  <rect
+     x="172"
+     y="292"
+     width="29"
+     height="29"
+     fill="rgb(65,0,0)"
+     id="rect93" />
+  <rect
+     x="202"
+     y="292"
+     width="29"
+     height="29"
+     fill="rgb(38,0,0)"
+     id="rect94" />
+  <rect
+     x="232"
+     y="292"
+     width="29"
+     height="29"
+     fill="rgb(46,0,0)"
+     id="rect95" />
+  <rect
+     x="262"
+     y="292"
+     width="29"
+     height="29"
+     fill="rgb(34,0,0)"
+     id="rect96" />
+  <rect
+     x="292"
+     y="292"
+     width="29"
+     height="29"
+     fill="rgb(51,0,0)"
+     id="rect97" />
+  <rect
+     x="322"
+     y="292"
+     width="29"
+     height="29"
+     fill="rgb(66,0,0)"
+     id="rect98" />
+  <rect
+     x="352"
+     y="292"
+     width="29"
+     height="29"
+     fill="rgb(111,0,0)"
+     id="rect99" />
+  <rect
+     x="382"
+     y="292"
+     width="29"
+     height="29"
+     fill="rgb(60,0,0)"
+     id="rect100" />
+  <rect
+     x="412"
+     y="292"
+     width="29"
+     height="29"
+     fill="rgb(211,0,0)"
+     id="rect101" />
+  <rect
+     x="442"
+     y="292"
+     width="29"
+     height="29"
+     fill="rgb(33,0,0)"
+     id="rect102" />
+  <rect
+     x="472"
+     y="292"
+     width="29"
+     height="29"
+     fill="rgb(55,0,0)"
+     id="rect103" />
+  <rect
+     x="502"
+     y="292"
+     width="29"
+     height="29"
+     fill="rgb(33,0,0)"
+     id="rect104" />
+  <rect
+     x="532"
+     y="292"
+     width="29"
+     height="29"
+     fill="rgb(48,0,0)"
+     id="rect105" />
+  <rect
+     x="112"
+     y="322"
+     width="29"
+     height="29"
+     fill="rgb(93,0,0)"
+     id="rect106" />
+  <rect
+     x="142"
+     y="322"
+     width="29"
+     height="29"
+     fill="rgb(195,0,0)"
+     id="rect107" />
+  <rect
+     x="172"
+     y="322"
+     width="29"
+     height="29"
+     fill="rgb(65,0,0)"
+     id="rect108" />
+  <rect
+     x="202"
+     y="322"
+     width="29"
+     height="29"
+     fill="rgb(33,0,0)"
+     id="rect109" />
+  <rect
+     x="232"
+     y="322"
+     width="29"
+     height="29"
+     fill="rgb(64,0,0)"
+     id="rect110" />
+  <rect
+     x="262"
+     y="322"
+     width="29"
+     height="29"
+     fill="rgb(32,0,0)"
+     id="rect111" />
+  <rect
+     x="292"
+     y="322"
+     width="29"
+     height="29"
+     fill="rgb(41,0,0)"
+     id="rect112" />
+  <rect
+     x="322"
+     y="322"
+     width="29"
+     height="29"
+     fill="rgb(33,0,0)"
+     id="rect113" />
+  <rect
+     x="352"
+     y="322"
+     width="29"
+     height="29"
+     fill="rgb(98,0,0)"
+     id="rect114" />
+  <rect
+     x="382"
+     y="322"
+     width="29"
+     height="29"
+     fill="rgb(46,0,0)"
+     id="rect115" />
+  <rect
+     x="412"
+     y="322"
+     width="29"
+     height="29"
+     fill="rgb(97,0,0)"
+     id="rect116" />
+  <rect
+     x="442"
+     y="322"
+     width="29"
+     height="29"
+     fill="rgb(37,0,0)"
+     id="rect117" />
+  <rect
+     x="472"
+     y="322"
+     width="29"
+     height="29"
+     fill="rgb(96,0,0)"
+     id="rect118" />
+  <rect
+     x="502"
+     y="322"
+     width="29"
+     height="29"
+     fill="rgb(45,0,0)"
+     id="rect119" />
+  <rect
+     x="532"
+     y="322"
+     width="29"
+     height="29"
+     fill="rgb(43,0,0)"
+     id="rect120" />
+  <rect
+     x="112"
+     y="352"
+     width="29"
+     height="29"
+     fill="rgb(44,0,0)"
+     id="rect121" />
+  <rect
+     x="142"
+     y="352"
+     width="29"
+     height="29"
+     fill="rgb(80,0,0)"
+     id="rect122" />
+  <rect
+     x="172"
+     y="352"
+     width="29"
+     height="29"
+     fill="rgb(35,0,0)"
+     id="rect123" />
+  <rect
+     x="202"
+     y="352"
+     width="29"
+     height="29"
+     fill="rgb(37,0,0)"
+     id="rect124" />
+  <rect
+     x="232"
+     y="352"
+     width="29"
+     height="29"
+     fill="rgb(39,0,0)"
+     id="rect125" />
+  <rect
+     x="262"
+     y="352"
+     width="29"
+     height="29"
+     fill="rgb(57,0,0)"
+     id="rect126" />
+  <rect
+     x="292"
+     y="352"
+     width="29"
+     height="29"
+     fill="rgb(50,0,0)"
+     id="rect127" />
+  <rect
+     x="322"
+     y="352"
+     width="29"
+     height="29"
+     fill="rgb(95,0,0)"
+     id="rect128" />
+  <rect
+     x="352"
+     y="352"
+     width="29"
+     height="29"
+     fill="rgb(37,0,0)"
+     id="rect129" />
+  <rect
+     x="382"
+     y="352"
+     width="29"
+     height="29"
+     fill="rgb(57,0,0)"
+     id="rect130" />
+  <rect
+     x="412"
+     y="352"
+     width="29"
+     height="29"
+     fill="rgb(37,0,0)"
+     id="rect131" />
+  <rect
+     x="442"
+     y="352"
+     width="29"
+     height="29"
+     fill="rgb(39,0,0)"
+     id="rect132" />
+  <rect
+     x="472"
+     y="352"
+     width="29"
+     height="29"
+     fill="rgb(248,0,0)"
+     id="rect133" />
+  <rect
+     x="502"
+     y="352"
+     width="29"
+     height="29"
+     fill="rgb(51,0,0)"
+     id="rect134" />
+  <rect
+     x="532"
+     y="352"
+     width="29"
+     height="29"
+     fill="rgb(113,0,0)"
+     id="rect135" />
+  <rect
+     x="112"
+     y="382"
+     width="29"
+     height="29"
+     fill="rgb(52,0,0)"
+     id="rect136" />
+  <rect
+     x="142"
+     y="382"
+     width="29"
+     height="29"
+     fill="rgb(172,0,0)"
+     id="rect137" />
+  <rect
+     x="172"
+     y="382"
+     width="29"
+     height="29"
+     fill="rgb(34,0,0)"
+     id="rect138" />
+  <rect
+     x="202"
+     y="382"
+     width="29"
+     height="29"
+     fill="rgb(34,0,0)"
+     id="rect139" />
+  <rect
+     x="232"
+     y="382"
+     width="29"
+     height="29"
+     fill="rgb(34,0,0)"
+     id="rect140" />
+  <rect
+     x="262"
+     y="382"
+     width="29"
+     height="29"
+     fill="rgb(71,0,0)"
+     id="rect141" />
+  <rect
+     x="292"
+     y="382"
+     width="29"
+     height="29"
+     fill="rgb(80,0,0)"
+     id="rect142" />
+  <rect
+     x="322"
+     y="382"
+     width="29"
+     height="29"
+     fill="rgb(125,0,0)"
+     id="rect143" />
+  <rect
+     x="352"
+     y="382"
+     width="29"
+     height="29"
+     fill="rgb(35,0,0)"
+     id="rect144" />
+  <rect
+     x="382"
+     y="382"
+     width="29"
+     height="29"
+     fill="rgb(66,0,0)"
+     id="rect145" />
+  <rect
+     x="412"
+     y="382"
+     width="29"
+     height="29"
+     fill="rgb(42,0,0)"
+     id="rect146" />
+  <rect
+     x="442"
+     y="382"
+     width="29"
+     height="29"
+     fill="rgb(66,0,0)"
+     id="rect147" />
+  <rect
+     x="472"
+     y="382"
+     width="29"
+     height="29"
+     fill="rgb(71,0,0)"
+     id="rect148" />
+  <rect
+     x="502"
+     y="382"
+     width="29"
+     height="29"
+     fill="rgb(65,0,0)"
+     id="rect149" />
+  <rect
+     x="532"
+     y="382"
+     width="29"
+     height="29"
+     fill="rgb(71,0,0)"
+     id="rect150" />
+  <rect
+     x="112"
+     y="412"
+     width="29"
+     height="29"
+     fill="rgb(42,0,0)"
+     id="rect151" />
+  <rect
+     x="142"
+     y="412"
+     width="29"
+     height="29"
+     fill="rgb(48,0,0)"
+     id="rect152" />
+  <rect
+     x="172"
+     y="412"
+     width="29"
+     height="29"
+     fill="rgb(26,0,0)"
+     id="rect153" />
+  <rect
+     x="202"
+     y="412"
+     width="29"
+     height="29"
+     fill="rgb(29,0,0)"
+     id="rect154" />
+  <rect
+     x="232"
+     y="412"
+     width="29"
+     height="29"
+     fill="rgb(53,0,0)"
+     id="rect155" />
+  <rect
+     x="262"
+     y="412"
+     width="29"
+     height="29"
+     fill="rgb(42,0,0)"
+     id="rect156" />
+  <rect
+     x="292"
+     y="412"
+     width="29"
+     height="29"
+     fill="rgb(47,0,0)"
+     id="rect157" />
+  <rect
+     x="322"
+     y="412"
+     width="29"
+     height="29"
+     fill="rgb(91,0,0)"
+     id="rect158" />
+  <rect
+     x="352"
+     y="412"
+     width="29"
+     height="29"
+     fill="rgb(26,0,0)"
+     id="rect159" />
+  <rect
+     x="382"
+     y="412"
+     width="29"
+     height="29"
+     fill="rgb(42,0,0)"
+     id="rect160" />
+  <rect
+     x="412"
+     y="412"
+     width="29"
+     height="29"
+     fill="rgb(42,0,0)"
+     id="rect161" />
+  <rect
+     x="442"
+     y="412"
+     width="29"
+     height="29"
+     fill="rgb(98,0,0)"
+     id="rect162" />
+  <rect
+     x="472"
+     y="412"
+     width="29"
+     height="29"
+     fill="rgb(186,0,0)"
+     id="rect163" />
+  <rect
+     x="502"
+     y="412"
+     width="29"
+     height="29"
+     fill="rgb(164,0,0)"
+     id="rect164" />
+  <rect
+     x="532"
+     y="412"
+     width="29"
+     height="29"
+     fill="rgb(82,0,0)"
+     id="rect165" />
+  <rect
+     x="112"
+     y="442"
+     width="29"
+     height="29"
+     fill="rgb(72,0,0)"
+     id="rect166" />
+  <rect
+     x="142"
+     y="442"
+     width="29"
+     height="29"
+     fill="rgb(72,0,0)"
+     id="rect167" />
+  <rect
+     x="172"
+     y="442"
+     width="29"
+     height="29"
+     fill="rgb(39,0,0)"
+     id="rect168" />
+  <rect
+     x="202"
+     y="442"
+     width="29"
+     height="29"
+     fill="rgb(41,0,0)"
+     id="rect169" />
+  <rect
+     x="232"
+     y="442"
+     width="29"
+     height="29"
+     fill="rgb(41,0,0)"
+     id="rect170" />
+  <rect
+     x="262"
+     y="442"
+     width="29"
+     height="29"
+     fill="rgb(72,0,0)"
+     id="rect171" />
+  <rect
+     x="292"
+     y="442"
+     width="29"
+     height="29"
+     fill="rgb(82,0,0)"
+     id="rect172" />
+  <rect
+     x="322"
+     y="442"
+     width="29"
+     height="29"
+     fill="rgb(147,0,0)"
+     id="rect173" />
+  <rect
+     x="352"
+     y="442"
+     width="29"
+     height="29"
+     fill="rgb(51,0,0)"
+     id="rect174" />
+  <rect
+     x="382"
+     y="442"
+     width="29"
+     height="29"
+     fill="rgb(44,0,0)"
+     id="rect175" />
+  <rect
+     x="412"
+     y="442"
+     width="29"
+     height="29"
+     fill="rgb(61,0,0)"
+     id="rect176" />
+  <rect
+     x="442"
+     y="442"
+     width="29"
+     height="29"
+     fill="rgb(51,0,0)"
+     id="rect177" />
+  <rect
+     x="472"
+     y="442"
+     width="29"
+     height="29"
+     fill="rgb(44,0,0)"
+     id="rect178" />
+  <rect
+     x="502"
+     y="442"
+     width="29"
+     height="29"
+     fill="rgb(72,0,0)"
+     id="rect179" />
+  <rect
+     x="532"
+     y="442"
+     width="29"
+     height="29"
+     fill="rgb(130,0,0)"
+     id="rect180" />
+  <rect
+     x="112"
+     y="472"
+     width="29"
+     height="29"
+     fill="rgb(59,0,0)"
+     id="rect181" />
+  <rect
+     x="142"
+     y="472"
+     width="29"
+     height="29"
+     fill="rgb(73,0,0)"
+     id="rect182" />
+  <rect
+     x="172"
+     y="472"
+     width="29"
+     height="29"
+     fill="rgb(43,0,0)"
+     id="rect183" />
+  <rect
+     x="202"
+     y="472"
+     width="29"
+     height="29"
+     fill="rgb(40,0,0)"
+     id="rect184" />
+  <rect
+     x="232"
+     y="472"
+     width="29"
+     height="29"
+     fill="rgb(50,0,0)"
+     id="rect185" />
+  <rect
+     x="262"
+     y="472"
+     width="29"
+     height="29"
+     fill="rgb(59,0,0)"
+     id="rect186" />
+  <rect
+     x="292"
+     y="472"
+     width="29"
+     height="29"
+     fill="rgb(139,0,0)"
+     id="rect187" />
+  <rect
+     x="322"
+     y="472"
+     width="29"
+     height="29"
+     fill="rgb(122,0,0)"
+     id="rect188" />
+  <rect
+     x="352"
+     y="472"
+     width="29"
+     height="29"
+     fill="rgb(43,0,0)"
+     id="rect189" />
+  <rect
+     x="382"
+     y="472"
+     width="29"
+     height="29"
+     fill="rgb(57,0,0)"
+     id="rect190" />
+  <rect
+     x="412"
+     y="472"
+     width="29"
+     height="29"
+     fill="rgb(40,0,0)"
+     id="rect191" />
+  <rect
+     x="442"
+     y="472"
+     width="29"
+     height="29"
+     fill="rgb(87,0,0)"
+     id="rect192" />
+  <rect
+     x="472"
+     y="472"
+     width="29"
+     height="29"
+     fill="rgb(52,0,0)"
+     id="rect193" />
+  <rect
+     x="502"
+     y="472"
+     width="29"
+     height="29"
+     fill="rgb(50,0,0)"
+     id="rect194" />
+  <rect
+     x="532"
+     y="472"
+     width="29"
+     height="29"
+     fill="rgb(106,0,0)"
+     id="rect195" />
+  <rect
+     x="112"
+     y="502"
+     width="29"
+     height="29"
+     fill="rgb(44,0,0)"
+     id="rect196" />
+  <rect
+     x="142"
+     y="502"
+     width="29"
+     height="29"
+     fill="rgb(81,0,0)"
+     id="rect197" />
+  <rect
+     x="172"
+     y="502"
+     width="29"
+     height="29"
+     fill="rgb(44,0,0)"
+     id="rect198" />
+  <rect
+     x="202"
+     y="502"
+     width="29"
+     height="29"
+     fill="rgb(26,0,0)"
+     id="rect199" />
+  <rect
+     x="232"
+     y="502"
+     width="29"
+     height="29"
+     fill="rgb(41,0,0)"
+     id="rect200" />
+  <rect
+     x="262"
+     y="502"
+     width="29"
+     height="29"
+     fill="rgb(51,0,0)"
+     id="rect201" />
+  <rect
+     x="292"
+     y="502"
+     width="29"
+     height="29"
+     fill="rgb(81,0,0)"
+     id="rect202" />
+  <rect
+     x="322"
+     y="502"
+     width="29"
+     height="29"
+     fill="rgb(113,0,0)"
+     id="rect203" />
+  <rect
+     x="352"
+     y="502"
+     width="29"
+     height="29"
+     fill="rgb(44,0,0)"
+     id="rect204" />
+  <rect
+     x="382"
+     y="502"
+     width="29"
+     height="29"
+     fill="rgb(61,0,0)"
+     id="rect205" />
+  <rect
+     x="412"
+     y="502"
+     width="29"
+     height="29"
+     fill="rgb(71,0,0)"
+     id="rect206" />
+  <rect
+     x="442"
+     y="502"
+     width="29"
+     height="29"
+     fill="rgb(101,0,0)"
+     id="rect207" />
+  <rect
+     x="472"
+     y="502"
+     width="29"
+     height="29"
+     fill="rgb(81,0,0)"
+     id="rect208" />
+  <rect
+     x="502"
+     y="502"
+     width="29"
+     height="29"
+     fill="rgb(81,0,0)"
+     id="rect209" />
+  <rect
+     x="532"
+     y="502"
+     width="29"
+     height="29"
+     fill="rgb(101,0,0)"
+     id="rect210" />
+  <text
+     x="102"
+     y="127.0"
+     text-anchor="end"
+     dominant-baseline="central"
+     fill="#1155cc"
+     id="text210"
+     style="dominant-baseline:central;fill:#333333">The</text>
+  <text
+     x="102"
+     y="157.0"
+     text-anchor="end"
+     dominant-baseline="central"
+     fill="#1155cc"
+     id="text211"
+     style="dominant-baseline:central;fill:#333333">animal</text>
+  <text
+     x="102"
+     y="187.0"
+     text-anchor="end"
+     dominant-baseline="central"
+     fill="#1155cc"
+     id="text212"
+     style="dominant-baseline:central;fill:#333333">didn</text>
+  <text
+     x="102"
+     y="217.0"
+     text-anchor="end"
+     dominant-baseline="central"
+     fill="#1155cc"
+     id="text213"
+     style="dominant-baseline:central;fill:#333333">'</text>
+  <text
+     x="102"
+     y="247.0"
+     text-anchor="end"
+     dominant-baseline="central"
+     fill="#1155cc"
+     id="text214"
+     style="dominant-baseline:central;fill:#333333">t</text>
+  <text
+     x="102"
+     y="277.0"
+     text-anchor="end"
+     dominant-baseline="central"
+     fill="#1155cc"
+     id="text215"
+     style="dominant-baseline:central;fill:#333333">cross</text>
+  <text
+     x="102"
+     y="307.0"
+     text-anchor="end"
+     dominant-baseline="central"
+     fill="#1155cc"
+     id="text216"
+     style="dominant-baseline:central;fill:#333333">the</text>
+  <text
+     x="102"
+     y="337.0"
+     text-anchor="end"
+     dominant-baseline="central"
+     fill="#1155cc"
+     id="text217"
+     style="dominant-baseline:central;fill:#333333">street</text>
+  <text
+     x="102"
+     y="367.0"
+     text-anchor="end"
+     dominant-baseline="central"
+     fill="#1155cc"
+     id="text218"
+     style="dominant-baseline:central;fill:#333333">because</text>
+  <text
+     x="102"
+     y="397.0"
+     text-anchor="end"
+     dominant-baseline="central"
+     fill="#1155cc"
+     id="text219"
+     style="dominant-baseline:central;fill:#333333">it</text>
+  <text
+     x="102"
+     y="427.0"
+     text-anchor="end"
+     dominant-baseline="central"
+     fill="#1155cc"
+     id="text220"
+     style="dominant-baseline:central;fill:#333333">was</text>
+  <text
+     x="102"
+     y="457.0"
+     text-anchor="end"
+     dominant-baseline="central"
+     fill="#1155cc"
+     id="text221"
+     style="dominant-baseline:central;fill:#333333">too</text>
+  <text
+     x="102"
+     y="487.0"
+     text-anchor="end"
+     dominant-baseline="central"
+     fill="#1155cc"
+     id="text222"
+     style="dominant-baseline:central;fill:#333333">tire</text>
+  <text
+     x="102"
+     y="517.0"
+     text-anchor="end"
+     dominant-baseline="central"
+     fill="#1155cc"
+     id="text223"
+     style="dominant-baseline:central;fill:#333333">d</text>
+  <text
+     x="127.0"
+     y="102"
+     transform="rotate(-90 127.0 102)"
+     dominant-baseline="central"
+     fill="#333333"
+     id="text224">The</text>
+  <text
+     x="157.0"
+     y="102"
+     transform="rotate(-90 157.0 102)"
+     dominant-baseline="central"
+     fill="#333333"
+     id="text225">animal</text>
+  <text
+     x="187.0"
+     y="102"
+     transform="rotate(-90 187.0 102)"
+     dominant-baseline="central"
+     fill="#333333"
+     id="text226">didn</text>
+  <text
+     x="217.0"
+     y="102"
+     transform="rotate(-90 217.0 102)"
+     dominant-baseline="central"
+     fill="#333333"
+     id="text227">'</text>
+  <text
+     x="247.0"
+     y="102"
+     transform="rotate(-90 247.0 102)"
+     dominant-baseline="central"
+     fill="#333333"
+     id="text228">t</text>
+  <text
+     x="277.0"
+     y="102"
+     transform="rotate(-90 277.0 102)"
+     dominant-baseline="central"
+     fill="#333333"
+     id="text229">cross</text>
+  <text
+     x="307.0"
+     y="102"
+     transform="rotate(-90 307.0 102)"
+     dominant-baseline="central"
+     fill="#333333"
+     id="text230">the</text>
+  <text
+     x="337.0"
+     y="102"
+     transform="rotate(-90 337.0 102)"
+     dominant-baseline="central"
+     fill="#333333"
+     id="text231">street</text>
+  <text
+     x="367.0"
+     y="102"
+     transform="rotate(-90 367.0 102)"
+     dominant-baseline="central"
+     fill="#333333"
+     id="text232">because</text>
+  <text
+     x="397.0"
+     y="102"
+     transform="rotate(-90 397.0 102)"
+     dominant-baseline="central"
+     fill="#333333"
+     id="text233">it</text>
+  <text
+     x="427.0"
+     y="102"
+     transform="rotate(-90 427.0 102)"
+     dominant-baseline="central"
+     fill="#333333"
+     id="text234">was</text>
+  <text
+     x="457.0"
+     y="102"
+     transform="rotate(-90 457.0 102)"
+     dominant-baseline="central"
+     fill="#333333"
+     id="text235">too</text>
+  <text
+     x="487.0"
+     y="102"
+     transform="rotate(-90 487.0 102)"
+     dominant-baseline="central"
+     fill="#333333"
+     id="text236">tire</text>
+  <text
+     x="517.0"
+     y="102"
+     transform="rotate(-90 517.0 102)"
+     dominant-baseline="central"
+     fill="#333333"
+     id="text237">d</text>
+  <text
+     x="547.0"
+     y="102"
+     transform="rotate(-90 547.0 102)"
+     dominant-baseline="central"
+     fill="#888888"
+     id="text238">EOS</text>
+</svg>
