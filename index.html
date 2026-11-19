@@ -34,14 +34,23 @@
 <div class="slides">
 
 <style>
-    .reveal span.bold {
-      font-weight: bold;
-      color: #606060;
-    }
+  .reveal span.bold {
+    font-weight: bold;
+    color: #606060;
+  }
 
-    .reveal span.italic {
-      font-style: italic;
-    }
+  .reveal span.italic {
+    font-style: italic;
+  }
+
+  .reveal table.center_table {
+    margin: 0 auto;
+    border-spacing: 50px 40px;
+  }
+
+  .reveal table.center_table td {
+    text-align: center;
+  }
 </style>
 
 <section>
@@ -155,11 +164,72 @@
 
   <br><br>
   <p>A function <span class="italic">f</span> takes any <span class="italic">(x, y)</span> and returns <span class="italic">(u, v)</span>, whether there's a measurement there or not.</p>
-
 </section>
 
 <!-- 3. transformations: smooth functions from space to space -->
 <section data-background-iframe="demo0-space/3-projections.html" data-background-interactive></section>
+
+<section>
+  <h2>Building any smooth function</h2>
+
+  <p>Consider the following building block: an S-shaped curve that can be reshaped 3 ways.</p>
+
+  <img style="height: 220px; display: block; margin: 0 auto;" src="img/scaling_logistic.svg">
+
+  <div class="fragment">
+    <br>
+    <p>Build any shape by adding S-shaped curves with different parameter values:</p>
+
+    <!-- a small demo in the lower part of the slide: data-src, so it loads (fresh, all unchecked) when the slide is shown -->
+    <iframe class="at" style="left: 90px; top: 548px; width: 1420px; height: 340px; border: none;" data-src="demo2-compression/logistic-terms.html"></iframe>
+  </div>
+</section>
+
+<section>
+  <h2>This kind of fit function is an artificial neuron</h2>
+  <div class="cite"><a href="https://doi.org/10.1007/BF02551274" target="_blank" rel="noopener">G. Cybenko, <i>Approximation by superpositions of a sigmoidal function</i> (1989).</a></div>
+
+  <img style="height: 720px; display: block; margin: 0 auto;" src="img/real_neuron_artificial_neurons-5x3-0.svg">
+</section>
+
+<section>
+  <h2>This kind of fit function is an artificial neuron</h2>
+  <div class="cite"><a href="https://doi.org/10.1007/BF02551274" target="_blank" rel="noopener">G. Cybenko, <i>Approximation by superpositions of a sigmoidal function</i> (1989).</a></div>
+
+  <img style="height: 720px; display: block; margin: 0 auto;" src="img/real_neuron_artificial_neurons-5x3.svg">
+</section>
+
+<section>
+  <h2>Differences between artificial neurons and real neurons</h2>
+
+  <table class="center_table">
+    <tr><td><span class="bold" style="text-decoration: underline;">Artificial neurons</span></td><td><span class="bold" style="text-decoration: underline;">Real neurons</span></td></tr>
+    <tr class="fragment"><td>inputs/outputs are arrays of numbers</td><td>data are pulses, timing carries information</td></tr>
+    <tr class="fragment"><td>only connections matter</td><td>chemicals (hormones) bypass connections</td></tr>
+    <tr class="fragment"><td>deterministic sum of building blocks</td><td>noisy, history-dependent, and chaotic</td></tr>
+    <tr class="fragment"><td>optimized by tuning the building block<br>parameters for the best fit</td><td>optimized by local rules,<br>chemical signals, and evolution</td></tr>
+    <tr class="fragment"><td>organized in layers (next slide)</td><td>loosely modular, heavily cross-wired</td></tr>
+  </table>
+
+  <br><br>
+  <p class="fragment">Artificial neurons are inspired by real neurons the way airplanes are inspired by birds.</p>
+</section>
+
+<section>
+  <img class="at" style="left: 0; top: 0; width: 1600px; height: 900px; object-fit: cover;" src="img/nerve-cells-sem-steve-gschmeissner.jpg">
+</section>
+
+<section>
+  <h2>A neural network is a chain of artificial neurons</h2>
+
+  <p>The output of each artificial neuron is the input to the next.</p>
+
+  <img style="height: 450px; display: block; margin: 0 auto;" src="img/network_three_layers.svg">
+
+  <br>
+  <p>Each artificial neuron is called a layer. One layer fits an arbitrary pattern; two layers fits patterns of patterns; three layers fits patterns of patterns of patterns…</p>
+</section>
+
 <!-- 4. a neural network: a chain of transformations, then a model -->
 <section data-background-iframe="demo3-generalization/4-snowflake.html" data-background-interactive></section>
 <section data-background-iframe="demo3-generalization/2-circle.html" data-background-interactive></section>

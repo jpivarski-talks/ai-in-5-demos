@@ -1,143 +1,970 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1314" height="454" viewBox="0 0 1314 454" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTowMjNlNzVhMC0xYWMxLTQ0MzAtOWI1NS0wYTllOWFhZjJmMWEAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaNb3sdFypYq3nqJJCIvJb1cAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo3MWFkZjNlZi01OTQ0LTRmYmUtOGM5NS05MjRiZWFkNTE2NzRscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNovPxorFySaMb/MDbjkgCxEQAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggKFtBRt7XxywXMgt7ZP8U8Pwhfm6lVH0I9Keh3UjpYkakZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaL42QYhtLrC9VYgLOYXkwq0AAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCArjYp/yHsuKqzjbCHcn9D7pI6ttqNHUABEOFsikNO0DmRuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBiYZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjAyM2U3NWEwLTFhYzEtNDQzMC05YjU1LTBhOWU5YWFmMmYxYS9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjg1MjA4ZjQ4LTVmNTktNDEzNi05ZTRmLTM4ZjUzZjkxZmRjOHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCAoW0FG3tfHLBcyC3tk/xTw/CF+bqVUfQj0p6HdSOliRqJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggt91O5dQdeu80QS5mykApnlnjjCAyCiCXcUzzAohCzDuiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFgg7k7urf0iqS4jU2qceT++zL7PUTVrtHbH8XSe6ttJBJ10Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQO00Ju/vDrdmLaUR+bK/AQZtzsEd3HJNSy+I8v3Z15VlQU8I5D979m1FFDzxyZSugvVS/ig9OgD7H+/Q/ESMRrc=</c2pa:manifest></metadata>
-<rect width="1314" height="454" fill="white"/>
-<g fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round">
-<path d="M94.0,131.0 C189.0,131.0 189.0,67.0 284.0,67.0"/>
-<path d="M94.0,131.0 C189.0,131.0 189.0,131.0 284.0,131.0"/>
-<path d="M94.0,131.0 C189.0,131.0 189.0,195.0 284.0,195.0"/>
-<path d="M94.0,131.0 C189.0,131.0 189.0,259.0 284.0,259.0"/>
-<path d="M94.0,131.0 C189.0,131.0 189.0,323.0 284.0,323.0"/>
-<path d="M94.0,131.0 C189.0,131.0 189.0,387.0 284.0,387.0"/>
-<path d="M94.0,195.0 C189.0,195.0 189.0,67.0 284.0,67.0"/>
-<path d="M94.0,195.0 C189.0,195.0 189.0,131.0 284.0,131.0"/>
-<path d="M94.0,195.0 C189.0,195.0 189.0,195.0 284.0,195.0"/>
-<path d="M94.0,195.0 C189.0,195.0 189.0,259.0 284.0,259.0"/>
-<path d="M94.0,195.0 C189.0,195.0 189.0,323.0 284.0,323.0"/>
-<path d="M94.0,195.0 C189.0,195.0 189.0,387.0 284.0,387.0"/>
-<path d="M94.0,259.0 C189.0,259.0 189.0,67.0 284.0,67.0"/>
-<path d="M94.0,259.0 C189.0,259.0 189.0,131.0 284.0,131.0"/>
-<path d="M94.0,259.0 C189.0,259.0 189.0,195.0 284.0,195.0"/>
-<path d="M94.0,259.0 C189.0,259.0 189.0,259.0 284.0,259.0"/>
-<path d="M94.0,259.0 C189.0,259.0 189.0,323.0 284.0,323.0"/>
-<path d="M94.0,259.0 C189.0,259.0 189.0,387.0 284.0,387.0"/>
-<path d="M94.0,323.0 C189.0,323.0 189.0,67.0 284.0,67.0"/>
-<path d="M94.0,323.0 C189.0,323.0 189.0,131.0 284.0,131.0"/>
-<path d="M94.0,323.0 C189.0,323.0 189.0,195.0 284.0,195.0"/>
-<path d="M94.0,323.0 C189.0,323.0 189.0,259.0 284.0,259.0"/>
-<path d="M94.0,323.0 C189.0,323.0 189.0,323.0 284.0,323.0"/>
-<path d="M94.0,323.0 C189.0,323.0 189.0,387.0 284.0,387.0"/>
-</g>
-<g fill="#808080" stroke="#808080"><line x1="366.0" y1="227.0" x2="414.0" y2="227.0" stroke-width="12"/><path d="M440.0,227.0 L410.0,207.0 L410.0,247.0 Z"/></g>
-<g fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round">
-<path d="M522.0,67.0 C617.0,67.0 617.0,99.0 712.0,99.0"/>
-<path d="M522.0,67.0 C617.0,67.0 617.0,163.0 712.0,163.0"/>
-<path d="M522.0,67.0 C617.0,67.0 617.0,227.0 712.0,227.0"/>
-<path d="M522.0,67.0 C617.0,67.0 617.0,291.0 712.0,291.0"/>
-<path d="M522.0,67.0 C617.0,67.0 617.0,355.0 712.0,355.0"/>
-<path d="M522.0,131.0 C617.0,131.0 617.0,99.0 712.0,99.0"/>
-<path d="M522.0,131.0 C617.0,131.0 617.0,163.0 712.0,163.0"/>
-<path d="M522.0,131.0 C617.0,131.0 617.0,227.0 712.0,227.0"/>
-<path d="M522.0,131.0 C617.0,131.0 617.0,291.0 712.0,291.0"/>
-<path d="M522.0,131.0 C617.0,131.0 617.0,355.0 712.0,355.0"/>
-<path d="M522.0,195.0 C617.0,195.0 617.0,99.0 712.0,99.0"/>
-<path d="M522.0,195.0 C617.0,195.0 617.0,163.0 712.0,163.0"/>
-<path d="M522.0,195.0 C617.0,195.0 617.0,227.0 712.0,227.0"/>
-<path d="M522.0,195.0 C617.0,195.0 617.0,291.0 712.0,291.0"/>
-<path d="M522.0,195.0 C617.0,195.0 617.0,355.0 712.0,355.0"/>
-<path d="M522.0,259.0 C617.0,259.0 617.0,99.0 712.0,99.0"/>
-<path d="M522.0,259.0 C617.0,259.0 617.0,163.0 712.0,163.0"/>
-<path d="M522.0,259.0 C617.0,259.0 617.0,227.0 712.0,227.0"/>
-<path d="M522.0,259.0 C617.0,259.0 617.0,291.0 712.0,291.0"/>
-<path d="M522.0,259.0 C617.0,259.0 617.0,355.0 712.0,355.0"/>
-<path d="M522.0,323.0 C617.0,323.0 617.0,99.0 712.0,99.0"/>
-<path d="M522.0,323.0 C617.0,323.0 617.0,163.0 712.0,163.0"/>
-<path d="M522.0,323.0 C617.0,323.0 617.0,227.0 712.0,227.0"/>
-<path d="M522.0,323.0 C617.0,323.0 617.0,291.0 712.0,291.0"/>
-<path d="M522.0,323.0 C617.0,323.0 617.0,355.0 712.0,355.0"/>
-<path d="M522.0,387.0 C617.0,387.0 617.0,99.0 712.0,99.0"/>
-<path d="M522.0,387.0 C617.0,387.0 617.0,163.0 712.0,163.0"/>
-<path d="M522.0,387.0 C617.0,387.0 617.0,227.0 712.0,227.0"/>
-<path d="M522.0,387.0 C617.0,387.0 617.0,291.0 712.0,291.0"/>
-<path d="M522.0,387.0 C617.0,387.0 617.0,355.0 712.0,355.0"/>
-</g>
-<g fill="#808080" stroke="#808080"><line x1="794.0" y1="227.0" x2="842.0" y2="227.0" stroke-width="12"/><path d="M868.0,227.0 L838.0,207.0 L838.0,247.0 Z"/></g>
-<g fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round">
-<path d="M950.0,99.0 C1045.0,99.0 1045.0,163.0 1140.0,163.0"/>
-<path d="M950.0,99.0 C1045.0,99.0 1045.0,227.0 1140.0,227.0"/>
-<path d="M950.0,99.0 C1045.0,99.0 1045.0,291.0 1140.0,291.0"/>
-<path d="M950.0,163.0 C1045.0,163.0 1045.0,163.0 1140.0,163.0"/>
-<path d="M950.0,163.0 C1045.0,163.0 1045.0,227.0 1140.0,227.0"/>
-<path d="M950.0,163.0 C1045.0,163.0 1045.0,291.0 1140.0,291.0"/>
-<path d="M950.0,227.0 C1045.0,227.0 1045.0,163.0 1140.0,163.0"/>
-<path d="M950.0,227.0 C1045.0,227.0 1045.0,227.0 1140.0,227.0"/>
-<path d="M950.0,227.0 C1045.0,227.0 1045.0,291.0 1140.0,291.0"/>
-<path d="M950.0,291.0 C1045.0,291.0 1045.0,163.0 1140.0,163.0"/>
-<path d="M950.0,291.0 C1045.0,291.0 1045.0,227.0 1140.0,227.0"/>
-<path d="M950.0,291.0 C1045.0,291.0 1045.0,291.0 1140.0,291.0"/>
-<path d="M950.0,355.0 C1045.0,355.0 1045.0,163.0 1140.0,163.0"/>
-<path d="M950.0,355.0 C1045.0,355.0 1045.0,227.0 1140.0,227.0"/>
-<path d="M950.0,355.0 C1045.0,355.0 1045.0,291.0 1140.0,291.0"/>
-</g>
-<g fill="#808080" stroke="#808080">
-<line x1="1194.0" y1="163.0" x2="1255.0" y2="163.0" stroke-width="3"/><path d="M1274.0,163.0 L1254.0,154.0 L1254.0,172.0 Z"/>
-<line x1="1194.0" y1="227.0" x2="1255.0" y2="227.0" stroke-width="3"/><path d="M1274.0,227.0 L1254.0,218.0 L1254.0,236.0 Z"/>
-<line x1="1194.0" y1="291.0" x2="1255.0" y2="291.0" stroke-width="3"/><path d="M1274.0,291.0 L1254.0,282.0 L1254.0,300.0 Z"/>
-</g>
-<rect x="40.0" y="104.0" width="54" height="54" fill="#fbd5b0" stroke="black" stroke-width="2.5"/>
-<text x="67.0" y="136.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">x<tspan dy="7" font-size="16" font-style="normal">1</tspan></text>
-<rect x="40.0" y="168.0" width="54" height="54" fill="#fbd5b0" stroke="black" stroke-width="2.5"/>
-<text x="67.0" y="200.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">x<tspan dy="7" font-size="16" font-style="normal">2</tspan></text>
-<rect x="40.0" y="232.0" width="54" height="54" fill="#fbd5b0" stroke="black" stroke-width="2.5"/>
-<text x="67.0" y="264.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">x<tspan dy="7" font-size="16" font-style="normal">3</tspan></text>
-<rect x="40.0" y="296.0" width="54" height="54" fill="#fbd5b0" stroke="black" stroke-width="2.5"/>
-<text x="67.0" y="328.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">x<tspan dy="7" font-size="16" font-style="normal">4</tspan></text>
-<rect x="284.0" y="40.0" width="54" height="54" fill="#c6dcf0" stroke="black" stroke-width="2.5"/>
-<text x="311.0" y="72.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">h<tspan dy="7" font-size="16" font-style="normal">1</tspan></text>
-<rect x="284.0" y="104.0" width="54" height="54" fill="#c6dcf0" stroke="black" stroke-width="2.5"/>
-<text x="311.0" y="136.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">h<tspan dy="7" font-size="16" font-style="normal">2</tspan></text>
-<rect x="284.0" y="168.0" width="54" height="54" fill="#c6dcf0" stroke="black" stroke-width="2.5"/>
-<text x="311.0" y="200.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">h<tspan dy="7" font-size="16" font-style="normal">3</tspan></text>
-<rect x="284.0" y="232.0" width="54" height="54" fill="#c6dcf0" stroke="black" stroke-width="2.5"/>
-<text x="311.0" y="264.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">h<tspan dy="7" font-size="16" font-style="normal">4</tspan></text>
-<rect x="284.0" y="296.0" width="54" height="54" fill="#c6dcf0" stroke="black" stroke-width="2.5"/>
-<text x="311.0" y="328.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">h<tspan dy="7" font-size="16" font-style="normal">5</tspan></text>
-<rect x="284.0" y="360.0" width="54" height="54" fill="#c6dcf0" stroke="black" stroke-width="2.5"/>
-<text x="311.0" y="392.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">h<tspan dy="7" font-size="16" font-style="normal">6</tspan></text>
-<rect x="468.0" y="40.0" width="54" height="54" fill="#c6dcf0" stroke="black" stroke-width="2.5"/>
-<text x="495.0" y="72.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">h<tspan dy="7" font-size="16" font-style="normal">1</tspan></text>
-<rect x="468.0" y="104.0" width="54" height="54" fill="#c6dcf0" stroke="black" stroke-width="2.5"/>
-<text x="495.0" y="136.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">h<tspan dy="7" font-size="16" font-style="normal">2</tspan></text>
-<rect x="468.0" y="168.0" width="54" height="54" fill="#c6dcf0" stroke="black" stroke-width="2.5"/>
-<text x="495.0" y="200.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">h<tspan dy="7" font-size="16" font-style="normal">3</tspan></text>
-<rect x="468.0" y="232.0" width="54" height="54" fill="#c6dcf0" stroke="black" stroke-width="2.5"/>
-<text x="495.0" y="264.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">h<tspan dy="7" font-size="16" font-style="normal">4</tspan></text>
-<rect x="468.0" y="296.0" width="54" height="54" fill="#c6dcf0" stroke="black" stroke-width="2.5"/>
-<text x="495.0" y="328.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">h<tspan dy="7" font-size="16" font-style="normal">5</tspan></text>
-<rect x="468.0" y="360.0" width="54" height="54" fill="#c6dcf0" stroke="black" stroke-width="2.5"/>
-<text x="495.0" y="392.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">h<tspan dy="7" font-size="16" font-style="normal">6</tspan></text>
-<rect x="712.0" y="72.0" width="54" height="54" fill="#cde7c4" stroke="black" stroke-width="2.5"/>
-<text x="739.0" y="104.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">H<tspan dy="7" font-size="16" font-style="normal">1</tspan></text>
-<rect x="712.0" y="136.0" width="54" height="54" fill="#cde7c4" stroke="black" stroke-width="2.5"/>
-<text x="739.0" y="168.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">H<tspan dy="7" font-size="16" font-style="normal">2</tspan></text>
-<rect x="712.0" y="200.0" width="54" height="54" fill="#cde7c4" stroke="black" stroke-width="2.5"/>
-<text x="739.0" y="232.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">H<tspan dy="7" font-size="16" font-style="normal">3</tspan></text>
-<rect x="712.0" y="264.0" width="54" height="54" fill="#cde7c4" stroke="black" stroke-width="2.5"/>
-<text x="739.0" y="296.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">H<tspan dy="7" font-size="16" font-style="normal">4</tspan></text>
-<rect x="712.0" y="328.0" width="54" height="54" fill="#cde7c4" stroke="black" stroke-width="2.5"/>
-<text x="739.0" y="360.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">H<tspan dy="7" font-size="16" font-style="normal">5</tspan></text>
-<rect x="896.0" y="72.0" width="54" height="54" fill="#cde7c4" stroke="black" stroke-width="2.5"/>
-<text x="923.0" y="104.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">H<tspan dy="7" font-size="16" font-style="normal">1</tspan></text>
-<rect x="896.0" y="136.0" width="54" height="54" fill="#cde7c4" stroke="black" stroke-width="2.5"/>
-<text x="923.0" y="168.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">H<tspan dy="7" font-size="16" font-style="normal">2</tspan></text>
-<rect x="896.0" y="200.0" width="54" height="54" fill="#cde7c4" stroke="black" stroke-width="2.5"/>
-<text x="923.0" y="232.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">H<tspan dy="7" font-size="16" font-style="normal">3</tspan></text>
-<rect x="896.0" y="264.0" width="54" height="54" fill="#cde7c4" stroke="black" stroke-width="2.5"/>
-<text x="923.0" y="296.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">H<tspan dy="7" font-size="16" font-style="normal">4</tspan></text>
-<rect x="896.0" y="328.0" width="54" height="54" fill="#cde7c4" stroke="black" stroke-width="2.5"/>
-<text x="923.0" y="360.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">H<tspan dy="7" font-size="16" font-style="normal">5</tspan></text>
-<rect x="1140.0" y="136.0" width="54" height="54" fill="#e2d2ef" stroke="black" stroke-width="2.5"/>
-<text x="1167.0" y="168.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">y<tspan dy="7" font-size="16" font-style="normal">1</tspan></text>
-<rect x="1140.0" y="200.0" width="54" height="54" fill="#e2d2ef" stroke="black" stroke-width="2.5"/>
-<text x="1167.0" y="232.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">y<tspan dy="7" font-size="16" font-style="normal">2</tspan></text>
-<rect x="1140.0" y="264.0" width="54" height="54" fill="#e2d2ef" stroke="black" stroke-width="2.5"/>
-<text x="1167.0" y="296.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="25" font-style="italic">y<tspan dy="7" font-size="16" font-style="normal">3</tspan></text>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1314"
+   height="454"
+   viewBox="0 0 1314 454"
+   version="1.1"
+   id="svg102"
+   sodipodi:docname="network_three_layers.svg"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:c2pa="http://c2pa.org/manifest">
+  <defs
+     id="defs102" />
+  <sodipodi:namedview
+     id="namedview102"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="0.92774132"
+     inkscape:cx="620.86272"
+     inkscape:cy="263.00435"
+     inkscape:current-layer="svg102" />
+  <metadata
+     id="metadata1">
+    <c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTowMjNlNzVhMC0xYWMxLTQ0MzAtOWI1NS0wYTllOWFhZjJmMWEAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaNb3sdFypYq3nqJJCIvJb1cAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo3MWFkZjNlZi01OTQ0LTRmYmUtOGM5NS05MjRiZWFkNTE2NzRscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNovPxorFySaMb/MDbjkgCxEQAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggKFtBRt7XxywXMgt7ZP8U8Pwhfm6lVH0I9Keh3UjpYkakZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaL42QYhtLrC9VYgLOYXkwq0AAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCArjYp/yHsuKqzjbCHcn9D7pI6ttqNHUABEOFsikNO0DmRuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBiYZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjAyM2U3NWEwLTFhYzEtNDQzMC05YjU1LTBhOWU5YWFmMmYxYS9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjg1MjA4ZjQ4LTVmNTktNDEzNi05ZTRmLTM4ZjUzZjkxZmRjOHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCAoW0FG3tfHLBcyC3tk/xTw/CF+bqVUfQj0p6HdSOliRqJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggt91O5dQdeu80QS5mykApnlnjjCAyCiCXcUzzAohCzDuiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFgg7k7urf0iqS4jU2qceT++zL7PUTVrtHbH8XSe6ttJBJ10Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQO00Ju/vDrdmLaUR+bK/AQZtzsEd3HJNSy+I8v3Z15VlQU8I5D979m1FFDzxyZSugvVS/ig9OgD7H+/Q/ESMRrc=</c2pa:manifest>
+  </metadata>
+  <g
+     fill="none"
+     stroke="#808080"
+     stroke-width="2"
+     stroke-linecap="round"
+     id="g24"
+     transform="translate(0,20)">
+    <path
+       d="m 94,131 c 95,0 95,-64 190,-64"
+       id="path1" />
+    <path
+       d="m 94,131 c 95,0 95,0 190,0"
+       id="path2" />
+    <path
+       d="m 94,131 c 95,0 95,64 190,64"
+       id="path3" />
+    <path
+       d="m 94,131 c 95,0 95,128 190,128"
+       id="path4" />
+    <path
+       d="m 94,131 c 95,0 95,192 190,192"
+       id="path5" />
+    <path
+       d="m 94,131 c 95,0 95,256 190,256"
+       id="path6" />
+    <path
+       d="M 94,195 C 189,195 189,67 284,67"
+       id="path7" />
+    <path
+       d="m 94,195 c 95,0 95,-64 190,-64"
+       id="path8" />
+    <path
+       d="m 94,195 c 95,0 95,0 190,0"
+       id="path9" />
+    <path
+       d="m 94,195 c 95,0 95,64 190,64"
+       id="path10" />
+    <path
+       d="m 94,195 c 95,0 95,128 190,128"
+       id="path11" />
+    <path
+       d="m 94,195 c 95,0 95,192 190,192"
+       id="path12" />
+    <path
+       d="M 94,259 C 189,259 189,67 284,67"
+       id="path13" />
+    <path
+       d="m 94,259 c 95,0 95,-128 190,-128"
+       id="path14" />
+    <path
+       d="m 94,259 c 95,0 95,-64 190,-64"
+       id="path15" />
+    <path
+       d="m 94,259 c 95,0 95,0 190,0"
+       id="path16" />
+    <path
+       d="m 94,259 c 95,0 95,64 190,64"
+       id="path17" />
+    <path
+       d="m 94,259 c 95,0 95,128 190,128"
+       id="path18" />
+    <path
+       d="M 94,323 C 189,323 189,67 284,67"
+       id="path19" />
+    <path
+       d="m 94,323 c 95,0 95,-192 190,-192"
+       id="path20" />
+    <path
+       d="m 94,323 c 95,0 95,-128 190,-128"
+       id="path21" />
+    <path
+       d="m 94,323 c 95,0 95,-64 190,-64"
+       id="path22" />
+    <path
+       d="m 94,323 c 95,0 95,0 190,0"
+       id="path23" />
+    <path
+       d="m 94,323 c 95,0 95,64 190,64"
+       id="path24" />
+  </g>
+  <line
+     x1="366"
+     y1="247"
+     x2="414"
+     y2="247"
+     stroke-width="12"
+     id="line24"
+     style="fill:#808080;stroke:#808080" />
+  <path
+     d="m 440,247 -34,-20 8,20 -8,20 z"
+     id="path25"
+     sodipodi:nodetypes="ccccc"
+     style="fill:#808080;stroke:#808080" />
+  <path
+     d="m 868,247 -34,-20 8,20 -8,20 z"
+     id="path102"
+     sodipodi:nodetypes="ccccc"
+     style="fill:#808080;stroke:#808080" />
+  <g
+     fill="none"
+     stroke="#808080"
+     stroke-width="2"
+     stroke-linecap="round"
+     id="g55"
+     transform="translate(0,20)">
+    <path
+       d="m 522,67 c 95,0 95,32 190,32"
+       id="path26" />
+    <path
+       d="m 522,67 c 95,0 95,96 190,96"
+       id="path27" />
+    <path
+       d="m 522,67 c 95,0 95,160 190,160"
+       id="path28" />
+    <path
+       d="m 522,67 c 95,0 95,224 190,224"
+       id="path29" />
+    <path
+       d="m 522,67 c 95,0 95,288 190,288"
+       id="path30" />
+    <path
+       d="m 522,131 c 95,0 95,-32 190,-32"
+       id="path31" />
+    <path
+       d="m 522,131 c 95,0 95,32 190,32"
+       id="path32" />
+    <path
+       d="m 522,131 c 95,0 95,96 190,96"
+       id="path33" />
+    <path
+       d="m 522,131 c 95,0 95,160 190,160"
+       id="path34" />
+    <path
+       d="m 522,131 c 95,0 95,224 190,224"
+       id="path35" />
+    <path
+       d="m 522,195 c 95,0 95,-96 190,-96"
+       id="path36" />
+    <path
+       d="m 522,195 c 95,0 95,-32 190,-32"
+       id="path37" />
+    <path
+       d="m 522,195 c 95,0 95,32 190,32"
+       id="path38" />
+    <path
+       d="m 522,195 c 95,0 95,96 190,96"
+       id="path39" />
+    <path
+       d="m 522,195 c 95,0 95,160 190,160"
+       id="path40" />
+    <path
+       d="M 522,259 C 617,259 617,99 712,99"
+       id="path41" />
+    <path
+       d="m 522,259 c 95,0 95,-96 190,-96"
+       id="path42" />
+    <path
+       d="m 522,259 c 95,0 95,-32 190,-32"
+       id="path43" />
+    <path
+       d="m 522,259 c 95,0 95,32 190,32"
+       id="path44" />
+    <path
+       d="m 522,259 c 95,0 95,96 190,96"
+       id="path45" />
+    <path
+       d="M 522,323 C 617,323 617,99 712,99"
+       id="path46" />
+    <path
+       d="m 522,323 c 95,0 95,-160 190,-160"
+       id="path47" />
+    <path
+       d="m 522,323 c 95,0 95,-96 190,-96"
+       id="path48" />
+    <path
+       d="m 522,323 c 95,0 95,-32 190,-32"
+       id="path49" />
+    <path
+       d="m 522,323 c 95,0 95,32 190,32"
+       id="path50" />
+    <path
+       d="M 522,387 C 617,387 617,99 712,99"
+       id="path51" />
+    <path
+       d="m 522,387 c 95,0 95,-224 190,-224"
+       id="path52" />
+    <path
+       d="m 522,387 c 95,0 95,-160 190,-160"
+       id="path53" />
+    <path
+       d="m 522,387 c 95,0 95,-96 190,-96"
+       id="path54" />
+    <path
+       d="m 522,387 c 95,0 95,-32 190,-32"
+       id="path55" />
+  </g>
+  <line
+     x1="794"
+     y1="247"
+     x2="842"
+     y2="247"
+     stroke-width="12"
+     id="line55"
+     style="fill:#808080;stroke:#808080" />
+  <g
+     fill="none"
+     stroke="#808080"
+     stroke-width="2"
+     stroke-linecap="round"
+     id="g71"
+     transform="translate(0,20)">
+    <path
+       d="m 950,99 c 95,0 95,64 190,64"
+       id="path57" />
+    <path
+       d="m 950,99 c 95,0 95,128 190,128"
+       id="path58" />
+    <path
+       d="m 950,99 c 95,0 95,192 190,192"
+       id="path59" />
+    <path
+       d="m 950,163 c 95,0 95,0 190,0"
+       id="path60" />
+    <path
+       d="m 950,163 c 95,0 95,64 190,64"
+       id="path61" />
+    <path
+       d="m 950,163 c 95,0 95,128 190,128"
+       id="path62" />
+    <path
+       d="m 950,227 c 95,0 95,-64 190,-64"
+       id="path63" />
+    <path
+       d="m 950,227 c 95,0 95,0 190,0"
+       id="path64" />
+    <path
+       d="m 950,227 c 95,0 95,64 190,64"
+       id="path65" />
+    <path
+       d="m 950,291 c 95,0 95,-128 190,-128"
+       id="path66" />
+    <path
+       d="m 950,291 c 95,0 95,-64 190,-64"
+       id="path67" />
+    <path
+       d="m 950,291 c 95,0 95,0 190,0"
+       id="path68" />
+    <path
+       d="m 950,355 c 95,0 95,-192 190,-192"
+       id="path69" />
+    <path
+       d="m 950,355 c 95,0 95,-128 190,-128"
+       id="path70" />
+    <path
+       d="m 950,355 c 95,0 95,-64 190,-64"
+       id="path71" />
+  </g>
+  <g
+     fill="#808080"
+     stroke="#808080"
+     id="g74"
+     transform="translate(0,20)">
+    <line
+       x1="1194"
+       y1="163"
+       x2="1255"
+       y2="163"
+       stroke-width="3"
+       id="line71" />
+    <path
+       d="m 1274,163 -20,-9 v 18 z"
+       id="path72" />
+    <line
+       x1="1194"
+       y1="227"
+       x2="1255"
+       y2="227"
+       stroke-width="3"
+       id="line72" />
+    <path
+       d="m 1274,227 -20,-9 v 18 z"
+       id="path73" />
+    <line
+       x1="1194"
+       y1="291"
+       x2="1255"
+       y2="291"
+       stroke-width="3"
+       id="line73" />
+    <path
+       d="m 1274,291 -20,-9 v 18 z"
+       id="path74" />
+  </g>
+  <rect
+     x="40"
+     y="124"
+     width="54"
+     height="54"
+     fill="#fbd5b0"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect74" />
+  <text
+     x="67"
+     y="156"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text74">x<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan74">1</tspan></text>
+  <rect
+     x="40"
+     y="188"
+     width="54"
+     height="54"
+     fill="#fbd5b0"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect75" />
+  <text
+     x="67"
+     y="220"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text75">x<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan75">2</tspan></text>
+  <rect
+     x="40"
+     y="252"
+     width="54"
+     height="54"
+     fill="#fbd5b0"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect76" />
+  <text
+     x="67"
+     y="284"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text76">x<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan76">3</tspan></text>
+  <rect
+     x="40"
+     y="316"
+     width="54"
+     height="54"
+     fill="#fbd5b0"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect77" />
+  <text
+     x="67"
+     y="348"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text77">x<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan77">4</tspan></text>
+  <rect
+     x="284"
+     y="60"
+     width="54"
+     height="54"
+     fill="#c6dcf0"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect78" />
+  <text
+     x="311"
+     y="92"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text78">h<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan78">1</tspan></text>
+  <rect
+     x="284"
+     y="124"
+     width="54"
+     height="54"
+     fill="#c6dcf0"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect79" />
+  <text
+     x="311"
+     y="156"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text79">h<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan79">2</tspan></text>
+  <rect
+     x="284"
+     y="188"
+     width="54"
+     height="54"
+     fill="#c6dcf0"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect80" />
+  <text
+     x="311"
+     y="220"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text80">h<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan80">3</tspan></text>
+  <rect
+     x="284"
+     y="252"
+     width="54"
+     height="54"
+     fill="#c6dcf0"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect81" />
+  <text
+     x="311"
+     y="284"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text81">h<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan81">4</tspan></text>
+  <rect
+     x="284"
+     y="316"
+     width="54"
+     height="54"
+     fill="#c6dcf0"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect82" />
+  <text
+     x="311"
+     y="348"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text82">h<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan82">5</tspan></text>
+  <rect
+     x="284"
+     y="380"
+     width="54"
+     height="54"
+     fill="#c6dcf0"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect83" />
+  <text
+     x="311"
+     y="412"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text83">h<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan83">6</tspan></text>
+  <rect
+     x="468"
+     y="60"
+     width="54"
+     height="54"
+     fill="#c6dcf0"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect84" />
+  <text
+     x="495"
+     y="92"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text84">h<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan84">1</tspan></text>
+  <rect
+     x="468"
+     y="124"
+     width="54"
+     height="54"
+     fill="#c6dcf0"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect85" />
+  <text
+     x="495"
+     y="156"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text85">h<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan85">2</tspan></text>
+  <rect
+     x="468"
+     y="188"
+     width="54"
+     height="54"
+     fill="#c6dcf0"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect86" />
+  <text
+     x="495"
+     y="220"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text86">h<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan86">3</tspan></text>
+  <rect
+     x="468"
+     y="252"
+     width="54"
+     height="54"
+     fill="#c6dcf0"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect87" />
+  <text
+     x="495"
+     y="284"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text87">h<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan87">4</tspan></text>
+  <rect
+     x="468"
+     y="316"
+     width="54"
+     height="54"
+     fill="#c6dcf0"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect88" />
+  <text
+     x="495"
+     y="348"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text88">h<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan88">5</tspan></text>
+  <rect
+     x="468"
+     y="380"
+     width="54"
+     height="54"
+     fill="#c6dcf0"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect89" />
+  <text
+     x="495"
+     y="412"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text89">h<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan89">6</tspan></text>
+  <rect
+     x="712"
+     y="92"
+     width="54"
+     height="54"
+     fill="#cde7c4"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect90" />
+  <text
+     x="739"
+     y="124"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text90">H<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan90">1</tspan></text>
+  <rect
+     x="712"
+     y="156"
+     width="54"
+     height="54"
+     fill="#cde7c4"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect91" />
+  <text
+     x="739"
+     y="188"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text91">H<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan91">2</tspan></text>
+  <rect
+     x="712"
+     y="220"
+     width="54"
+     height="54"
+     fill="#cde7c4"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect92" />
+  <text
+     x="739"
+     y="252"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text92">H<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan92">3</tspan></text>
+  <rect
+     x="712"
+     y="284"
+     width="54"
+     height="54"
+     fill="#cde7c4"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect93" />
+  <text
+     x="739"
+     y="316"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text93">H<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan93">4</tspan></text>
+  <rect
+     x="712"
+     y="348"
+     width="54"
+     height="54"
+     fill="#cde7c4"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect94" />
+  <text
+     x="739"
+     y="380"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text94">H<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan94">5</tspan></text>
+  <rect
+     x="896"
+     y="92"
+     width="54"
+     height="54"
+     fill="#cde7c4"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect95" />
+  <text
+     x="923"
+     y="124"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text95">H<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan95">1</tspan></text>
+  <rect
+     x="896"
+     y="156"
+     width="54"
+     height="54"
+     fill="#cde7c4"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect96" />
+  <text
+     x="923"
+     y="188"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text96">H<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan96">2</tspan></text>
+  <rect
+     x="896"
+     y="220"
+     width="54"
+     height="54"
+     fill="#cde7c4"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect97" />
+  <text
+     x="923"
+     y="252"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text97">H<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan97">3</tspan></text>
+  <rect
+     x="896"
+     y="284"
+     width="54"
+     height="54"
+     fill="#cde7c4"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect98" />
+  <text
+     x="923"
+     y="316"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text98">H<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan98">4</tspan></text>
+  <rect
+     x="896"
+     y="348"
+     width="54"
+     height="54"
+     fill="#cde7c4"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect99" />
+  <text
+     x="923"
+     y="380"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text99">H<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan99">5</tspan></text>
+  <rect
+     x="1140"
+     y="156"
+     width="54"
+     height="54"
+     fill="#e2d2ef"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect100" />
+  <text
+     x="1167"
+     y="188"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text100">y<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan100">1</tspan></text>
+  <rect
+     x="1140"
+     y="220"
+     width="54"
+     height="54"
+     fill="#e2d2ef"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect101" />
+  <text
+     x="1167"
+     y="252"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text101">y<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan101">2</tspan></text>
+  <rect
+     x="1140"
+     y="284"
+     width="54"
+     height="54"
+     fill="#e2d2ef"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="rect102" />
+  <text
+     x="1167"
+     y="316"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text102">y<tspan
+   dy="7"
+   font-size="16px"
+   font-style="normal"
+   id="tspan102">3</tspan></text>
+  <text
+     x="189.41504"
+     y="38.367107"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text103"
+     style="text-align:center;text-anchor:middle"><tspan
+       style="font-style:normal"
+       id="tspan103">some function</tspan></text>
+  <text
+     x="617.31738"
+     y="38.367107"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text104"
+     style="text-align:center;text-anchor:middle"><tspan
+       style="font-style:normal"
+       id="tspan104">another function</tspan></text>
+  <text
+     x="1045.6897"
+     y="38.367107"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="25px"
+     font-style="italic"
+     id="text105"
+     style="text-align:center;text-anchor:middle"><tspan
+       style="font-style:normal"
+       id="tspan105">yet another function</tspan></text>
 </svg>
