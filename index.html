@@ -104,12 +104,62 @@
   <div class="fragment">
     <hr>
 
-    <ol style="padding-left: 100px;" start="5">
+    <ol style="padding-left: 100px;" start="8">
       <li style="margin-top: 20px;">Training on large enough bodies of text yields problem-solving capabilities.</li>
       <li style="margin-top: 20px;">Modern chatbots refine this capability and reshape it into Q&amp;A format.</li>
       <li style="margin-top: 20px;">Agents are conventional systems built around this problem-solving unit.</li>
     </ol>
   </div>
+</section>
+
+<section>
+  <h2>Through-line for this talk</h2>
+
+  <div style="position: relative;">
+    <ol style="padding-left: 100px; visibility: hidden;" aria-hidden="true">
+      <li style="margin-top: 20px;">Data can be represented as points in space.</li>
+      <li style="margin-top: 20px;">Models are smooth functions over space, fitted to match the training data.</li>
+      <li style="margin-top: 20px;">Space can be transformed to different coordinate systems, taking the data with it.</li>
+      <li style="margin-top: 20px;">A neural network is a model that discovers symmetric patterns in space.</li>
+    </ol>
+    <ol style="position: absolute; top: calc(50% + (24px - 40px) / 2); transform: translateY(-50%); left: 0; right: 0; padding-left: 100px;">
+      <li style="margin: 0; list-style-type: '1–4. ';">How to find hidden geometric patterns in spatial data.</li>
+    </ol>
+  </div>
+
+  <div>
+    <hr>
+
+    <div style="position: relative;">
+      <ol style="padding-left: 100px; visibility: hidden;" aria-hidden="true" start="5">
+        <li style="margin-top: 20px;">Meanings of words can be represented as points in space.</li>
+        <li style="margin-top: 20px;">Relationships between words can be encoded in an attention matrix.</li>
+        <li style="margin-top: 20px;">Natural language has syntax patterns that point to world-modeling.</li>
+      </ol>
+      <ol style="position: absolute; top: calc(50% + (24px - 20px) / 2); transform: translateY(-50%); left: 0; right: 0; padding-left: 100px;">
+        <li style="margin: 0; list-style-type: '5–7. ';">How to turn linguistic meaning into geometry and find its patterns.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div>
+    <hr>
+
+    <div style="position: relative;">
+      <ol style="padding-left: 100px; visibility: hidden;" aria-hidden="true" start="8">
+        <li style="margin-top: 20px;">Training on large enough bodies of text yields problem-solving capabilities.</li>
+        <li style="margin-top: 20px;">Modern chatbots refine this capability and reshape it into Q&amp;A format.</li>
+        <li style="margin-top: 20px;">Agents are conventional systems built around this problem-solving unit.</li>
+      </ol>
+      <ol style="position: absolute; top: calc(50% + (24px - 20px) / 2); transform: translateY(-50%); left: 0; right: 0; padding-left: 100px;">
+        <li style="margin: 0; list-style-type: '8–10. ';">How to build systems that talk, using linguistic patterns from millions of humans.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2 style="text-align: center; margin-top: 300px;">How to find hidden geometric<br>patterns in spatial data.</h2>
 </section>
 
 <section>
@@ -234,24 +284,53 @@
 <section>
   <h2>Why build layers when one artificial neuron approximates any function?</h2>
 
-  <br><br>
-  <div class="fragment">
-    <p>All layers except the last transform the space from a set of coordinates <span class="italic">(x, y)</span> to another <span class="italic">(u, v)</span>.</p>
-
-    <p>The last layer fits the data in a highly warped space.</p>
-  </div>
-
-  <br><br><br>
-  <p class="fragment">Transformations that fold space along lines of symmetry make the next step easier to fit.</p>
-
-  <br><br><br>
-  <p class="fragment">Thus, fitting a deep neural network means searching for the data's hidden symmetries.</p>
+  <p class="fragment">1. If the data have symmetries, it's easier to fit the folded data than the raw data.</p>
 </section>
 
 <!-- 4. a neural network: a chain of transformations, then a model -->
 <section data-background-iframe="demo3-generalization/4-snowflake.html" data-background-interactive></section>
+
+<section>
+  <h2>Why build layers when one artificial neuron approximates any function?</h2>
+
+  <p>1. If the data have symmetries, it's easier to fit the folded data than the raw data.</p>
+
+  <p>2. All layers of a neural network except the last transforms and folds space.</p>
+
+  <img style="display: block; margin: 0 auto 12px auto;" src="img/network_layers_braces.svg">
+</section>
+
 <section data-background-iframe="demo3-generalization/2-circle.html" data-background-interactive></section>
 <section data-background-iframe="demo3-generalization/3-spirals.html" data-background-interactive></section>
+
+<section>
+  <h2>Why build layers when one artificial neuron approximates any function?</h2>
+
+  <p>1. If the data have symmetries, it's easier to fit the folded data than the raw data.</p>
+
+  <p>2. All layers of a neural network except the last transforms and folds space.</p>
+
+  <img style="display: block; margin: 0 auto 12px auto;" src="img/network_layers_braces.svg">
+
+  <br>
+  <p class="fragment" style="color: blue;">3. Fitting a deep (many-layered) neural network is a search for symmetries in the data.</p>
+</section>
+
+<section>
+  <h2>Why build layers when one artificial neuron approximates any function?</h2>
+
+  <p style="margin-top: 150px; color: blue;"><span style="visibility: hidden;">3.</span> Fitting a deep (many-layered) neural network is a search for symmetries in the data.</p>
+
+  <br><br>
+  <p class="fragment"><span style="visibility: hidden;">3.</span> Many real-world datasets consist of hierarchical patterns of patterns.</p>
+
+  <br><br>
+  <p class="fragment"><span style="visibility: hidden;">3.</span> Neural networks are good at fitting them <span class="italic">as spatial shapes</span>.</p>
+</section>
+
+<section>
+  <h2 style="text-align: center; margin-top: 300px;">How to turn linguistic meaning into<br>geometry and find its patterns.</h2>
+</section>
 
 <section>
 
@@ -263,6 +342,11 @@
 <section data-background-iframe="demo4-attention/2-translation.html" data-background-interactive></section>
 <!-- 7. higher-order patterns: syntax models generic aspects of the world -->
 <section data-background-iframe="demo4-attention/3-verb-classes.html" data-background-interactive></section>
+
+<section>
+  <h2 style="text-align: center; margin-top: 300px;">How to build systems that talk, using linguistic patterns from millions of humans.</h2>
+</section>
+
 <!-- 8. a base LLM: knowledge and few-shot problem solving -->
 <section data-background-iframe="demo5-few-shot/1-complete.html" data-background-interactive></section>
 <!-- 9. RLHF (no demo) -->

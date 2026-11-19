@@ -30,7 +30,9 @@ const panel = new Stage.Panel({ x: 0, y: 0, w: Stage.W, h: Stage.H });
 const left = { x: X0, y: Y0, w: S, h: S }, right = { x: X0 + S + GAP, y: Y0, w: S, h: S };
 const axL = new Plots.Axes(panel, left, [-1.1, 1.1], [-1.1, 1.1]);
 const axR = new Plots.Axes(panel, right, [-1.1, 1.1], [-1.1, 1.1]);
-const NET = { x: X0 + 250, y: Y0 + S + 12, w: 2 * S + GAP - 250, h: Stage.H - (Y0 + S + 12) - 8 };
+// the network is between the buttons (on the left) and a note (on the right, NOTE_W wide)
+const NOTE_W = 300;
+const NET = { x: X0 + 250, y: Y0 + S + 12, w: 2 * S + GAP - 250 - NOTE_W - 20, h: Stage.H - (Y0 + S + 12) - 8 };
 
 // the first data set is always the same; "new data" draws new spirals
 let data = NN.spirals(CFG.nPer, Optim.rng(12345));
@@ -214,6 +216,12 @@ Object.assign(bar.style, { flexDirection: "column", alignItems: "stretch", justi
 Stage.button("new data", () => { stop(); newData(); newModel(); }, bar);
 Stage.button("random model", () => { stop(); newModel(); }, bar);
 const trainButton = Stage.button("optimize model", train, bar, { cls: "primary" });
+// the note, at the right edge of the right panel (its lines centered) and vertically centered with the buttons,
+// in the slides' body text style
+Stage.label("Fits both the space\ntransformation and\nthe data at once.",
+  { x: X0 + 2 * S + GAP - NOTE_W, y: NET.y, w: NOTE_W, h: NET.h },
+  { fontSize: "34px", lineHeight: "1.2", color: C.ink, display: "flex", alignItems: "center", justifyContent: "flex-end",
+    textAlign: "center", whiteSpace: "pre-line", pointerEvents: "none" });
 
 newModel();
 Stage.loop(() => {

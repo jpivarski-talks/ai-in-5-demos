@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1340" height="386" viewBox="0 0 1340 386">
+<g fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round"><path d="M 56,79 C 233,79 233,27 410,27"/><path d="M 56,79 C 233,79 233,79 410,79"/><path d="M 56,79 C 233,79 233,131 410,131"/><path d="M 56,79 C 233,79 233,183 410,183"/><path d="M 56,79 C 233,79 233,235 410,235"/><path d="M 56,79 C 233,79 233,287 410,287"/><path d="M 56,131 C 233,131 233,27 410,27"/><path d="M 56,131 C 233,131 233,79 410,79"/><path d="M 56,131 C 233,131 233,131 410,131"/><path d="M 56,131 C 233,131 233,183 410,183"/><path d="M 56,131 C 233,131 233,235 410,235"/><path d="M 56,131 C 233,131 233,287 410,287"/><path d="M 56,183 C 233,183 233,27 410,27"/><path d="M 56,183 C 233,183 233,79 410,79"/><path d="M 56,183 C 233,183 233,131 410,131"/><path d="M 56,183 C 233,183 233,183 410,183"/><path d="M 56,183 C 233,183 233,235 410,235"/><path d="M 56,183 C 233,183 233,287 410,287"/><path d="M 56,235 C 233,235 233,27 410,27"/><path d="M 56,235 C 233,235 233,79 410,79"/><path d="M 56,235 C 233,235 233,131 410,131"/><path d="M 56,235 C 233,235 233,183 410,183"/><path d="M 56,235 C 233,235 233,235 410,235"/><path d="M 56,235 C 233,235 233,287 410,287"/><path d="M 456,27 C 633,27 633,53 810,53"/><path d="M 456,27 C 633,27 633,105 810,105"/><path d="M 456,27 C 633,27 633,157 810,157"/><path d="M 456,27 C 633,27 633,209 810,209"/><path d="M 456,27 C 633,27 633,261 810,261"/><path d="M 456,79 C 633,79 633,53 810,53"/><path d="M 456,79 C 633,79 633,105 810,105"/><path d="M 456,79 C 633,79 633,157 810,157"/><path d="M 456,79 C 633,79 633,209 810,209"/><path d="M 456,79 C 633,79 633,261 810,261"/><path d="M 456,131 C 633,131 633,53 810,53"/><path d="M 456,131 C 633,131 633,105 810,105"/><path d="M 456,131 C 633,131 633,157 810,157"/><path d="M 456,131 C 633,131 633,209 810,209"/><path d="M 456,131 C 633,131 633,261 810,261"/><path d="M 456,183 C 633,183 633,53 810,53"/><path d="M 456,183 C 633,183 633,105 810,105"/><path d="M 456,183 C 633,183 633,157 810,157"/><path d="M 456,183 C 633,183 633,209 810,209"/><path d="M 456,183 C 633,183 633,261 810,261"/><path d="M 456,235 C 633,235 633,53 810,53"/><path d="M 456,235 C 633,235 633,105 810,105"/><path d="M 456,235 C 633,235 633,157 810,157"/><path d="M 456,235 C 633,235 633,209 810,209"/><path d="M 456,235 C 633,235 633,261 810,261"/><path d="M 456,287 C 633,287 633,53 810,53"/><path d="M 456,287 C 633,287 633,105 810,105"/><path d="M 456,287 C 633,287 633,157 810,157"/><path d="M 456,287 C 633,287 633,209 810,209"/><path d="M 456,287 C 633,287 633,261 810,261"/><path d="M 856,53 C 1033,53 1033,105 1210,105"/><path d="M 856,53 C 1033,53 1033,157 1210,157"/><path d="M 856,53 C 1033,53 1033,209 1210,209"/><path d="M 856,105 C 1033,105 1033,105 1210,105"/><path d="M 856,105 C 1033,105 1033,157 1210,157"/><path d="M 856,105 C 1033,105 1033,209 1210,209"/><path d="M 856,157 C 1033,157 1033,105 1210,105"/><path d="M 856,157 C 1033,157 1033,157 1210,157"/><path d="M 856,157 C 1033,157 1033,209 1210,209"/><path d="M 856,209 C 1033,209 1033,105 1210,105"/><path d="M 856,209 C 1033,209 1033,157 1210,157"/><path d="M 856,209 C 1033,209 1033,209 1210,209"/><path d="M 856,261 C 1033,261 1033,105 1210,105"/><path d="M 856,261 C 1033,261 1033,157 1210,157"/><path d="M 856,261 C 1033,261 1033,209 1210,209"/></g>
+<line x1="1256" y1="105" x2="1319" y2="105" stroke="#808080" stroke-width="3"/>
+<path d="M 1336,105 l -26,-8 8,8 -8,8 z" fill="#808080"/>
+<line x1="1256" y1="157" x2="1319" y2="157" stroke="#808080" stroke-width="3"/>
+<path d="M 1336,157 l -26,-8 8,8 -8,8 z" fill="#808080"/>
+<line x1="1256" y1="209" x2="1319" y2="209" stroke="#808080" stroke-width="3"/>
+<path d="M 1336,209 l -26,-8 8,8 -8,8 z" fill="#808080"/>
+<rect x="10" y="56" width="46" height="46" fill="#fbd5b0" stroke="#000" stroke-width="2.5"/>
+<text x="30" y="85" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">x<tspan dy="6" font-size="15px" font-style="normal">1</tspan></text>
+<rect x="10" y="108" width="46" height="46" fill="#fbd5b0" stroke="#000" stroke-width="2.5"/>
+<text x="30" y="137" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">x<tspan dy="6" font-size="15px" font-style="normal">2</tspan></text>
+<rect x="10" y="160" width="46" height="46" fill="#fbd5b0" stroke="#000" stroke-width="2.5"/>
+<text x="30" y="189" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">x<tspan dy="6" font-size="15px" font-style="normal">3</tspan></text>
+<rect x="10" y="212" width="46" height="46" fill="#fbd5b0" stroke="#000" stroke-width="2.5"/>
+<text x="30" y="241" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">x<tspan dy="6" font-size="15px" font-style="normal">4</tspan></text>
+<rect x="410" y="4" width="46" height="46" fill="#c6dcf0" stroke="#000" stroke-width="2.5"/>
+<text x="430" y="33" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">h<tspan dy="6" font-size="15px" font-style="normal">1</tspan></text>
+<rect x="410" y="56" width="46" height="46" fill="#c6dcf0" stroke="#000" stroke-width="2.5"/>
+<text x="430" y="85" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">h<tspan dy="6" font-size="15px" font-style="normal">2</tspan></text>
+<rect x="410" y="108" width="46" height="46" fill="#c6dcf0" stroke="#000" stroke-width="2.5"/>
+<text x="430" y="137" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">h<tspan dy="6" font-size="15px" font-style="normal">3</tspan></text>
+<rect x="410" y="160" width="46" height="46" fill="#c6dcf0" stroke="#000" stroke-width="2.5"/>
+<text x="430" y="189" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">h<tspan dy="6" font-size="15px" font-style="normal">4</tspan></text>
+<rect x="410" y="212" width="46" height="46" fill="#c6dcf0" stroke="#000" stroke-width="2.5"/>
+<text x="430" y="241" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">h<tspan dy="6" font-size="15px" font-style="normal">5</tspan></text>
+<rect x="410" y="264" width="46" height="46" fill="#c6dcf0" stroke="#000" stroke-width="2.5"/>
+<text x="430" y="293" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">h<tspan dy="6" font-size="15px" font-style="normal">6</tspan></text>
+<rect x="810" y="30" width="46" height="46" fill="#cde7c4" stroke="#000" stroke-width="2.5"/>
+<text x="830" y="59" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">H<tspan dy="6" font-size="15px" font-style="normal">1</tspan></text>
+<rect x="810" y="82" width="46" height="46" fill="#cde7c4" stroke="#000" stroke-width="2.5"/>
+<text x="830" y="111" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">H<tspan dy="6" font-size="15px" font-style="normal">2</tspan></text>
+<rect x="810" y="134" width="46" height="46" fill="#cde7c4" stroke="#000" stroke-width="2.5"/>
+<text x="830" y="163" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">H<tspan dy="6" font-size="15px" font-style="normal">3</tspan></text>
+<rect x="810" y="186" width="46" height="46" fill="#cde7c4" stroke="#000" stroke-width="2.5"/>
+<text x="830" y="215" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">H<tspan dy="6" font-size="15px" font-style="normal">4</tspan></text>
+<rect x="810" y="238" width="46" height="46" fill="#cde7c4" stroke="#000" stroke-width="2.5"/>
+<text x="830" y="267" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">H<tspan dy="6" font-size="15px" font-style="normal">5</tspan></text>
+<rect x="1210" y="82" width="46" height="46" fill="#e2d2ef" stroke="#000" stroke-width="2.5"/>
+<text x="1230" y="111" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">y<tspan dy="6" font-size="15px" font-style="normal">1</tspan></text>
+<rect x="1210" y="134" width="46" height="46" fill="#e2d2ef" stroke="#000" stroke-width="2.5"/>
+<text x="1230" y="163" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">y<tspan dy="6" font-size="15px" font-style="normal">2</tspan></text>
+<rect x="1210" y="186" width="46" height="46" fill="#e2d2ef" stroke="#000" stroke-width="2.5"/>
+<text x="1230" y="215" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">y<tspan dy="6" font-size="15px" font-style="normal">3</tspan></text>
+<path d="M 38,326 q 0,11.0 14,11.0 L 219,337.0 q 14,0 14,11.0 q 0,-11.0 14,-11.0 L 414,337.0 q 14,0 14,-11.0" fill="none" stroke="#333333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="233" y="378" text-anchor="middle" font-family='"Helvetica Neue", Helvetica, Arial, sans-serif' font-size="28px" fill="#333333">transforms 4D <tspan font-style="italic">x</tspan> to 6D <tspan font-style="italic">h</tspan></text>
+<path d="M 438,326 q 0,11.0 14,11.0 L 619,337.0 q 14,0 14,11.0 q 0,-11.0 14,-11.0 L 814,337.0 q 14,0 14,-11.0" fill="none" stroke="#333333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="633" y="378" text-anchor="middle" font-family='"Helvetica Neue", Helvetica, Arial, sans-serif' font-size="28px" fill="#333333">transforms 6D <tspan font-style="italic">h</tspan> to 5D <tspan font-style="italic">H</tspan></text>
+<path d="M 838,326 q 0,11.0 14,11.0 L 1019,337.0 q 14,0 14,11.0 q 0,-11.0 14,-11.0 L 1214,337.0 q 14,0 14,-11.0" fill="none" stroke="#333333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1033" y="378" text-anchor="middle" font-family='"Helvetica Neue", Helvetica, Arial, sans-serif' font-size="28px" fill="#333333">fits 3 <tspan font-style="italic">y</tspan> functions in 5D <tspan font-style="italic">H</tspan></text>
+</svg>

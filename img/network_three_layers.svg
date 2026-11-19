@@ -24,9 +24,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
-     inkscape:zoom="0.92774132"
-     inkscape:cx="620.86272"
-     inkscape:cy="263.00435"
+     inkscape:zoom="3.7109653"
+     inkscape:cx="1184.5974"
+     inkscape:cy="250.87812"
      inkscape:current-layer="svg102" />
   <metadata
      id="metadata1">
@@ -289,42 +289,30 @@
        d="m 950,355 c 95,0 95,-64 190,-64"
        id="path71" />
   </g>
-  <g
-     fill="#808080"
-     stroke="#808080"
-     id="g74"
-     transform="translate(0,20)">
-    <line
-       x1="1194"
-       y1="163"
-       x2="1255"
-       y2="163"
-       stroke-width="3"
-       id="line71" />
-    <path
-       d="m 1274,163 -20,-9 v 18 z"
-       id="path72" />
-    <line
-       x1="1194"
-       y1="227"
-       x2="1255"
-       y2="227"
-       stroke-width="3"
-       id="line72" />
-    <path
-       d="m 1274,227 -20,-9 v 18 z"
-       id="path73" />
-    <line
-       x1="1194"
-       y1="291"
-       x2="1255"
-       y2="291"
-       stroke-width="3"
-       id="line73" />
-    <path
-       d="m 1274,291 -20,-9 v 18 z"
-       id="path74" />
-  </g>
+  <line
+     x1="1194"
+     y1="183"
+     x2="1255"
+     y2="183"
+     stroke-width="3"
+     id="line71"
+     style="fill:#808080;stroke:#808080" />
+  <line
+     x1="1194"
+     y1="247"
+     x2="1255"
+     y2="247"
+     stroke-width="3"
+     id="line72"
+     style="fill:#808080;stroke:#808080" />
+  <line
+     x1="1194"
+     y1="311"
+     x2="1255"
+     y2="311"
+     stroke-width="3"
+     id="line73"
+     style="fill:#808080;stroke:#808080" />
   <rect
      x="40"
      y="124"
@@ -967,4 +955,19 @@
      style="text-align:center;text-anchor:middle"><tspan
        style="font-style:normal"
        id="tspan105">yet another function</tspan></text>
+  <path
+     d="m 1272,183 -26,-8 8,8 -8,8 z"
+     id="path56"
+     sodipodi:nodetypes="ccccc"
+     style="fill:#808080;stroke:#808080" />
+  <path
+     d="m 1272,247 -26,-8 8,8 -8,8 z"
+     id="path72"
+     sodipodi:nodetypes="ccccc"
+     style="fill:#808080;stroke:#808080" />
+  <path
+     d="m 1272,311 -26,-8 8,8 -8,8 z"
+     id="path75"
+     sodipodi:nodetypes="ccccc"
+     style="fill:#808080;stroke:#808080" />
 </svg>
