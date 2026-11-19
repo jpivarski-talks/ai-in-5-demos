@@ -39,6 +39,10 @@ function drawBar() {
 barPanel.onresize = drawBar;
 panel.onresize = draw;
 
+// how the measurements become the picture, at the left of the controls row, in the slides' body text style
+Stage.label("longitude, latitude → position, temperature → color", { x: MAP.x, y: 818 },
+  { fontSize: "34px", color: Stage.COLORS.ink, whiteSpace: "nowrap" });
+
 const tip = MapC.tooltip();
 panel.canvas.addEventListener("mousemove", (e) => {
   const m = panel.pos(e);
