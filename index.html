@@ -131,10 +131,10 @@
 
   <p>Data points only tell us facts at discrete points: exactly where and when they were measured.</p>
 
-  <p class="fragment" style="margin-top: 30px;">We believe that seawater has a temperature even when it isn't being measured.</p>
+  <p class="fragment" style="margin-top: 30px;">Seawater has a temperature even when it isn't being measured.</p>
 
   <div class="fragment">
-    <p style="margin-top: 30px;">To express our educated guess about unmeasured points, we fit a function to the data, which fills in the gaps between points and extrapolates beyond them.</p>
+    <p style="margin-top: 30px;">To make educated guesses about unmeasured points, we fit a function to the data, which fills in the gaps between points and extrapolates beyond them.</p>
 
     <img style="height: 300px; display: block; margin: 0 auto;" src="img/curve_fit.svg">
   </div>
@@ -144,6 +144,20 @@
 
 <!-- 2. a model: a smooth function from the data's space to the prediction -->
 <section data-background-iframe="demo0-space/2-ocean-model.html" data-background-interactive></section>
+
+<section>
+  <h2>Functions also transform coordinates</h2>
+
+  <p>For example, from a 2-dimensional space <span class="italic">(x, y)</span> to a 2-dimensional space <span class="italic">(u, v)</span>:</p>
+
+  <br>
+  <img style="height: 400px; display: block; margin: 0 auto;" src="img/xy_to_uv.svg">
+
+  <br><br>
+  <p>A function <span class="italic">f</span> takes any <span class="italic">(x, y)</span> and returns <span class="italic">(u, v)</span>, whether there's a measurement there or not.</p>
+
+</section>
+
 <!-- 3. transformations: smooth functions from space to space -->
 <section data-background-iframe="demo0-space/3-projections.html" data-background-interactive></section>
 <!-- 4. a neural network: a chain of transformations, then a model -->
