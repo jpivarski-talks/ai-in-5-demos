@@ -165,7 +165,7 @@
 <section>
   <h2>Data as points in space</h2>
 
-  <p>When we measure something, we can express it as a number, even if it's just 0 or 1.</p>
+  <p>When we measure something, we can express it as a number, even if it’s just 0 or 1.</p>
 
   <p class="fragment" data-fragment-index="1">We usually measure a few attributes together, such as temperature and pressure of seawater.</p>
 
@@ -173,7 +173,7 @@
        texts wrap to different numbers of lines); the figures' labels are the same size as the text -->
   <div style="display: grid; grid-template-columns: 760px 600px; column-gap: 60px; margin-bottom: 20px;">
     <p class="fragment" data-fragment-index="2">Those two numbers can be drawn in a scatter-plot as a 2-dimensional point on paper.</p>
-    <p class="fragment" data-fragment-index="3">Add a salinity measurement, and it's a <span style="white-space: nowrap;">3-dimensional</span> point in space.</p>
+    <p class="fragment" data-fragment-index="3">Add a salinity measurement, and it’s a <span style="white-space: nowrap;">3-dimensional</span> point in space.</p>
     <div class="seawater-plot fragment" data-fragment-index="2" data-dims="2" style="width: 760px; height: 330px;"></div>
     <div class="seawater-plot fragment" data-fragment-index="3" data-dims="3" style="width: 600px; height: 330px;"></div>
   </div>
@@ -190,7 +190,7 @@
 
   <p>Data points only tell us facts at discrete points: exactly where and when they were measured.</p>
 
-  <p class="fragment" style="margin-top: 30px;">Seawater has a temperature even when it isn't being measured.</p>
+  <p class="fragment" style="margin-top: 30px;">Seawater has a temperature even when it isn’t being measured.</p>
 
   <div class="fragment">
     <p style="margin-top: 30px;">To make educated guesses about unmeasured points, we fit a function to the data, which fills in the gaps between points and extrapolates beyond them.</p>
@@ -213,7 +213,7 @@
   <img style="height: 400px; display: block; margin: 0 auto;" src="img/xy_to_uv.svg">
 
   <br><br>
-  <p>A function <span class="italic">f</span> takes any <span class="italic">(x, y)</span> and returns <span class="italic">(u, v)</span>, whether there's a measurement there or not.</p>
+  <p>A function <span class="italic">f</span> takes any <span class="italic">(x, y)</span> and returns <span class="italic">(u, v)</span>, whether there’s a measurement there or not.</p>
 </section>
 
 <!-- 3. transformations: smooth functions from space to space -->
@@ -284,7 +284,7 @@
 <section>
   <h2>Why build layers when one artificial neuron approximates any function?</h2>
 
-  <p class="fragment">1. If the data have symmetries, it's easier to fit the folded data than the raw data.</p>
+  <p class="fragment">1. If the data have symmetries, it’s easier to fit the folded data than the raw data.</p>
 </section>
 
 <!-- 4. a neural network: a chain of transformations, then a model -->
@@ -293,7 +293,7 @@
 <section>
   <h2>Why build layers when one artificial neuron approximates any function?</h2>
 
-  <p>1. If the data have symmetries, it's easier to fit the folded data than the raw data.</p>
+  <p>1. If the data have symmetries, it’s easier to fit the folded data than the raw data.</p>
 
   <p>2. All layers of a neural network except the last transforms and folds space.</p>
 
@@ -306,7 +306,7 @@
 <section>
   <h2>Why build layers when one artificial neuron approximates any function?</h2>
 
-  <p>1. If the data have symmetries, it's easier to fit the folded data than the raw data.</p>
+  <p>1. If the data have symmetries, it’s easier to fit the folded data than the raw data.</p>
 
   <p>2. All layers of a neural network except the last transforms and folds space.</p>
 
@@ -333,11 +333,42 @@
 </section>
 
 <section>
+  <h2>Words as points in space</h2>
 
+  <div class="fragment">
+    <br>
+    <p>On a computer, text is usually encoded by assigning every character a number:</p>
+    <p style="font-family: monospace; text-align: center;">a = 97, b = 98, c = 99...</p>
+  </div>
+
+  <div class="fragment">
+    <br><br>
+    <p>But this encoding doesn’t capture semantic meaning:</p>
+    <ul>
+      <li>“If” and “Whether” are close in meaning, but spelled entirely differently.</li>
+      <li>“Showing” and “Snowing” are far in meaning, but spelled nearly the same.</li>
+    </ul>
+  </div>
+
+  <br><br>
+  <p class="fragment">Remember that neural networks look for <span class="italic">spatial</span> patterns, and words encoded this way don’t have relationships in space.</p>
+</section>
+
+<section>
+  <h2>Words as points in space</h2>
+
+  <br><br><br>
+  <p>Instead, train a model to transform words into points in a 100-dimensional space.</p>
+
+  <br><br><br><br>
+  <p>Nearby points are similar words, faraway points are dissimilar, and arithmetic relationships correspond to semantic relationships.</p>
 </section>
 
 <!-- 5. meanings of words as points in space -->
 <section data-background-iframe="demo4-attention/1-embedding.html" data-background-interactive></section>
+
+
+
 <!-- 6. relationships between words in a sequence: attention -->
 <section data-background-iframe="demo4-attention/2-translation.html" data-background-interactive></section>
 <!-- 7. higher-order patterns: syntax models generic aspects of the world -->
