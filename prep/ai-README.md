@@ -44,7 +44,7 @@ Keys: → / PageDown next, ← / PageUp previous, also while a demo has the keyb
 | 4.1 `demo4-attention/1-embedding.html` | type a word + Enter: its 100-d vector and the nearest words around it. Each word's distance from the center is its dissimilarity (1 − cosine similarity, minus the nearest word's) and the angles come from radius-constrained multidimensional scaling, so the plot is a crop of the whole vocabulary laid out that way, zoomed to about 40 readable words. Or type a sum/difference such as *king − man + woman*: the words' vectors are added (`-` or `−` subtracts) and the plot is centered on the result | text field |
 | 4.2 `…/2-translation.html` | type an English sentence + Enter: French translation and the attention matrix ("hot" colormap) | text field |
 | 4.3 `demo4-attention/3-verb-classes.html` | four verb microclasses (pure contact, contact through motion, change of state by contact and motion, pure change of state) in four sentence frames: blue grammatical, orange not; clicking anywhere in a column swaps in another member of its class (from VerbNet), and the pattern stays the same | click a column (space: all four) |
-| 5 `demo5-few-shot/1-complete.html` | base LLM completes the text box (completion in blue); starts empty, temperature 1 | presets (they only fill in the text box), **complete** (Ctrl/⌘-Enter; runs until **stop** unless max tokens is set in ⚙), temperature, ⚙ settings |
+| 5 `demo5-few-shot/1-complete.html` | base LLM completes the text box (completion in blue); starts empty, temperature 1 | presets (they only fill in the text box; **verbatim** also highlights, in yellow, where the completion differs from the book, until you type in the box or pick another preset), **complete** (Ctrl/⌘-Enter; runs until **stop** unless max tokens is set in ⚙), temperature, ⚙ settings |
 
 Good Demo 4.2 sentences: *My older sister bought a beautiful blue car yesterday.* · *The white car is new.* · *He has a red bicycle and a black car.* · *The old man reads a book.*
 
@@ -62,6 +62,8 @@ To retrain, put the data in `training/data/` and run the script with Python ≥ 
 - `glove.6B.100d.txt`, from `glove.6B.zip` at <https://nlp.stanford.edu/projects/glove/> (mirrored at <https://huggingface.co/stanfordnlp/glove>).
 
 ## Demo 5's base model
+
+`./serve-llm.sh` now starts **Llama-2-13B** base by default (TheBloke's Q4_K_M GGUF, about 9 GB of memory): its training data is from before ChatGPT, so its completions show no chatbot habits. The presets (few-shot, cloze, verbatim, ingredients, category, emotion, letter count) were chosen from `prep/few-shot-candidates.md`, which has the tests behind them. The rest of this section describes the earlier Qwen3-8B setup and its presets.
 
 OpenRouter currently lists no base (pre-trained only) model with a live provider. Instead, the page talks to any OpenAI-compatible `/v1/completions` endpoint, by default llama.cpp on the presenting laptop:
 

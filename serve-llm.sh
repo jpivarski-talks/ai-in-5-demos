@@ -3,9 +3,9 @@
 #
 # Needs llama.cpp's llama-server: on a Mac, `brew install llama.cpp`
 # (or download a release from https://github.com/ggml-org/llama.cpp/releases).
-# The first run downloads the model (~5 GB) into llama.cpp's cache.
+# The first run downloads the model (5-19 GB) into llama.cpp's cache.
 #
-#   ./serve-llm.sh          Qwen3-8B-Base (same as `qwen`; needs ~6 GB of free memory)
+#   ./serve-llm.sh          Llama-2-13B (same as `llama2`)
 #   ./serve-llm.sh qwen     Qwen3-8B-Base (its pretraining included instruction datasets)
 #   ./serve-llm.sh llama    Llama-3.1-8B, the base model (~6 GB)
 #   ./serve-llm.sh llama2   Llama-2-13B, the base model (~9 GB; trained on pre-ChatGPT data, so no chatbot habits)
@@ -19,7 +19,7 @@
 # whose GPU shares the main memory), and otherwise as much as fits, with the rest in RAM (slower).
 set -euo pipefail
 
-case "${1:-qwen}" in
+case "${1:-llama2}" in
   qwen)
     REPO=mradermacher/Qwen3-8B-Base-GGUF        # revision 11c0eaa7581c2cedab123814f676ff44da1bc7b0
     FILE=Qwen3-8B-Base.Q4_K_M.gguf
@@ -39,7 +39,7 @@ case "${1:-qwen}" in
     FILE=Qwen3-30B-A3B-Base.Q4_K_M.gguf
     ;;
   *)
-    echo "usage: $0 [qwen | llama | llama2 | big]   (default: qwen)" >&2
+    echo "usage: $0 [llama2 | qwen | llama | big]   (default: llama2)" >&2
     exit 1
     ;;
 esac

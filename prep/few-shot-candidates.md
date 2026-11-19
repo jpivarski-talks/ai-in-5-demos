@@ -1939,3 +1939,53 @@ Runners-up on Llama-2-13B, all 7/8 or better:
 - **Deleted:** Llama-2-7B, Mistral-7B-v0.1 and Qwen3-30B-A3B-Base.
 - **Qwen3-30B and `big`:** Qwen3-30B-A3B-Base was downloaded during this test. It is the `big` option in `serve-llm.sh`, which will download it again (18.6 GB) if you use it.
 - **Kept:** Llama-2-13B (recommended) and the two models that were already cached.
+
+## Addendum: math word problems with worked examples (bicycles)
+
+Tested afterwards on Llama-2-13B (the same server settings as the page; temperature 0, then 8 samples at 0.5). The bare "bicycles" question fails (always "4"), and so does the same question after three examples that show only the answers. Showing **two worked examples** whose answers spell out the steps fixes it. This is few-shot "chain of thought" (Wei et al. 2022, arXiv:2201.11903): the model copies the form of the reasoning, not just the form of the answer.
+
+```
+Q: Tom has 4 cars and sells 1. How many wheels do his cars have now?
+A: He has 4 - 1 = 3 cars. Each car has 4 wheels, so 3 cars have 3 × 4 = 12 wheels. The answer is 12.
+
+Q: Ana has 2 tricycles and buys 2 more. How many wheels do her tricycles have?
+A: She has 2 + 2 = 4 tricycles. Each tricycle has 3 wheels, so 4 tricycles have 4 × 3 = 12 wheels. The answer is 12.
+
+Q: If Nebuchadnezzar has three bicycles and Qui-Gon Jinn gives him one more, how many wheels does Nebuchadnezzar have?
+A:
+```
+
+| question (replaces the last Q) | expected | T=0 | k/8 at T=0.5 |
+|---|---|---|---|
+| Nebuchadnezzar, three bicycles, one more | 8 | `… 4 × 2 = 8 wheels. The answer is 8.` | 8 (7 in a second set of samples) |
+| Hermione, five unicycles, gives two to Ron | 3 | `… 3 × 1 = 3 wheels. The answer is 3.` | 7 |
+| a farmer, 3 cows, buys 2 more (legs) | 20 | `… 5 × 4 = 20 legs. The answer is 20.` | 8 |
+| Gandalf, 6 spiders in a jar, 2 escape (legs left) | 32 | `… 4 × 8 = 32 legs. The answer is 32.` | 7 |
+
+For comparison, with three answer-only examples ("A: 5", "A: 16", "A: 12") the bicycles question got 0/8 (always "4"). With three worked examples that included a trivial one first (apples, spiders, cars), it got 3/8, and its temperature-0 answer added the new bicycle to the wheel count ("6 + 1 = 7 wheels").
+
+### Longer chains (2–4 steps)
+
+Two worked examples with 2–3 steps each, then a new problem (numbers spelled out in the questions, as in the "chain of reasoning" preset):
+
+```
+Q: A baker makes three trays of muffins with twelve muffins on each tray. She sells twenty muffins and gives away four. How many muffins does she have left?
+A: She makes 3 × 12 = 36 muffins. After selling 20, she has 36 - 20 = 16 muffins. After giving away 4, she has 16 - 4 = 12 muffins. The answer is 12.
+
+Q: Leo buys four packs of pencils with six pencils in each pack. He shares them equally among himself and his two sisters. How many pencils does each of them get?
+A: He has 4 × 6 = 24 pencils. There are 1 + 2 = 3 people, so each gets 24 ÷ 3 = 8 pencils. The answer is 8.
+
+Q: Mia saves seven dollars a week for six weeks, then spends fifteen dollars on a book. How much money does she have left?
+A:
+```
+
+| problem | steps | expected | Llama-2-13B T=0 | k/8 at T=0.5 |
+|---|---|---|---|---|
+| Mia saves $7/week for 6 weeks, spends $15 | 2 | 27 | right | 8 |
+| 5 classes of 24, 18 absent, teams of 6 | 3 | 17 | right | 7 |
+| 12 pages a day, 200-page book, after two weeks | 3 (two weeks = 14 days) | 32 | right | 6 |
+| train: 8 cars × 40 seats, +150, then +37 and −12 | 4 | 145 | 133 (forgot the 12 who got off) | 3 |
+| 3 fields × 9 rows × 8 trees × 5 baskets | 3 | 1080 | 1,920 (did the whole product in one step, wrongly) | 0 |
+| 20 rows × 15 seats, $8 tickets, two shows | 3 | 4800 | 2,400 (forgot the second show) | 3 |
+
+So on this model, 2–3 steps with small numbers work well, but 4 steps or a big multiplication don't. The failures are the classic ones: a step left out, and arithmetic done "in its head" instead of one operation at a time. The Llama 2 paper reports about 29% for Llama-2-13B on GSM8K grade-school word problems (8 worked examples). Qwen3-30B-A3B (`./serve-llm.sh big`) would very likely do better, but it was deleted after the model comparison, so it wasn't tested here.
