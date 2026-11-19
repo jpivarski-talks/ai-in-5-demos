@@ -66,9 +66,105 @@
 <section>
   <img class="at" style="left: 0; top: 0; width: 1600px; height: 900px; object-fit: contain;" src="img/tool-web-search.png">
 </section>
+
+<section>
+  <h2>Experiment: two lines from <span class="italic">A Tale of Two Cities</span></h2>
+  <div class="cite"><span>OpenAI gpt-5.4, temperature 1, no web search, no reasoning.</span></div>
+
+  <div class="r-hstack" style="align-items: flex-start;">
+    <div style="width: 40%;">
+      <p>What follows “It was the best of times”?</p>
+
+      <p style="font-size: 0.75em;">
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.
+      </p>
+
+      <br><br>
+      <p style="color: #1f6fb4;">Correct every time for the famous first line, never correct for a line<br>from <span class="italic">Book the Third, Chapter VI</span>.</p>
+
+    </div>
+    <div style="width: 60%;">
+      <p>What follows “His judges sat upon the Bench in feathered hats”?</p>
+
+      <p style="font-size: 0.75em;">
+→ and looked at Monsieur the Marquis as if they thought him too much above the common herd to be tried by such canaille.<br>
+→ and gold-laced coats.<br>
+→ but the whole Court was sufficiently covered, as to appearance, with black cloth and horse-hair, as to display an unnatural blotting out of day.<br>
+→ but not in furs, to mock the afflicted man.<br>
+→ but the roughest men at the Bar had no more emotion than if they had been so many rats.<br>
+→ but the red glare of the furnace shone upon them, stern and inexorable, as if they had all been so many fallen angels.<br>
+→ and gold-laced coats.<br>
+→ and were all in jewels but the axe was sharp, and the block was black.<br>
+→ and hanging robes.<br>
+→ and hoods; when a prisoner was tried, they had such an air of being all packed up somewhere for safe keeping, that one could have fancied they were all in several bags, and might at any time be brought out and squeezed dry.
+      </p>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Same lines from <span class="italic">A Tale of Two Cities</span>, with web-search</h2>
+  <div class="cite"><span>OpenAI gpt-5.4, temperature 1, <span style="text-decoration: underline;">with web search</span>, no reasoning.</span></div>
+
+  <div class="r-hstack" style="align-items: flex-start;">
+    <div style="width: 25%;">
+      <p>What follows “It was the best of times”?</p>
+
+      <p style="font-size: 0.75em;">
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.<br>
+→ it was the worst of times.
+      </p>
+    </div>
+    <div style="width: 75%;">
+      <p>What follows “His judges sat upon the Bench in feathered hats”?<br>&nbsp;</p>
+
+      <p style="font-size: 0.75em;">
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.<br>
+→ but the rough red cap and tricoloured cockade was the head-dress otherwise prevailing.
+      </p>
+
+    </div>
+  </div>
+
+  <br>
+  <p class="fragment">Now it’s correct every time.</p>
+
+  <p class="fragment">We’re only relying on its ability to summarize the source, which is much more accurate.</p>
+
+</section>
+
 <section>
   <img class="at" style="left: 0; top: 0; width: 1600px; height: 900px; object-fit: contain;" src="img/tool-reasoning.png">
 </section>
+
+
+
 <section>
   <img class="at" style="left: 0; top: 0; width: 1600px; height: 900px; object-fit: contain;" src="img/tool-agent.png">
 </section>
