@@ -33,12 +33,84 @@
 <div class="reveal">
 <div class="slides">
 
+<style>
+    .reveal span.bold {
+      font-weight: bold;
+      color: #606060;
+    }
+
+    .reveal span.italic {
+      font-style: italic;
+    }
+</style>
+
 <section>
   <h1 class="at" style="left: 90px; top: 300px; width: 1400px">How Chatbots Work</h1>
   <p class="at grey" style="left: 92px; top: 430px; font-size: 40px">Understanding AI through Interactive Demos</p>
   <p class="at" style="left: 92px; top: 600px">Jim Pivarski</p>
   <p class="at grey" style="left: 92px; top: 655px; font-size: 28px">University of Chicago, Data Science Institute</p>
 </section>
+
+<section>
+  <h2>Computers are what our grandparents thought they’d be</h2>
+
+  <p class="fragment">When computers were first invented, the public thought of them as things you can talk to in natural language, like HAL in 2001.</p>
+
+  <p class="fragment">After the widespread growth of personal computing and the Internet, we’ve come to think of them as a <span class="bold">thing</span> or a <span class="bold">place</span>: desktop, tool, game, cyberspace, platform, storefront, feed.</p>
+
+  <p class="fragment">Now computers <span class="italic">actually can</span> hold a conversation, like HAL.</p>
+
+  <div class="fragment">
+    <p>The purpose of this talk is to understand what happened, without anthropomorphizing.</p>
+
+    <div style="display: flex; justify-content: center; align-items: center; gap: 40px; height: 300px;">
+      <img style="height: 100%;" src="img/not-this-chatbot.jpg">
+      <img style="height: 100%;" src="img/not-a-brain.jpg">
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Through-line for this talk</h2>
+
+  <div class="fragment">
+    <ol style="padding-left: 100px;">
+      <li style="margin-top: 20px;">Data can be represented as points in space.
+      <li style="margin-top: 20px;">Models are smooth functions over space, fitted to match the training data.
+      <li style="margin-top: 20px;">Space can be transformed to different coordinate systems, taking the data with it.
+      <li style="margin-top: 20px;">A neural network is a model that discovers symmetric patterns in space.
+    </ol>
+  </div>
+
+  <div class="fragment">
+    <hr>
+
+    <ol style="padding-left: 100px;" start="5">
+      <li style="margin-top: 20px;">Meanings of words can be represented as points in space.
+      <li style="margin-top: 20px;">Relationships between words can be encoded in an attention matrix.
+      <li style="margin-top: 20px;">Natural language has syntax patterns that point to world-modeling.
+    </ol>
+  </div>
+
+  <div class="fragment">
+    <hr>
+
+    <ol style="padding-left: 100px;" start="5">
+      <li style="margin-top: 20px;">Training on large enough bodies of text yields problem-solving capabilities.
+      <li style="margin-top: 20px;">Modern chatbots refine this capability and reshape it into Q&amp;A format.
+      <li style="margin-top: 20px;">Agents are conventional systems built around this problem-solving unit.
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2>Data as points in space</h2>
+
+
+
+
+</section>
+
 
 <!-- 1. data as points in space -->
 <section data-background-iframe="demo0-space/1-ocean-data.html" data-background-interactive></section>
