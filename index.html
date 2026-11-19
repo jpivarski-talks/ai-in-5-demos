@@ -125,6 +125,23 @@
 
 <!-- 1. data as points in space -->
 <section data-background-iframe="demo0-space/1-ocean-data.html" data-background-interactive></section>
+
+<section>
+  <h2>Models as best-fit functions</h2>
+
+  <p>Data points only tell us facts at discrete points: exactly where and when they were measured.</p>
+
+  <p class="fragment" style="margin-top: 30px;">We believe that seawater has a temperature even when it isn't being measured.</p>
+
+  <div class="fragment">
+    <p style="margin-top: 30px;">To express our educated guess about unmeasured points, we fit a function to the data, which fills in the gaps between points and extrapolates beyond them.</p>
+
+    <img style="height: 300px; display: block; margin: 0 auto;" src="img/curve_fit.svg">
+  </div>
+
+  <p class="fragment" style="margin-top: 30px;">A function <span class="italic">f</span> is some algorithm (a formula or a computer program) that predicts a single number <span class="italic">f(x)</span> for every number <span class="italic">x</span>.</p>
+</section>
+
 <!-- 2. a model: a smooth function from the data's space to the prediction -->
 <section data-background-iframe="demo0-space/2-ocean-model.html" data-background-interactive></section>
 <!-- 3. transformations: smooth functions from space to space -->

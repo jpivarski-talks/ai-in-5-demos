@@ -111,10 +111,11 @@
     }
   }
   const LAND_FILL = "#d6d6d6", LAND_EDGE = "#9a9a9a";
-  function drawLand(c, r, fill) {
+  // with bold, a thick white coastline, to stand out from a model's colors painted over the map
+  function drawLand(c, r, fill, bold) {
     landPath(c, r);
     if (fill) { c.fillStyle = LAND_FILL; c.fill(); }
-    c.strokeStyle = LAND_EDGE; c.lineWidth = 1.2; c.lineJoin = "round"; c.stroke();
+    c.strokeStyle = bold ? "#fff" : LAND_EDGE; c.lineWidth = bold ? 2.5 : 1.2; c.lineJoin = "round"; c.stroke();
   }
 
   // the Argo floats as dots colored by temperature, with a dark ring so they show on any background

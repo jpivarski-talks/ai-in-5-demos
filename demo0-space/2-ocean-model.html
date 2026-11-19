@@ -5,6 +5,10 @@
 <link rel="icon" href="data:,">
 <title>A model: a smooth function from place to temperature</title>
 <link rel="stylesheet" href="../common/stage.css">
+<style>
+  /* stage.css styles .btn.primary after .btn:disabled, so a disabled primary button needs its own gray */
+  .btn.primary:disabled { color: #bbb; border-color: #e2e2e2; background: #fafafa; }
+</style>
 </head>
 <body>
 <div id="stage"></div>
@@ -46,7 +50,7 @@ for (let j = 0; j < CFG.GY; j++) for (let i = 0; i < CFG.GX; i++) {
 }
 const GRID = tf.tensor(ga, [CFG.GX * CFG.GY, 2]);
 
-let model = null, opt = null, running = false, field = null, rms = null, steps = 0;
+let model = null, opt = null, running = false, field = null, steps = 0;
 
 // Random start: large enough first-layer weights that the untrained model is a visibly
 // random smooth landscape of temperatures, not a flat color.
@@ -67,8 +71,6 @@ const lossFn = () => tf.losses.meanSquaredError(Y, model.forward(X));
 
 function update() {
   field = tf.tidy(() => model.forward(GRID).dataSync());
-  rms = Math.sqrt(tf.tidy(() => lossFn().dataSync()[0])) * STD;
-  errText.textContent = `typical error: ${rms.toFixed(1)} °C`;
 }
 
 // paint the model's temperatures into an offscreen canvas, then stretch it over the map
@@ -88,7 +90,7 @@ function paintField(c) {
 function draw() {
   const c = panel.clear();
   if (showModel.checked && field) paintField(c);
-  MapC.drawLand(c, R, !overLand.checked || !showModel.checked);
+  MapC.drawLand(c, R, !overLand.checked || !showModel.checked, showModel.checked);
   MapC.drawFloats(c, xy, temps);
   c.strokeStyle = "#bbb"; c.lineWidth = 1.5; c.strokeRect(0.75, 0.75, R.w - 1.5, R.h - 1.5);
 }
@@ -96,31 +98,36 @@ function draw() {
 function stop() { running = false; trainButton.textContent = "optimize model"; trainButton.classList.remove("on"); }
 function train() {
   if (running) { stop(); return; }
-  if (!showModel.checked) { showModel.checked = true; showError(); }
   running = true;
   trainButton.textContent = "stop";
   trainButton.classList.add("on");
 }
 
-// controls: buttons, checkboxes, the error, and the color bar on the right
+// controls: buttons, checkboxes, and the color bar on the right
 const bar = Stage.controls({ x: 50, y: 815, w: 900, h: 70 });
-Stage.button("random model", () => { stop(); newModel(); draw(); }, bar);
+Stage.button("random model", () => {
+  stop(); newModel();
+  showModel.checked = true;
+  enableTraining();
+  draw();
+}, bar);
 const trainButton = Stage.button("optimize model", train, bar, { cls: "primary" });
 function checkbox(text, on) {
   const l = Stage.el("label", { class: "field" }, bar);
   const box = Stage.el("input", { type: "checkbox" }, l);
   box.checked = on;
   l.appendChild(document.createTextNode(text));
-  box.addEventListener("change", () => { box.blur(); showError(); draw(); });
+  box.addEventListener("change", () => { box.blur(); enableTraining(); draw(); });
   return box;
 }
-const showModel = checkbox("model", false);
-const overLand = checkbox("over land", false);
-const errText = Stage.el("div", {}, bar);
-Object.assign(errText.style, { fontSize: "22px", color: Stage.COLORS.grey, marginLeft: "12px", fontVariantNumeric: "tabular-nums" });
-// the error is only shown along with the model
-function showError() { errText.style.visibility = showModel.checked ? "visible" : "hidden"; }
-showError();
+const showModel = checkbox("show model", false);
+const overLand = checkbox("everywhere", false);   // also paint the model over the land
+// the model can only be optimized while it's shown; hiding it stops the optimization
+function enableTraining() {
+  trainButton.disabled = !showModel.checked;
+  if (trainButton.disabled && running) stop();
+}
+enableTraining();
 
 const barPanel = new Stage.Panel({ x: 930, y: 830, w: 640, h: 44 });
 barPanel.onresize = () => MapC.colorBar(barPanel.clear(), { x: 120, y: 2, w: 500, h: 18 }, "°C");
@@ -141,7 +148,7 @@ Stage.cite([
   ["Argo Global Data Assembly Centre (SEANOE).", "https://doi.org/10.17882/42182"],
 ], { x: 510, y: 16, w: 1000 });
 Stage.nav("1-ocean-data.html", "3-projections.html");
-window.demo = { CFG, train, stop, newModel, get rms() { return rms; }, get steps() { return steps; }, get model() { return model; } };
+window.demo = { CFG, train, stop, newModel, get steps() { return steps; }, get model() { return model; } };
 </script>
 </body>
 </html>
