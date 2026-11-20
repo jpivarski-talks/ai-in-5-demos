@@ -311,7 +311,7 @@ const trainButton = Stage.button("optimize model", train, bar, { cls: "primary" 
 // a note at the bottom right, under the right square, in the slides' body text style; it has the
 // same box as the controls row, and is nudged so that the middle of its lowercase letters (half the
 // x-height above the baseline) is level with the middle of the buttons' lowercase letters
-const note = Stage.label("The model on the right fits only the folded triangle.",
+const note = Stage.label("The model on the right only fits the folded triangle.",
   { x: R2.x + panel.x + R2.w - 950, y: 815, w: 950, h: 70 },
   { fontSize: "34px", color: C.ink, display: "flex", alignItems: "center", justifyContent: "flex-end",
     whiteSpace: "nowrap", pointerEvents: "none", boxSizing: "border-box" });

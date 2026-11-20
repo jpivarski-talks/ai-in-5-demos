@@ -55,7 +55,7 @@
 
 <section>
   <h1 class="at" style="left: 90px; top: 300px; width: 1400px">How Chatbots Work</h1>
-  <p class="at grey" style="left: 92px; top: 430px; font-size: 40px">Understanding AI through Interactive Demos</p>
+  <p class="at grey" style="left: 92px; top: 430px; font-size: 40px">Understanding AI from the ground up, with interactive demos!</p>
   <p class="at" style="left: 92px; top: 600px">Jim Pivarski</p>
   <p class="at grey" style="left: 92px; top: 655px; font-size: 28px">University of Chicago, Data Science Institute</p>
 </section>
@@ -63,11 +63,11 @@
 <section>
   <h2>Computers are what our grandparents thought they’d be</h2>
 
-  <p class="fragment">When computers were first invented, the public thought of them as things you can talk to in natural language, like HAL in 2001.</p>
+  <p class="fragment">When computers were first invented, they were imagined as thinking entities that you could pose questions to and get answers from, more like an oracle than a calculator.</p>
 
-  <p class="fragment">After the widespread growth of personal computing and the Internet, we’ve come to think of them as a <span class="bold">thing</span> or a <span class="bold">place</span>: desktop, tool, game, cyberspace, platform, storefront, feed.</p>
+  <p class="fragment">Now that many people can access personal computers and the Internet, we’ve come to think of them as a <span class="bold">thing</span> or a <span class="bold">place</span>: desktop, tool, game, cyberspace, platform, storefront, feed.</p>
 
-  <p class="fragment">Now computers <span class="italic">actually can</span> hold a conversation, like HAL.</p>
+  <p class="fragment">Now computers <span class="italic">actually can</span> hold a conversation, like on <span class="italic">Star Trek</span>.</p>
 
   <div class="fragment">
     <p>The purpose of this talk is to understand what happened, without anthropomorphizing.</p>
@@ -107,7 +107,7 @@
     <ol style="padding-left: 100px;" start="8">
       <li style="margin-top: 20px;">Training on large enough bodies of text yields problem-solving capabilities.</li>
       <li style="margin-top: 20px;">Modern chatbots refine this capability and reshape it into Q&amp;A format.</li>
-      <li style="margin-top: 20px;">Agents are conventional systems built around this problem-solving unit.</li>
+      <li style="margin-top: 20px;">Agents are conventional systems built around this free-text problem-solving unit.</li>
     </ol>
   </div>
 </section>
@@ -149,7 +149,7 @@
       <ol style="padding-left: 100px; visibility: hidden;" aria-hidden="true" start="8">
         <li style="margin-top: 20px;">Training on large enough bodies of text yields problem-solving capabilities.</li>
         <li style="margin-top: 20px;">Modern chatbots refine this capability and reshape it into Q&amp;A format.</li>
-        <li style="margin-top: 20px;">Agents are conventional systems built around this problem-solving unit.</li>
+        <li style="margin-top: 20px;">Agents are conventional systems built around this free-text problem-solving unit.</li>
       </ol>
       <ol style="position: absolute; top: calc(50% + (24px - 20px) / 2); transform: translateY(-50%); left: 0; right: 0; padding-left: 100px;">
         <li style="margin: 0; list-style-type: '8–10. ';">How to build systems that talk, using linguistic patterns from millions of humans.</li>
@@ -236,21 +236,25 @@
 </section>
 
 <section>
-  <h2>This kind of fit function is an artificial neuron</h2>
+  <p style="text-align: center; margin-top: 300px;">I haven't mentioned neural networks yet, but what we’ve just seen is a neural network.</p>
+</section>
+
+<section>
+  <h2>This kind of fit function simulates a neuron (brain cell)</h2>
   <div class="cite"><a href="https://doi.org/10.1007/BF02551274" target="_blank" rel="noopener">G. Cybenko, <i>Approximation by superpositions of a sigmoidal function</i> (1989).</a></div>
 
   <img style="height: 720px; display: block; margin: 0 auto;" src="img/real_neuron_artificial_neurons-5x3-0.svg">
 </section>
 
 <section>
-  <h2>This kind of fit function is an artificial neuron</h2>
+  <h2>This kind of fit function simulates a neuron (brain cell)</h2>
   <div class="cite"><a href="https://doi.org/10.1007/BF02551274" target="_blank" rel="noopener">G. Cybenko, <i>Approximation by superpositions of a sigmoidal function</i> (1989).</a></div>
 
   <img style="height: 720px; display: block; margin: 0 auto;" src="img/real_neuron_artificial_neurons-5x3.svg">
 </section>
 
 <section>
-  <h2>Differences between artificial neurons and real neurons</h2>
+  <h2>But artificial neurons are very different from real neurons!</h2>
 
   <table class="center_table">
     <tr><td><span class="bold" style="text-decoration: underline;">Artificial neurons</span></td><td><span class="bold" style="text-decoration: underline;">Real neurons</span></td></tr>
@@ -295,7 +299,7 @@
 
   <p>1. If the data have symmetries, it’s easier to fit the folded data than the raw data.</p>
 
-  <p>2. All layers of a neural network except the last transforms and folds space.</p>
+  <p>2. All layers of a neural network, except the last, transform and fold space.</p>
 
   <img style="display: block; margin: 0 auto 12px auto;" src="img/network_layers_braces.svg">
 </section>
@@ -308,7 +312,7 @@
 
   <p>1. If the data have symmetries, it’s easier to fit the folded data than the raw data.</p>
 
-  <p>2. All layers of a neural network except the last transforms and folds space.</p>
+  <p>2. All layers of a neural network, except the last, transform and fold space.</p>
 
   <img style="display: block; margin: 0 auto 12px auto;" src="img/network_layers_braces.svg">
 
@@ -325,7 +329,7 @@
   <p class="fragment"><span style="visibility: hidden;">3.</span> Many real-world datasets consist of hierarchical patterns of patterns.</p>
 
   <br><br>
-  <p class="fragment"><span style="visibility: hidden;">3.</span> Neural networks are good at fitting them <span class="italic">as spatial shapes</span>.</p>
+  <p class="fragment"><span style="visibility: hidden;">3.</span> Neural networks are good at finding them <span class="italic">in spatial shapes</span>.</p>
 </section>
 
 <section>
@@ -393,7 +397,7 @@
   <h2>Deep structures in natural language</h2>
 
   <br><br>
-  <p class="fragment">Now that we’ve transformed the meanings of words and sequences into geometrical relationships, deep neural networks can find patterns of patterns (of patterns…).</p>
+  <p class="fragment">Now that we’ve transformed the meanings of words and word sequences into geometrical relationships, deep neural networks can find patterns of patterns (of patterns…).</p>
 
   <br><br><br>
   <p class="fragment">Are there patterns of patterns (of patterns…) to be found?</p>
@@ -445,7 +449,7 @@
   <p class="fragment">1. Contains knowledge about the world (like a book) in a way that can be queried with natural language (unlike a book).</p>
 
   <br><br><br><br>
-  <p class="fragment">2. Can be instructed to follow new, previously unseen patterns, and therefore solve generic problems without explicit training and only a few examples.</p>
+  <p class="fragment">2. Can be instructed to follow new, previously unseen patterns, and therefore solve generic problems without explicit training and only a few examples (few-shot learning).</p>
 </section>
 
 <!-- 9. RLHF (no demo) -->
@@ -458,7 +462,7 @@
   <p class="fragment" data-fragment-index="1">Training on raw text made an LLM that could be tricked into providing information or solving problems, but it would be more useful if you could just ask questions and get the answers.</p>
 
   <br><br>
-  <p class="fragment" data-fragment-index="2">So continue training the LLM on curated text, in the form of stage directions between two characters, “Assistant” and “User”, with the LLM only completing “Assistant” messages.</p>
+  <p class="fragment" data-fragment-index="2">So continue training the LLM on text, this time in the form of stage directions between two characters, “Assistant” and “User”, with the LLM only completing “Assistant” messages.</p>
 
   <br><br>
   <p class="fragment" data-fragment-index="3"><span class="bold">Reinforcement Learning from Human Feedback (RLHF):</span> humans rate the quality of the messages, and this score is what the fitter optimizes.</p>
@@ -686,7 +690,7 @@ Apple beguiles cursed, dwarfs enchant fair girl, huntsman intervenes; jealous ki
     <ol style="padding-left: 100px;" start="8">
       <li style="margin-top: 20px;">Training on large enough bodies of text yields problem-solving capabilities.</li>
       <li style="margin-top: 20px;">Modern chatbots refine this capability and reshape it into Q&amp;A format.</li>
-      <li style="margin-top: 20px;">Agents are conventional systems built around this problem-solving unit.</li>
+      <li style="margin-top: 20px;">Agents are conventional systems built around this free-text problem-solving unit.</li>
     </ol>
   </div>
 </section>
@@ -728,7 +732,7 @@ Apple beguiles cursed, dwarfs enchant fair girl, huntsman intervenes; jealous ki
       <ol style="padding-left: 100px; visibility: hidden;" aria-hidden="true" start="8">
         <li style="margin-top: 20px;">Training on large enough bodies of text yields problem-solving capabilities.</li>
         <li style="margin-top: 20px;">Modern chatbots refine this capability and reshape it into Q&amp;A format.</li>
-        <li style="margin-top: 20px;">Agents are conventional systems built around this problem-solving unit.</li>
+        <li style="margin-top: 20px;">Agents are conventional systems built around this free-text problem-solving unit.</li>
       </ol>
       <ol style="position: absolute; top: calc(50% + (24px - 20px) / 2); transform: translateY(-50%); left: 0; right: 0; padding-left: 100px;">
         <li style="margin: 0; list-style-type: '8–10. ';">How to build systems that talk, using linguistic patterns from millions of humans.</li>
@@ -747,10 +751,10 @@ Apple beguiles cursed, dwarfs enchant fair girl, huntsman intervenes; jealous ki
   <p class="fragment" style="margin-top: 45px;">I find it surprising that <span class="italic">just doing that</span> gives us a general-purpose problem-solver, the discovery of <span class="bold">few-shot learning</span>.</p>
 
   <div class="fragment">
-    <p style="margin-top: 45px;">What’s happened since 2020:</p>
+    <p style="margin-top: 45px;">What’s happened since that discovery (2020):</p>
     <ul>
       <li><span class="bold">Refining that capability:</span> aligning the LLM with user interests and cleaning the interface.</li>
-      <li><span class="bold">Building around it:</span> using its strengths (e.g. summarizing web articles more than drawing on internal knowledge) and putting it to work (e.g. writing code).</li>
+      <li><span class="bold">Building around it:</span> leaning on its strengths (e.g. summarizing web articles more than drawing on internal knowledge) and putting it to work (e.g. writing code).</li>
     </ul>
   </div>
 
