@@ -14,6 +14,9 @@
   }
   #text:focus { border-color: var(--accent); }
   #text .completion { color: var(--accent); }
+  /* "verbatim" preset: where the completion differs from the book, like a yellow highlighter */
+  #text mark.diff { background: rgba(255, 226, 0, 0.6); color: inherit; border-radius: 2px; }
+  #text .gap { display: inline-block; width: 5px; height: 1.05em; vertical-align: -0.18em; background: rgba(255, 226, 0, 0.9); border-radius: 2px; }
   #side { position: absolute; display: flex; flex-direction: column; gap: 10px; }
   #side .btn { text-align: left; }
   .settings label { display: block; font-size: 20px; color: #555; margin: 14px 0 4px; }
@@ -27,6 +30,7 @@
 <div id="stage"></div>
 <script src="../common/stage.js"></script>
 <script src="presets.js"></script>
+<script src="alice.js"></script>
 <script>
 "use strict";
 const DEFAULTS = { endpoint: "http://localhost:8080", model: "", key: "", temperature: "0.5", maxTokens: "" };   // blank max tokens: no limit
@@ -41,7 +45,7 @@ const side = Stage.el("div", { id: "side" });
 // the citation tops the right column; the presets start below however many lines it takes
 const cite = Stage.cite([["T. B. Brown et al., <i>Language Models are Few-Shot Learners</i> (2020).", "https://doi.org/10.48550/arXiv.2005.14165"]],
   { x: 1300, y: 20, w: 280 }, { align: "left" });
-const sideTop = 20 + cite.offsetHeight + 14;
+const sideTop = 20 + cite.offsetHeight + 30;   // a little space below the citation
 Stage.place(side, { x: 1300, y: sideTop, w: 280, h: 720 - sideTop });
 const err = Stage.el("div", { id: "err" });
 Stage.place(err, { x: 1300, y: 590, w: 280, h: 90 });
@@ -72,9 +76,12 @@ Stage.place(gear, { x: 1535, y: 822, w: 40, h: 40 });
 
 let abort = null;
 
-// a preset just fills in the text box
+// a preset just fills in the text box (and "verbatim" also turns on the check against the book);
+// the buttons are headed "Examples:", the size of the labels of the knobs below but bold, in the text color
+const examples = Stage.el("div", { text: "Examples:" }, side);
+Object.assign(examples.style, { fontSize: "22px", fontWeight: "bold", color: Stage.COLORS.ink });
 for (const p of PRESETS) {
-  Stage.button(p.label, () => { stop(); setText(p.prompt); }, side);
+  Stage.button(p.label, () => { stop(); setText(p.prompt); setVerbatim(p.verbatim ? p.verbatim() : null); }, side);
 }
 function setText(s) { text.textContent = s; err.textContent = ""; placeCaret(); }
 function placeCaret() {
@@ -85,6 +92,140 @@ function placeCaret() {
 
 function stop() { if (abort) abort.abort(); }
 
+// ---------------------------------------------------------------- checking a completion against the book
+// While on, everything in the box is compared with the original text, character by character,
+// and the completion's differences are highlighted: extra or changed characters in yellow, and a
+// thin yellow bar where some of the original is missing. The comparison ignores what a reader
+// wouldn't count as a difference: curly vs. straight quotes, -- vs. a dash, italics marks, and
+// line breaks vs. spaces. Typing in the box or choosing another preset turns it off.
+let verbatim = null;   // {orig: normalized original text} while checking
+const CFG_VERBATIM = { minRun: 12 };   // agreements shorter than this, between differences, are coincidences
+function setVerbatim(original) {
+  verbatim = original ? { orig: normalize([original]).chars } : null;
+}
+// the comparable characters of some strings, and where each one came from: [string, offset]
+function normalize(strings) {
+  const chars = [], where = [];
+  let prevSpace = true;
+  strings.forEach((str, g) => {
+    for (let o = 0; o < str.length; o++) {
+      let c = str[o];
+      if (c === "_" || c === "*") continue;
+      if (/\s/.test(c)) { if (prevSpace) continue; c = " "; }
+      else if ("‘’“”\"`".includes(c)) c = "'";
+      else if (c === "-" && str[o + 1] === "-") { c = "—"; o++; }
+      prevSpace = c === " ";
+      chars.push(c); where.push([g, c === "—" && str[o] === "-" ? o - 1 : o]);
+    }
+  });
+  return { chars, where };
+}
+// Line up all of a (the box) with the beginning of b (the book), with the fewest characters added
+// or removed (Myers's diff, stopping as soon as a is used up). Returns, for each character of a,
+// whether it is extra (not in the book), and before which characters something of the book is missing.
+function prefixDiff(a, b, cap) {
+  const N = a.length, M = b.length, MAX = Math.min(N + M, cap || 3000), off = MAX + 1;
+  const V = new Int32Array(2 * MAX + 3).fill(-1), trace = [];
+  V[off + 1] = 0;
+  let endD = -1, endK = 0;
+  outer: for (let d = 0; d <= MAX; d++) {
+    trace.push(V.slice());
+    for (let k = -d; k <= d; k += 2) {
+      const down = k === -d || (k !== d && V[off + k - 1] < V[off + k + 1]);
+      const src = down ? V[off + k + 1] : V[off + k - 1];
+      if (src < 0) { V[off + k] = -1; continue; }
+      let x = down ? src : src + 1, y = x - k;
+      if (x > N || y > M) { V[off + k] = -1; continue; }
+      while (x < N && y < M && a[x] === b[y]) { x++; y++; }
+      V[off + k] = x;
+      if (x >= N) { endD = d; endK = k; break outer; }
+    }
+  }
+  const extra = new Uint8Array(N), gap = new Uint8Array(N + 1);
+  if (endD < 0) { extra.fill(1); return { extra, gap }; }   // nothing like the book at all
+  let x = N, y = N - endK;
+  for (let d = endD; d > 0; d--) {
+    const T = trace[d], k = x - y;
+    const down = k === -d || (k !== d && T[off + k - 1] < T[off + k + 1]);
+    const pk = down ? k + 1 : k - 1, px = T[off + pk], py = px - pk;
+    while (x > px && y > py) { x--; y--; }
+    if (down) gap[x] = 1; else extra[x - 1] = 1;
+    x = px; y = py;
+  }
+  return { extra, gap };
+}
+let checkPending = false;
+function scheduleCheck() {
+  if (checkPending) return;
+  checkPending = true;
+  requestAnimationFrame(() => { checkPending = false; check(); });
+}
+function check() {
+  if (!verbatim) return;
+  const nodes = [...text.childNodes];
+  const strs = nodes.map((n) => n.nodeType === 1 && n.classList.contains("completion") ? (n._text || "") : n.textContent);
+  const { chars, where } = normalize(strs);
+  const { extra, gap } = prefixDiff(chars, verbatim.orig);
+  // Where the model has wandered off into text of its own, the diff still finds letters here and
+  // there in common with the book; a short stretch of agreement between differences is a
+  // coincidence, not the book, so count it as different too.
+  for (let i = 0; i < chars.length;) {
+    if (extra[i]) { i++; continue; }
+    let j = i;
+    while (j < chars.length && !extra[j]) j++;
+    const before = i === 0 ? false : extra[i - 1] || gap[i], after = j === chars.length ? false : true;
+    if (before && after && j - i < CFG_VERBATIM.minRun) for (let q = i; q < j; q++) { extra[q] = 1; gap[q] = 0; }
+    i = j;
+  }
+  const marks = nodes.map((n, g) => n.nodeType === 1 && n.classList.contains("completion") ? { extra: new Uint8Array(strs[g].length), gap: new Uint8Array(strs[g].length + 1) } : null);
+  for (let i = 0; i < chars.length; i++) {
+    const [g, o] = where[i], m = marks[g];
+    if (!m) continue;
+    if (extra[i]) m.extra[o] = 1;
+    // a removed character next to an extra one is a changed character: the yellow already shows it
+    if (gap[i] && !extra[i] && !(i > 0 && extra[i - 1])) m.gap[o] = 1;
+  }
+  nodes.forEach((n, g) => { if (marks[g]) renderMarked(n, strs[g], marks[g]); });
+  if (abort) text.scrollTop = text.scrollHeight;
+}
+function renderMarked(span, str, m) {
+  span.textContent = "";
+  let run = "", runMarked = false;
+  const flush = () => {
+    if (!run) return;
+    if (runMarked) { const e = document.createElement("mark"); e.className = "diff"; e.textContent = run; span.appendChild(e); }
+    else span.appendChild(document.createTextNode(run));
+    run = "";
+  };
+  for (let o = 0; o < str.length; o++) {
+    if (m.gap[o]) { flush(); const e = document.createElement("span"); e.className = "gap"; span.appendChild(e); }
+    const mk = !!m.extra[o];
+    if (mk !== runMarked) { flush(); runMarked = mk; }
+    run += str[o];
+  }
+  flush();
+}
+// typing in the box turns the check off (and removes the highlighting, keeping the cursor where it was)
+text.addEventListener("input", () => {
+  if (!verbatim) return;
+  verbatim = null;
+  const sel = getSelection();
+  let caret = null;
+  if (sel.rangeCount && text.contains(sel.anchorNode)) {
+    const r = document.createRange(); r.selectNodeContents(text); r.setEnd(sel.anchorNode, sel.anchorOffset);
+    caret = r.toString().length;
+  }
+  for (const span of text.querySelectorAll(".completion")) span.textContent = span.textContent;
+  if (caret != null) {
+    const w = document.createTreeWalker(text, NodeFilter.SHOW_TEXT);
+    let n, left = caret;
+    while ((n = w.nextNode())) {
+      if (left <= n.nodeValue.length) { const r = document.createRange(); r.setStart(n, left); r.collapse(true); sel.removeAllRanges(); sel.addRange(r); break; }
+      left -= n.nodeValue.length;
+    }
+  }
+});
+
 // stream a completion of the whole text box from an OpenAI-compatible /v1/completions endpoint
 async function complete() {
   if (abort) { stop(); return; }
@@ -92,6 +233,7 @@ async function complete() {
   const prompt = text.textContent;
   const span = document.createElement("span");
   span.className = "completion";
+  span._text = "";   // the completion's text (the span may also hold highlighting)
   text.appendChild(span);
   abort = new AbortController();
   go.textContent = "stop";
@@ -128,7 +270,9 @@ async function complete() {
         if (data === "[DONE]") continue;
         const j = JSON.parse(data);
         const t = j.choices && j.choices[0] ? (j.choices[0].text || "") : (j.content || "");
-        span.textContent += t;
+        span._text += t;
+        if (verbatim) scheduleCheck();
+        else span.textContent = span._text;
         text.scrollTop = text.scrollHeight;
       }
     }
@@ -138,7 +282,8 @@ async function complete() {
     abort = null;
     go.textContent = "complete";
     go.classList.remove("on");
-    if (!span.textContent) span.remove();
+    if (!span._text) span.remove();
+    else if (verbatim) check();
     placeCaret();
   }
 }
@@ -170,7 +315,7 @@ text.addEventListener("keydown", (e) => {
 
 text.focus();
 Stage.nav("../demo4-attention/2-translation.html", null);
-window.demo = { complete, setText, cfg };
+window.demo = { complete, setText, cfg, setVerbatim, check, prefixDiff, normalize, get verbatim() { return verbatim; } };
 </script>
 </body>
 </html>

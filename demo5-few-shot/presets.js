@@ -1,51 +1,85 @@
 // Prompts for Demo 5. A preset only fills in the text box: completing it behaves exactly as
 // if it had been typed by hand (same temperature, same max tokens, no special stopping rules).
+// The one exception is "verbatim", which also turns on a check of the completion against the
+// book's own text (alice.js); typing in the box or choosing another preset turns it off.
+// Chosen from prep/few-shot-candidates.md (tested on Llama-2-13B, the default in serve-llm.sh).
 window.PRESETS = [
   {
-    label: "capitals",
-    prompt: "France → Paris\nJapan → Tokyo\nKenya → Nairobi\nCanada → Ottawa\nArgentina → Buenos Aires\nPeru →",
+    // the model contains the book, and can be asked about it in plain English
+    // (alice-queen: "Off with her/his/their head(s)!"; 8/8 at temperature 0.5)
+    label: "few-shot",
+    prompt:
+      "Questions and answers about Alice's Adventures in Wonderland by Lewis Carroll\n\n" +
+      "Q: What was written on the little bottle that made Alice shrink?\nA: DRINK ME.\n\n" +
+      "Q: What is the name of Alice's cat?\nA: Dinah.\n\n" +
+      "Q: Why did Alice follow the White Rabbit down the hole?\n" +
+      "A: She was curious, because she had never seen a rabbit with a waistcoat-pocket and a watch.\n\n" +
+      "Q: What does the Queen of Hearts shout over and over?\nA:",
   },
   {
-    label: "English → French",
-    prompt:
-      "English: The cat is sleeping.\nFrench: Le chat dort.\n\n" +
-      "English: Where is the train station?\nFrench: Où est la gare ?\n\n" +
-      "English: We ate bread and cheese.\nFrench: Nous avons mangé du pain et du fromage.\n\n" +
-      "English: My older sister bought a beautiful blue car yesterday.\nFrench:",
+    // the same fact, as a sentence to finish, with no examples (8/8 at temperature 0.5)
+    label: "cloze",
+    prompt: "In Alice's Adventures in Wonderland, the Queen of Hearts often says,",
   },
   {
-    label: "French → English",
-    prompt:
-      "French: Le chat dort.\nEnglish: The cat is sleeping.\n\n" +
-      "French: Où est la gare ?\nEnglish: Where is the train station?\n\n" +
-      "French: Nous avons mangé du pain et du fromage.\nEnglish: We ate bread and cheese.\n\n" +
-      "French: La vieille femme a un petit chien blanc qui aboie toute la nuit.\nEnglish:",
+    // the first sentence of the book: the model continues it word for word, for pages
+    label: "verbatim",
+    prompt: "Alice was beginning to get very tired of sitting by her sister on the bank, and",
+    verbatim: () => window.ALICE,
   },
   {
-    // a language that doesn't exist: vocabulary and word order come only from the examples
-    // (adjective after the noun, as in French). Answer: Kina pim nam sula tal. Best at temperature 0.
-    label: "made-up language",
+    // a task that doesn't exist as flashcards (46/48 at temperature 0.5 over 6 inputs);
+    // other inputs: tortilla, beans, cheese · chicken, broth, noodles · milk, ice cream, chocolate syrup
+    label: "ingredients",
     prompt:
-      "English: The dog sleeps.\nZorbish: Kina dop.\n\n" +
-      "English: The big dog sleeps.\nZorbish: Kina tal dop.\n\n" +
-      "English: The dog sees the cat.\nZorbish: Kina vek moru.\n\n" +
-      "English: The cat sees the big dog.\nZorbish: Moru vek kina tal.\n\n" +
-      "English: The small cat eats the fish.\nZorbish: Moru pim nam sula.\n\n" +
-      "English: The small dog eats the big fish.\nZorbish:",
+      "flour, eggs, milk → pancakes\n" +
+      "bread, cheese, butter → grilled cheese sandwich\n" +
+      "dough, tomato sauce, cheese → pizza\n" +
+      "lettuce, tomato, cucumber → salad\n" +
+      "rice, seaweed, raw fish →",
   },
   {
-    label: "syllogisms",
+    // 56/56 at temperature 0.5 over 7 inputs; other inputs: Mars, Venus · oak, maple · Monday, Friday
+    label: "category",
     prompt:
-      "All blorks are frimmy. Zib is a blork. Therefore, Zib is frimmy.\n" +
-      "All wugs can glorp. Tam is a wug. Therefore, Tam can glorp.\n" +
-      "All quindles live under the sea. Mopsy is a quindle. Therefore, Mopsy lives under the sea.\n" +
-      "All snerfs are made of plinth. This teapot is a snerf. Therefore,",
+      "apple, banana → fruit\n" +
+      "hammer, saw → tools\n" +
+      "red, blue → colors\n" +
+      "dog, cat → animals\n" +
+      "shirt, pants → clothes\n" +
+      "trumpet, violin →",
   },
   {
-    // no examples at all (zero-shot), with names that make the question unlikely to have been seen.
-    label: "bicycles",
+    // 36/40 at temperature 0.5 over 5 inputs; other inputs: My best friend moved away. ·
+    // Somebody cut in front of me in line.
+    label: "emotion",
     prompt:
-      "Question: If Nebuchadnezzar has three bicycles and Qui-Gon Jinn gives him one more, how many wheels does Nebuchadnezzar have?\n" +
-      "Answer:",
+      "I won the lottery! → happy\n" +
+      "My dog ran away. → sad\n" +
+      "Someone stole my bike! → angry\n" +
+      "There's a spider on my pillow! → scared\n" +
+      "I got an A on my test! →",
+  },
+  {
+    // few-shot "chain of thought" (Wei et al. 2022): the examples spell out the steps, and so does
+    // the answer. The bare question always gets "4"; this way, 8/8 at temperature 0.5 (answer: 8)
+    label: "chain of reasoning",
+    prompt:
+      "Q: Tom has four cars and sells one. How many wheels do his cars have now?\n" +
+      "A: He has 4 - 1 = 3 cars. Each car has 4 wheels, so 3 cars have 3 × 4 = 12 wheels. The answer is 12.\n\n" +
+      "Q: Ana has two tricycles and buys two more. How many wheels do her tricycles have?\n" +
+      "A: She has 2 + 2 = 4 tricycles. Each tricycle has 3 wheels, so 4 tricycles have 4 × 3 = 12 wheels. The answer is 12.\n\n" +
+      "Q: If Sam has three bicycles and Maria gives him one more, how many wheels does Sam have?\nA:",
+  },
+  {
+    // an instructive failure: Llama-2 sees words as tokens, not letters (2/48; answer: 7)
+    label: "letter count",
+    prompt:
+      "cat → 3\n" +
+      "house → 5\n" +
+      "elephant → 8\n" +
+      "sun → 3\n" +
+      "pencil → 6\n" +
+      "giraffe →",
   },
 ];

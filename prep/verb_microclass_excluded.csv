@@ -1,0 +1,88 @@
+verbnet_class,verb,reason_excluded
+touch-20,chafe,'The branch chafed.' is acceptable (intransitive use)
+touch-20,grope,'Kim groped at the branch.' is acceptable
+touch-20,knead,'Kim kneaded Bill on the arm.' is odd
+touch-20,osculate,rare
+touch-20,tug,'Kim tugged at the branch.' is acceptable
+touch-20,tweak,"'Kim tweaked Bill on the arm.' is odd (nose, cheek)"
+touch-20,twinge,not used with an agent
+touch-20,wring,'Kim wrung Bill on the arm.' is odd
+touch-20,fondle,connotation unsuitable for a talk
+touch-20,grasp,body-part frame needs 'by the arm'
+touch-20,grip,body-part frame needs 'by the arm'
+touch-20,lick,'Kim licked at the branch.' is acceptable
+touch-20,massage,'Kim massaged Bill on the arm.' is marginal
+touch-20,nudge,'Kim nudged at the branch.' is marginal
+touch-20,pat,'Kim patted at the branch.' is marginal (cf. 'patted at her hair')
+touch-20,paw,'Kim pawed at the branch.' is acceptable
+touch-20,peck,'Kim pecked at the branch.' is acceptable
+touch-20,pinch,'Kim pinched at the branch.' is marginal
+touch-20,prod,'Kim prodded at the branch.' is acceptable
+touch-20,rub,'Kim rubbed at the branch.' is acceptable
+touch-20,sting,needs an insect or plant as subject
+touch-20,tickle,'The branch tickled.' is acceptable (it tickles)
+hit-18.1,bang,'The branch banged.' is acceptable (sound)
+hit-18.1,thump,'The branch thumped.' is acceptable (sound)
+hit-18.1,blast,'Kim blasted Bill on the arm.' is odd
+hit-18.1,bop,'Kim bopped at the branch.' is marginal
+hit-18.1,thwack,'Kim thwacked at the branch.' is marginal; rare
+hit-18.1,click,other senses dominate
+hit-18.1,dash,other senses dominate
+hit-18.1,knap,technical (flint)
+hit-18.1,pink,rare
+hit-18.1,squash,change-of-state sense: 'squashes easily'
+hit-18.1,squelch,other senses dominate
+hit-18.1,tamp,'Kim tamped Bill on the arm.' is odd
+hit-18.1,trounce,other senses dominate
+hit-18.1,smite,archaic
+hit-18.1,wham,rare
+hit-18.1,whang,rare
+hit-18.1,whap,rare
+hit-18.1,whop,rare
+hit-18.1,batter,'Kim battered Bill on the arm.' is odd
+hit-18.1,bump,'Kim bumped at the branch.' is odd
+hit-18.1,butt,needs an animal subject to be natural
+hit-18.1,drum,'The branch drummed.' is acceptable (sound)
+hit-18.1,knock,'The branch knocked.' is acceptable (sound)
+hit-18.1,lash,'The branch lashed.' is acceptable (in the wind)
+hit-18.1,rap,'The branch rapped.' is marginally acceptable (sound)
+hit-18.1,smash,'This branch smashes easily.' is acceptable (change-of-state sense)
+hit-18.1,stomp,body-part frame needs 'on the foot'
+hit-18.1,tap,'The branch tapped.' is acceptable (on a window)
+cut-21.1,chip,also in the break class; mixed behavior
+cut-21.1,hack,'This branch hacks easily.' is odd
+cut-21.1,hew,archaic
+cut-21.1,rip,also in the break class; 'Kim ripped at the branch.' is acceptable
+cut-21.1,saw,'Kim sawed Bill on the arm.' is grammatical but too odd for a demo
+cut-21.1,scarify,technical
+cut-21.1,ream,technical
+cut-21.1,scrape,'The branch scraped.' is acceptable (against a window)
+cut-21.1,scratch,'The branch scratched.' is acceptable (against a window)
+cut-21.1,slash,'This branch slashes easily.' is odd
+cut-21.1,snip,'Kim snipped Bill on the arm.' is odd
+break-45.1,crack,'Kim cracked Bill on the arm.' is acceptable (hit sense)
+break-45.1,smash,'Kim smashed Bill on the arm.' is acceptable (hit sense)
+break-45.1,snap,"'Kim snapped Bill on the arm.' is acceptable (towel, rubber band)"
+break-45.1,tear,'Kim tore at the branch.' is acceptable
+break-45.1,rip,'Kim ripped at the branch.' is acceptable
+break-45.1,crash,"'The branch crashed.' means it fell, not broke"
+break-45.1,crush,'The branch crushed.' is odd
+break-45.1,crumble,needs a rotten branch to be natural
+break-45.1,shatter,"odd with a branch (glass, ice)"
+break-45.1,cleave,rare; ambiguous with 'cling'
+break-45.1,chip,also in the cut class; odd with a branch
+break-45.1,fissure,odd with a branch
+break-45.1,fragment,odd with a branch
+break-45.1,rupture,odd with a branch
+break-45.1,pop,odd with a branch
+break-45.1,shred,odd with a branch
+break-45.1,sliver,rare
+break-45.1,atomize,odd with a branch
+break-45.1,granulate,odd with a branch
+break-45.1,dissolve,odd with a branch
+break-45.1,tatter,rare
+break-45.1,rend,archaic
+break-45.1,rive,archaic
+break-45.1,break_apart,phrasal
+break-45.1,break_down,phrasal
+break-45.1,break_up,phrasal

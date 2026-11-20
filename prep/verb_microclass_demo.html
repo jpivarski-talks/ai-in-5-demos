@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Same frames, different verbs</title>
+<style>
+:root{
+  --bg:#EDF1F4; --ink:#1C2B3A; --muted:#5B6B7A; --line:#C5CFD8;
+  --ok-bg:#D3EBE3; --ok-ink:#145A4A; --bad-bg:#F3DCE1; --bad-ink:#8A2F4B;
+  --btn-bg:#1C2B3A; --btn-ink:#EDF1F4; --mark:#F7E27A;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:"Avenir Next","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{ color-scheme:dark;
+    --bg:#172029; --ink:#E6ECF1; --muted:#9AA8B5; --line:#2E3B47;
+    --ok-bg:#1F4A41; --ok-ink:#BFEADC; --bad-bg:#4E2433; --bad-ink:#F6C9D5;
+    --btn-bg:#E6ECF1; --btn-ink:#172029; --mark:#6B5A12;}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.4}
+main{max-width:1200px;margin:0 auto;padding:clamp(16px,4vw,48px)}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(28px,4.2vw,52px);line-height:1.1;margin:0 0 .35em;letter-spacing:-.01em}
+p.lede{color:var(--muted);max-width:62ch;margin:0 0 1.6em;font-size:clamp(15px,1.4vw,19px)}
+.wrap{overflow-x:auto}
+table{border-collapse:separate;border-spacing:6px;width:100%;min-width:760px;table-layout:fixed}
+col.lab{width:17%}
+th,td{vertical-align:top;text-align:left}
+thead th{font-weight:400;padding:0 0 6px}
+.cls{display:block;color:var(--muted);font-size:14px;min-height:2.8em}
+.verb{display:block;width:100%;font:600 clamp(22px,2.6vw,34px)/1.1 var(--serif);
+  background:var(--btn-bg);color:var(--btn-ink);border:0;border-radius:6px;padding:.4em .5em .35em;cursor:pointer;text-align:left}
+.verb:hover{filter:brightness(1.15)}
+.verb:focus-visible{outline:3px solid var(--mark);outline-offset:2px}
+.count{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+tbody th{font:400 clamp(15px,1.4vw,18px)/1.35 var(--serif);color:var(--muted);padding:14px 10px 14px 0;width:18%}
+td{border-radius:6px;padding:14px 14px;font:clamp(16px,1.6vw,21px)/1.35 var(--serif)}
+td.ok{background:var(--ok-bg);color:var(--ok-ink);font-style:italic}
+td.bad{background:var(--bad-bg);color:var(--bad-ink)}
+td.bad::before{content:"*";font-weight:700;margin-right:1px}
+td b{font-weight:inherit;border-radius:3px;transition:background-color .6s ease}
+td b.flash{background:var(--mark);transition:none}
+.key{display:flex;gap:18px;flex-wrap:wrap;margin:18px 6px 0;color:var(--muted);font-size:14px}
+.sw{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:6px}
+.foot{margin:22px 6px 0;color:var(--muted);font-size:13px;max-width:80ch}
+@media (prefers-reduced-motion: reduce){td b{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<h1>Same frames, different verbs</h1>
+<p class="lede">Click a verb to swap in another member of its class. The sentences change; which ones work never does.</p>
+<div class="wrap"><table id="grid" aria-describedby="key"></table></div>
+<div class="key" id="key">
+  <span><span class="sw" style="background:var(--ok-bg)"></span>Grammatical</span>
+  <span><span class="sw" style="background:var(--bad-bg)"></span>*Ungrammatical</span>
+</div>
+<p class="foot">Classes from VerbNet 3.4 (touch-20, hit-18.1, cut-21.1, break-45.1), following Levin (1993). Only members whose four sentences all match the class pattern are included. Judgments are introspective and some speakers will differ.</p>
+</main>
+<script>
+const DATA = {"templates": ["Kim {past} Bill on the arm.", "Kim {past} at the branch.", "This branch {pres} easily.", "The branch {past}."], "classes": [{"key": "touch", "name": "Pure contact", "vn": "touch-20", "pattern": [1, 0, 0, 0], "verbs": [{"base": "touch", "past": "touched", "pres": "touches"}, {"base": "caress", "past": "caressed", "pres": "caresses"}, {"base": "graze", "past": "grazed", "pres": "grazes"}, {"base": "kiss", "past": "kissed", "pres": "kisses"}, {"base": "pet", "past": "petted", "pres": "pets"}, {"base": "squeeze", "past": "squeezed", "pres": "squeezes"}, {"base": "stroke", "past": "stroked", "pres": "strokes"}]}, {"key": "hit", "name": "Contact by motion", "vn": "hit-18.1", "pattern": [1, 1, 0, 0], "verbs": [{"base": "hit", "past": "hit", "pres": "hits"}, {"base": "bash", "past": "bashed", "pres": "bashes"}, {"base": "beat", "past": "beat", "pres": "beats"}, {"base": "hammer", "past": "hammered", "pres": "hammers"}, {"base": "jab", "past": "jabbed", "pres": "jabs"}, {"base": "kick", "past": "kicked", "pres": "kicks"}, {"base": "pound", "past": "pounded", "pres": "pounds"}, {"base": "slap", "past": "slapped", "pres": "slaps"}, {"base": "smack", "past": "smacked", "pres": "smacks"}, {"base": "strike", "past": "struck", "pres": "strikes"}, {"base": "whack", "past": "whacked", "pres": "whacks"}]}, {"key": "cut", "name": "Change of state by contact and motion", "vn": "cut-21.1", "pattern": [1, 1, 1, 0], "verbs": [{"base": "cut", "past": "cut", "pres": "cuts"}, {"base": "chop", "past": "chopped", "pres": "chops"}, {"base": "clip", "past": "clipped", "pres": "clips"}, {"base": "slice", "past": "sliced", "pres": "slices"}]}, {"key": "break", "name": "Pure change of state", "vn": "break-45.1", "pattern": [0, 0, 1, 1], "verbs": [{"base": "break", "past": "broke", "pres": "breaks"}, {"base": "fracture", "past": "fractured", "pres": "fractures"}, {"base": "splinter", "past": "splintered", "pres": "splinters"}, {"base": "split", "past": "split", "pres": "splits"}]}]};
+const rowNames = ["Body part","Trying","Easily","By itself"];
+const idx = DATA.classes.map(() => 0);
+const grid = document.getElementById("grid");
+function build(){
+  const head = DATA.classes.map((c, i) => `<th scope="col"><span class="cls">${c.name}</span>
+    <button class="verb" data-col="${i}" aria-label="${c.name}: ${c.verbs[0].base}. Next verb in class">${c.verbs[0].base}</button>
+    <span class="count" id="count${i}"></span></th>`).join("");
+  const body = DATA.templates.map((t, r) => {
+    const label = t.replace("{past}", "___").replace("{pres}", "___s");
+    const cells = DATA.classes.map((c, i) => `<td class="${c.pattern[r] ? "ok" : "bad"}" id="c${r}-${i}"></td>`).join("");
+    return `<tr><th scope="row">${label}<br><small>${rowNames[r]}</small></th>${cells}</tr>`;
+  }).join("");
+  grid.innerHTML = `<colgroup><col class="lab"><col><col><col><col></colgroup><thead><tr><td></td>${head}</tr></thead><tbody>${body}</tbody>`;
+  grid.querySelectorAll(".verb").forEach(b => b.addEventListener("click", () => next(+b.dataset.col)));
+  DATA.classes.forEach((_, i) => render(i, false));
+}
+function render(i, flash){
+  const c = DATA.classes[i], v = c.verbs[idx[i]];
+  const btn = grid.querySelector(`.verb[data-col="${i}"]`);
+  btn.textContent = v.base;
+  btn.setAttribute("aria-label", `${c.name}: ${v.base}. Next verb in class`);
+  document.getElementById("count" + i).textContent = `${idx[i] + 1} of ${c.verbs.length}`;
+  DATA.templates.forEach((t, r) => {
+    const form = t.includes("{pres}") ? v.pres : v.past;
+    const [a, b] = t.split(/\{past\}|\{pres\}/);
+    const cell = document.getElementById(`c${r}-${i}`);
+    cell.innerHTML = `${a}<b>${form}</b>${b}`;
+    if (flash){ const m = cell.querySelector("b"); m.classList.add("flash"); requestAnimationFrame(() => requestAnimationFrame(() => m.classList.remove("flash"))); }
+  });
+}
+function next(i){ idx[i] = (idx[i] + 1) % DATA.classes[i].verbs.length; render(i, true); }
+build();
+</script>
+</body>
+</html>

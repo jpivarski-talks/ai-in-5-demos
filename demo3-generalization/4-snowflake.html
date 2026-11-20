@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<title>Fold, then fit: a paper snowflake</title>
+<link rel="stylesheet" href="../common/stage.css">
+</head>
+<body>
+<div id="stage"></div>
+<script src="../common/tf.js"></script>
+<script src="../common/stage.js"></script>
+<script src="../common/plots.js"></script>
+<script src="../common/optim.js"></script>
+<script src="nn-common.js"></script>
+<script>
+"use strict";
+// A paper snowflake: fold a square of paper in half three times, cut shapes out of the folded
+// wedge, unfold. The data are points on the paper: blue where there is paper, orange where it
+// was cut away. Two models with one hidden layer each (same size) learn it:
+//   left:  directly, from (x, y);
+//   right: from the folded (x, y), i.e. the paper folded the same way (a fixed transformation,
+//          not learned), which only has to learn one eighth of the pattern.
+// Click the right square to fold the paper (see the fit in the folded wedge) or unfold it (see
+// the same fit on the whole paper, where it has the snowflake's symmetries).
+const CFG = { n: 2000, hidden: 14, lr: 0.05, perFrame: 6, G: 120, w1: 4.0, b1: 2.0 };
+let u = Optim.rng();
+const C = Stage.COLORS;
+const P = 720, GAP = 100;
+const panel = new Stage.Panel({ x: (Stage.W - 2 * P - GAP) / 2, y: 76, w: 2 * P + GAP, h: P });
+const R1 = { x: 0, y: 0, w: P, h: P }, R2 = { x: P + GAP, y: 0, w: P, h: P };
+const ax1 = new Plots.Axes(panel, R1, [-1, 1], [-1, 1]);
+// the right square has the same scale as the left, so the folded paper is visibly 1/8 of the square
+const VIEW2 = [-1, 1];
+const ax2 = new Plots.Axes(panel, R2, VIEW2.slice(), VIEW2.slice());
+
+// ---------------------------------------------------------------- the fold: in half, in half, along the diagonal
+function fold(x, y) {
+  const a = Math.abs(x), b = Math.abs(y);
+  return a >= b ? [a, b] : [b, a];
+}
+
+// ---------------------------------------------------------------- the snowflake
+// Cuts are made in the folded wedge 0 <= y <= x <= 1, like scissors on folded paper: notches into
+// the two folded edges and the outer edge, and maybe a hole or two in the middle.
+let cuts = [];
+function newCuts() {
+  cuts = [];
+  const add = (cx, cy, rmin, rmax) => cuts.push({ cx, cy, a: rmin + (rmax - rmin) * u(), b: rmin + (rmax - rmin) * u(), t: Math.PI * u() });
+  const nEdge = 2 + Math.floor(3 * u());
+  for (let k = 0; k < nEdge; k++) {
+    const side = Math.floor(3 * u()), s = 0.15 + 0.8 * u();
+    if (side === 0) add(s, 0, 0.05, 0.16);                // the first fold (bottom edge of the wedge)
+    else if (side === 1) add(s, s, 0.05, 0.14);           // the diagonal fold
+    else add(1, s * 0.95, 0.06, 0.2);                     // the outer edge
+  }
+  if (u() < 0.7) add(0, 0, 0.08, 0.2);                    // the center
+  const nIn = Math.floor(2 * u());
+  for (let k = 0; k <= nIn; k++) { const x = 0.35 + 0.5 * u(); add(x, (0.15 + 0.7 * u()) * x, 0.04, 0.1); }
+  // the outer corner
+  if (u() < 0.6) add(1, 1, 0.12, 0.35);
+}
+function isCut(x, y) {
+  const [fx, fy] = fold(x, y);
+  for (const c of cuts) {
+    const dx = fx - c.cx, dy = fy - c.cy, ct = Math.cos(c.t), st = Math.sin(c.t);
+    const p = (dx * ct + dy * st) / c.a, q = (-dx * st + dy * ct) / c.b;
+    if (p * p + q * q < 1) return true;
+  }
+  return false;
+}
+
+let data, X1, X2, Y;
+function newData() {
+  for (let attempt = 0; attempt < 50; attempt++) {
+    newCuts();
+    const xs = [], ys = [];
+    for (let i = 0; i < CFG.n; i++) {
+      const x = 2 * u() - 1, y = 2 * u() - 1;
+      xs.push([x, y]);
+      ys.push(isCut(x, y) ? 0 : 1);   // 0: cut away (orange), 1: paper (blue)
+    }
+    const frac = ys.filter((v) => v === 0).length / ys.length;
+    data = { xs, ys, folded: xs.map(([x, y]) => fold(x, y)) };
+    if (frac > 0.2 && frac < 0.45) break;
+  }
+  for (const t of [X1, X2, Y]) if (t) t.dispose();
+  X1 = tf.tensor(data.xs);
+  X2 = tf.tensor(data.folded);
+  Y = tf.tensor(data.ys.map((v) => [v]));
+}
+
+// ---------------------------------------------------------------- the two models
+const G = CFG.G;
+const gridFull = NN.grid(G, -1, 1);                          // the whole square
+const gridWedge = NN.grid(G, VIEW2[0], VIEW2[1]);            // the folded view (middle panel)
+const gridFolded = tf.tidy(() => {                           // the whole square, folded
+  const a = gridFull.dataSync(), out = new Float32Array(a.length);
+  for (let i = 0; i < a.length; i += 2) { const [p, q] = fold(a[i], a[i + 1]); out[i] = p; out[i + 1] = q; }
+  return tf.tensor(out, [G * G, 2]);
+});
+let direct = null, folded = null, optA = null, optB = null, running = false, view = null, steps = 0;
+function oneLayer() {
+  return new NN.MLP([
+    { W: NN.randn([2, CFG.hidden], CFG.w1, u), b: NN.randn([CFG.hidden], CFG.b1, u), act: "tanh" },
+    { W: NN.randn([CFG.hidden, 1], 0.3, u), b: tf.zeros([1]) },
+  ]);
+}
+function newModels() {
+  for (const m of [direct, folded]) if (m) m.dispose();
+  for (const o of [optA, optB]) if (o) o.dispose();
+  direct = oneLayer(); folded = oneLayer();
+  optA = tf.train.adam(CFG.lr); optB = tf.train.adam(CFG.lr);
+  steps = 0;
+  computeView();
+}
+const lossA = () => tf.losses.sigmoidCrossEntropy(Y, direct.forward(X1));
+const lossB = () => tf.losses.sigmoidCrossEntropy(Y, folded.forward(X2));
+function accuracy(model, X) {
+  return tf.tidy(() => {
+    const pred = tf.greater(model.forward(X), 0).cast("float32");
+    return tf.mean(tf.equal(pred, Y).cast("float32")).dataSync()[0];
+  });
+}
+function computeView() {
+  view = tf.tidy(() => ({
+    direct: tf.sigmoid(direct.forward(gridFull)).dataSync(),
+    wedge: tf.sigmoid(folded.forward(gridWedge)).dataSync(),
+    unfolded: tf.sigmoid(folded.forward(gridFolded)).dataSync(),
+    accA: accuracy(direct, X1), accB: accuracy(folded, X2),
+  }));
+}
+
+// ---------------------------------------------------------------- the folding animation (middle panel)
+// Each fold turns half of the paper over in 3D about the fold line; seen from above, the distance
+// from the fold line shrinks by cos(pi s) as the turn s goes from 0 to 1.
+const FOLD_T = 1.1, PAUSE = 0.35;
+let paperFolded = false;   // the right square: is the paper folded (or unfolded)?
+let anim = null;      // while folding or unfolding: {t0, from, dir}
+function foldStep(k, x, y, s) {
+  const c = Math.cos(Math.PI * s);
+  if (k === 0) return y < 0 ? [x, y * c] : [x, y];
+  if (k === 1) return x < 0 ? [x * c, y] : [x, y];
+  if (y > x) { const d = (y - x) * (c - 1) / 2; return [x - d, y + d]; }
+  return [x, y];
+}
+// which fold is happening at time t into the animation, and how far it has gone
+function animState(t) {
+  const per = FOLD_T + PAUSE;
+  const k = Math.min(3, Math.floor(t / per)), s = k < 3 ? Math.min(1, (t - k * per) / FOLD_T) : 1;
+  return { k, s: s * s * (3 - 2 * s) };
+}
+function animPoint(x, y, st) {
+  let p = [x, y];
+  for (let j = 0; j < 3; j++) {
+    if (j < st.k) p = foldStep(j, p[0], p[1], 1);
+    else if (j === st.k) p = foldStep(j, p[0], p[1], st.s);
+  }
+  return p;
+}
+// the paper as 8 triangles (one per layer once it's folded); each moves as a whole through every fold
+const TRIS = [];
+for (let k = 0; k < 8; k++) {
+  const a0 = k * Math.PI / 4, a1 = (k + 1) * Math.PI / 4;
+  const corner = (a) => { const c = Math.cos(a), s = Math.sin(a), m = Math.max(Math.abs(c), Math.abs(s)); return [c / m, s / m]; };
+  TRIS.push([[0, 0], corner(a0), corner(a1)]);
+}
+function animTriangle(tri, st) {
+  // decide each fold by the triangle's center, so the whole triangle turns over together
+  let pts = tri.map((p) => p.slice()), nflips = 0;
+  for (let j = 0; j < 3 && j <= st.k; j++) {
+    const s = j < st.k ? 1 : st.s;
+    const cx = (pts[0][0] + pts[1][0] + pts[2][0]) / 3, cy = (pts[0][1] + pts[1][1] + pts[2][1]) / 3;
+    const flips = j === 0 ? cy < 0 : j === 1 ? cx < 0 : cy > cx;
+    if (flips) {
+      pts = pts.map(([x, y]) => j === 0 ? [x, y * Math.cos(Math.PI * s)] : j === 1 ? [x * Math.cos(Math.PI * s), y] : foldStep(2, x, y, s));
+      nflips += s;
+    }
+  }
+  pts.flips = nflips;   // how many times this layer has been turned over (layers turned over more lie on top)
+  return pts;
+}
+const animLength = () => 3 * (FOLD_T + PAUSE) - PAUSE;
+
+// the folded model's fit on the whole paper, as a G x G image (for the folding animation)
+const heat = document.createElement("canvas");
+heat.width = heat.height = CFG.G;
+function paintHeat() { NN.paintRegions(heat.getContext("2d"), { x: 0, y: 0, w: CFG.G, h: CFG.G }, view.unfolded, CFG.G, 1); }
+// the affine map [a, b, c, d, e, f] (as for ctx.transform) taking 3 source points to 3 destinations
+function affine(src, dst) {
+  const [[u0, v0], [u1, v1], [u2, v2]] = src;
+  const det = (u1 - u0) * (v2 - v0) - (u2 - u0) * (v1 - v0);
+  const [[x0, y0], [x1, y1], [x2, y2]] = dst;
+  const ddet = (x1 - x0) * (y2 - y0) - (x2 - x0) * (y1 - y0);
+  if (Math.abs(det) < 1e-9 || Math.abs(ddet) < 1e-3) return null;
+  // solve for each output coordinate: out = A u + B v + C
+  const solve = (w0, w1, w2) => {
+    const A = ((w1 - w0) * (v2 - v0) - (w2 - w0) * (v1 - v0)) / det;
+    const B = ((u1 - u0) * (w2 - w0) - (u2 - u0) * (w1 - w0)) / det;
+    return [A, B, w0 - A * u0 - B * v0];
+  };
+  const [a, cc, e] = solve(x0, x1, x2), [b, d, f] = solve(y0, y1, y2);
+  return [a, b, cc, d, e, f];
+}
+
+// ---------------------------------------------------------------- drawing
+function frame(c, r) { c.strokeStyle = "#bbb"; c.lineWidth = 1.5; c.strokeRect(r.x + 0.75, r.y + 0.75, r.w - 1.5, r.h - 1.5); }
+// dashed lines where the paper is folded: in half, in half again, and along the diagonals
+function drawFoldLines(c) {
+  c.save();
+  c.setLineDash([7, 7]); c.strokeStyle = "rgba(0, 0, 0, 0.3)"; c.lineWidth = 1.5;
+  c.beginPath();
+  c.moveTo(ax2.X(-1), ax2.Y(0)); c.lineTo(ax2.X(1), ax2.Y(0));
+  c.moveTo(ax2.X(0), ax2.Y(-1)); c.lineTo(ax2.X(0), ax2.Y(1));
+  c.moveTo(ax2.X(-1), ax2.Y(-1)); c.lineTo(ax2.X(1), ax2.Y(1));
+  c.moveTo(ax2.X(-1), ax2.Y(1)); c.lineTo(ax2.X(1), ax2.Y(-1));
+  c.stroke();
+  c.restore();
+}
+function drawWedgeOutline(c, ax) {
+  c.beginPath(); c.moveTo(ax.X(0), ax.Y(0)); c.lineTo(ax.X(1), ax.Y(0)); c.lineTo(ax.X(1), ax.Y(1)); c.closePath();
+}
+// time into the folding animation (0: unfolded, animLength(): folded)
+function animTime(now) { return Math.max(0, Math.min(animLength(), anim.from + anim.dir * (now - anim.t0) / 1000)); }
+function toggleFold() {
+  const now = performance.now();
+  const from = anim ? animTime(now) : paperFolded ? animLength() : 0;   // a second click mid-way turns back
+  const dir = (anim ? anim.dir : paperFolded ? 1 : -1) > 0 ? -1 : 1;
+  anim = { t0: now, from, dir };
+}
+const R_BIG = 4.2, R_SMALL = 2.8;   // point sizes on the whole paper and in the folded wedge
+function drawRight(c, now) {
+  let t = null;
+  if (anim) {
+    t = animTime(now);
+    if ((anim.dir > 0 && t >= animLength()) || (anim.dir < 0 && t <= 0)) { paperFolded = anim.dir > 0; anim = null; t = null; }
+  }
+  if (!anim && !paperFolded) {
+    // unfolded: the folded model's fit, drawn on the whole paper
+    NN.paintRegions(c, R2, view.unfolded, G, 1);
+    drawFoldLines(c);
+    NN.drawPoints(ax2, data.xs, data.ys, { r: R_BIG, lw: 0.9 });
+    return;
+  }
+  if (!anim) {
+    // the folded paper: a triangle, 1/8 of the square and eight layers thick, with the folded
+    // model's fit inside it; the dashed lines are the folds
+    c.save();
+    c.beginPath(); c.rect(R2.x, R2.y, R2.w, R2.h); c.clip();
+    drawFoldLines(c);
+    drawWedgeOutline(c, ax2); c.save(); c.clip();
+    NN.paintRegions(c, R2, view.wedge, G, 1);
+    c.restore();
+    NN.drawPoints(ax2, data.folded, data.ys, { r: R_SMALL, lw: 0.6 });
+    drawWedgeOutline(c, ax2); c.strokeStyle = "#999"; c.lineWidth = 1.5; c.stroke();
+    c.restore();
+    return;
+  }
+  const st = animState(t);
+  c.fillStyle = "#fff"; c.fillRect(R2.x, R2.y, R2.w, R2.h);
+  c.save();
+  c.beginPath(); c.rect(R2.x, R2.y, R2.w, R2.h); c.clip();
+  // The layers of paper, each carrying its piece of the model's fit: every fold moves a layer
+  // rigidly (turning it over, seen from above), so each one is the fit on the whole paper, clipped
+  // to that layer's triangle and moved by the same (affine) map as the layer's corners.
+  paintHeat();
+  const layers = TRIS.map((tri) => ({ tri, p: animTriangle(tri, st) })).sort((a, b) => a.p.flips - b.p.flips);
+  const img = ([x, y]) => [(x + 1) / 2 * G, (1 - y) / 2 * G];   // paper coordinates -> heat-image pixels
+  for (const { tri, p } of layers) {
+    const src = tri.map(img), dst = p.map(([x, y]) => [ax2.X(x), ax2.Y(y)]);
+    const m = affine(src, dst);
+    if (!m) continue;   // a layer seen exactly edge-on
+    c.save();
+    c.transform(...m);
+    c.beginPath(); c.moveTo(...src[0]); c.lineTo(...src[1]); c.lineTo(...src[2]); c.closePath();
+    c.clip();
+    c.imageSmoothingEnabled = true;
+    c.drawImage(heat, 0, 0);
+    c.restore();
+    c.beginPath(); c.moveTo(...dst[0]); c.lineTo(...dst[1]); c.lineTo(...dst[2]); c.closePath();
+    c.strokeStyle = "rgba(0, 0, 0, 0.3)"; c.lineWidth = 1; c.stroke();
+  }
+  drawFoldLines(c);
+  const moved = data.xs.map(([x, y]) => animPoint(x, y, st));
+  NN.drawPoints(ax2, moved, data.ys, { r: R_BIG - (R_BIG - R_SMALL) * (st.k + st.s) / 3, lw: 0.8 });
+  c.restore();
+}
+
+function draw(now) {
+  const c = panel.clear();
+  if (!view) return;
+  NN.paintRegions(c, R1, view.direct, G, 1);
+  NN.drawPoints(ax1, data.xs, data.ys, { r: R_BIG, lw: 0.9 });
+  frame(c, R1);
+  drawRight(c, now);
+  frame(c, R2);
+}
+
+// ---------------------------------------------------------------- controls
+function stop() { running = false; trainButton.textContent = "optimize model"; trainButton.classList.remove("on"); }
+function train() {
+  if (running) { stop(); return; }
+  running = true;
+  trainButton.textContent = "stop";
+  trainButton.classList.add("on");
+}
+const bar = Stage.controls({ x: panel.x, y: 815, w: 1000, h: 70 });
+Stage.button("new data", () => { stop(); newData(); newModels(); }, bar);
+Stage.button("random model", () => { stop(); newModels(); }, bar);
+const trainButton = Stage.button("optimize model", train, bar, { cls: "primary" });
+// a note at the bottom right, under the right square, in the slides' body text style; it has the
+// same box as the controls row, and is nudged so that the middle of its lowercase letters (half the
+// x-height above the baseline) is level with the middle of the buttons' lowercase letters
+const note = Stage.label("The model on the right only fits the folded triangle.",
+  { x: R2.x + panel.x + R2.w - 950, y: 815, w: 950, h: 70 },
+  { fontSize: "34px", color: C.ink, display: "flex", alignItems: "center", justifyContent: "flex-end",
+    whiteSpace: "nowrap", pointerEvents: "none", boxSizing: "border-box" });
+{
+  // a line of text centered in a box has its baseline (ascent - descent) / 2 below the center
+  const midline = (el) => {
+    const cs = getComputedStyle(el), c = document.createElement("canvas").getContext("2d");
+    c.font = `${cs.fontSize} ${cs.fontFamily}`;
+    const m = c.measureText("x");
+    return (m.fontBoundingBoxAscent - m.fontBoundingBoxDescent) / 2 - m.actualBoundingBoxAscent / 2;
+  };
+  const shift = midline(note) - midline(bar.querySelector(".btn"));   // how far the note's middle is below the buttons'
+  note.style.paddingBottom = 2 * shift + "px";
+}
+// clicking the right square folds or unfolds the paper
+const onRight = (e) => { const m = panel.pos(e); return m.x >= R2.x && m.x <= R2.x + R2.w && m.y >= R2.y && m.y <= R2.y + R2.h; };
+panel.canvas.addEventListener("click", (e) => { if (onRight(e)) toggleFold(); });
+panel.canvas.addEventListener("mousemove", (e) => { panel.canvas.style.cursor = onRight(e) ? "pointer" : ""; });
+
+newData();
+newModels();
+Stage.loop((dt, now) => {
+  if (running) {
+    for (let k = 0; k < CFG.perFrame; k++) { optA.minimize(lossA); optB.minimize(lossB); }
+    steps += CFG.perFrame;
+    computeView();
+  }
+  draw(now);
+});
+
+Stage.cite([
+  ["G. Montúfar, R. Pascanu, K. Cho, Y. Bengio, <i>On the Number of Linear Regions of Deep Neural Networks</i> (2014).", "https://doi.org/10.48550/arXiv.1402.1869"],
+  ["G. Cybenko, <i>Approximation by superpositions of a sigmoidal function</i> (1989).", "https://doi.org/10.1007/BF02551274"],
+], { x: 310, y: 16, w: 1200 });
+Stage.nav("../demo0-space/3-projections.html", "2-circle.html");
+window.demo = { CFG, train, stop, newData, newModels, get view() { return view; }, get steps() { return steps; }, toggleFold, get folded() { return paperFolded; } };
+</script>
+</body>
+</html>
