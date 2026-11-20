@@ -1,52 +1,717 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1340" height="386" viewBox="0 0 1340 386">
-<g fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round"><path d="M 56,79 C 233,79 233,27 410,27"/><path d="M 56,79 C 233,79 233,79 410,79"/><path d="M 56,79 C 233,79 233,131 410,131"/><path d="M 56,79 C 233,79 233,183 410,183"/><path d="M 56,79 C 233,79 233,235 410,235"/><path d="M 56,79 C 233,79 233,287 410,287"/><path d="M 56,131 C 233,131 233,27 410,27"/><path d="M 56,131 C 233,131 233,79 410,79"/><path d="M 56,131 C 233,131 233,131 410,131"/><path d="M 56,131 C 233,131 233,183 410,183"/><path d="M 56,131 C 233,131 233,235 410,235"/><path d="M 56,131 C 233,131 233,287 410,287"/><path d="M 56,183 C 233,183 233,27 410,27"/><path d="M 56,183 C 233,183 233,79 410,79"/><path d="M 56,183 C 233,183 233,131 410,131"/><path d="M 56,183 C 233,183 233,183 410,183"/><path d="M 56,183 C 233,183 233,235 410,235"/><path d="M 56,183 C 233,183 233,287 410,287"/><path d="M 56,235 C 233,235 233,27 410,27"/><path d="M 56,235 C 233,235 233,79 410,79"/><path d="M 56,235 C 233,235 233,131 410,131"/><path d="M 56,235 C 233,235 233,183 410,183"/><path d="M 56,235 C 233,235 233,235 410,235"/><path d="M 56,235 C 233,235 233,287 410,287"/><path d="M 456,27 C 633,27 633,53 810,53"/><path d="M 456,27 C 633,27 633,105 810,105"/><path d="M 456,27 C 633,27 633,157 810,157"/><path d="M 456,27 C 633,27 633,209 810,209"/><path d="M 456,27 C 633,27 633,261 810,261"/><path d="M 456,79 C 633,79 633,53 810,53"/><path d="M 456,79 C 633,79 633,105 810,105"/><path d="M 456,79 C 633,79 633,157 810,157"/><path d="M 456,79 C 633,79 633,209 810,209"/><path d="M 456,79 C 633,79 633,261 810,261"/><path d="M 456,131 C 633,131 633,53 810,53"/><path d="M 456,131 C 633,131 633,105 810,105"/><path d="M 456,131 C 633,131 633,157 810,157"/><path d="M 456,131 C 633,131 633,209 810,209"/><path d="M 456,131 C 633,131 633,261 810,261"/><path d="M 456,183 C 633,183 633,53 810,53"/><path d="M 456,183 C 633,183 633,105 810,105"/><path d="M 456,183 C 633,183 633,157 810,157"/><path d="M 456,183 C 633,183 633,209 810,209"/><path d="M 456,183 C 633,183 633,261 810,261"/><path d="M 456,235 C 633,235 633,53 810,53"/><path d="M 456,235 C 633,235 633,105 810,105"/><path d="M 456,235 C 633,235 633,157 810,157"/><path d="M 456,235 C 633,235 633,209 810,209"/><path d="M 456,235 C 633,235 633,261 810,261"/><path d="M 456,287 C 633,287 633,53 810,53"/><path d="M 456,287 C 633,287 633,105 810,105"/><path d="M 456,287 C 633,287 633,157 810,157"/><path d="M 456,287 C 633,287 633,209 810,209"/><path d="M 456,287 C 633,287 633,261 810,261"/><path d="M 856,53 C 1033,53 1033,105 1210,105"/><path d="M 856,53 C 1033,53 1033,157 1210,157"/><path d="M 856,53 C 1033,53 1033,209 1210,209"/><path d="M 856,105 C 1033,105 1033,105 1210,105"/><path d="M 856,105 C 1033,105 1033,157 1210,157"/><path d="M 856,105 C 1033,105 1033,209 1210,209"/><path d="M 856,157 C 1033,157 1033,105 1210,105"/><path d="M 856,157 C 1033,157 1033,157 1210,157"/><path d="M 856,157 C 1033,157 1033,209 1210,209"/><path d="M 856,209 C 1033,209 1033,105 1210,105"/><path d="M 856,209 C 1033,209 1033,157 1210,157"/><path d="M 856,209 C 1033,209 1033,209 1210,209"/><path d="M 856,261 C 1033,261 1033,105 1210,105"/><path d="M 856,261 C 1033,261 1033,157 1210,157"/><path d="M 856,261 C 1033,261 1033,209 1210,209"/></g>
-<line x1="1256" y1="105" x2="1319" y2="105" stroke="#808080" stroke-width="3"/>
-<path d="M 1336,105 l -26,-8 8,8 -8,8 z" fill="#808080"/>
-<line x1="1256" y1="157" x2="1319" y2="157" stroke="#808080" stroke-width="3"/>
-<path d="M 1336,157 l -26,-8 8,8 -8,8 z" fill="#808080"/>
-<line x1="1256" y1="209" x2="1319" y2="209" stroke="#808080" stroke-width="3"/>
-<path d="M 1336,209 l -26,-8 8,8 -8,8 z" fill="#808080"/>
-<rect x="10" y="56" width="46" height="46" fill="#fbd5b0" stroke="#000" stroke-width="2.5"/>
-<text x="30" y="85" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">x<tspan dy="6" font-size="15px" font-style="normal">1</tspan></text>
-<rect x="10" y="108" width="46" height="46" fill="#fbd5b0" stroke="#000" stroke-width="2.5"/>
-<text x="30" y="137" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">x<tspan dy="6" font-size="15px" font-style="normal">2</tspan></text>
-<rect x="10" y="160" width="46" height="46" fill="#fbd5b0" stroke="#000" stroke-width="2.5"/>
-<text x="30" y="189" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">x<tspan dy="6" font-size="15px" font-style="normal">3</tspan></text>
-<rect x="10" y="212" width="46" height="46" fill="#fbd5b0" stroke="#000" stroke-width="2.5"/>
-<text x="30" y="241" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">x<tspan dy="6" font-size="15px" font-style="normal">4</tspan></text>
-<rect x="410" y="4" width="46" height="46" fill="#c6dcf0" stroke="#000" stroke-width="2.5"/>
-<text x="430" y="33" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">h<tspan dy="6" font-size="15px" font-style="normal">1</tspan></text>
-<rect x="410" y="56" width="46" height="46" fill="#c6dcf0" stroke="#000" stroke-width="2.5"/>
-<text x="430" y="85" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">h<tspan dy="6" font-size="15px" font-style="normal">2</tspan></text>
-<rect x="410" y="108" width="46" height="46" fill="#c6dcf0" stroke="#000" stroke-width="2.5"/>
-<text x="430" y="137" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">h<tspan dy="6" font-size="15px" font-style="normal">3</tspan></text>
-<rect x="410" y="160" width="46" height="46" fill="#c6dcf0" stroke="#000" stroke-width="2.5"/>
-<text x="430" y="189" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">h<tspan dy="6" font-size="15px" font-style="normal">4</tspan></text>
-<rect x="410" y="212" width="46" height="46" fill="#c6dcf0" stroke="#000" stroke-width="2.5"/>
-<text x="430" y="241" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">h<tspan dy="6" font-size="15px" font-style="normal">5</tspan></text>
-<rect x="410" y="264" width="46" height="46" fill="#c6dcf0" stroke="#000" stroke-width="2.5"/>
-<text x="430" y="293" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">h<tspan dy="6" font-size="15px" font-style="normal">6</tspan></text>
-<rect x="810" y="30" width="46" height="46" fill="#cde7c4" stroke="#000" stroke-width="2.5"/>
-<text x="830" y="59" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">H<tspan dy="6" font-size="15px" font-style="normal">1</tspan></text>
-<rect x="810" y="82" width="46" height="46" fill="#cde7c4" stroke="#000" stroke-width="2.5"/>
-<text x="830" y="111" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">H<tspan dy="6" font-size="15px" font-style="normal">2</tspan></text>
-<rect x="810" y="134" width="46" height="46" fill="#cde7c4" stroke="#000" stroke-width="2.5"/>
-<text x="830" y="163" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">H<tspan dy="6" font-size="15px" font-style="normal">3</tspan></text>
-<rect x="810" y="186" width="46" height="46" fill="#cde7c4" stroke="#000" stroke-width="2.5"/>
-<text x="830" y="215" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">H<tspan dy="6" font-size="15px" font-style="normal">4</tspan></text>
-<rect x="810" y="238" width="46" height="46" fill="#cde7c4" stroke="#000" stroke-width="2.5"/>
-<text x="830" y="267" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">H<tspan dy="6" font-size="15px" font-style="normal">5</tspan></text>
-<rect x="1210" y="82" width="46" height="46" fill="#e2d2ef" stroke="#000" stroke-width="2.5"/>
-<text x="1230" y="111" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">y<tspan dy="6" font-size="15px" font-style="normal">1</tspan></text>
-<rect x="1210" y="134" width="46" height="46" fill="#e2d2ef" stroke="#000" stroke-width="2.5"/>
-<text x="1230" y="163" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">y<tspan dy="6" font-size="15px" font-style="normal">2</tspan></text>
-<rect x="1210" y="186" width="46" height="46" fill="#e2d2ef" stroke="#000" stroke-width="2.5"/>
-<text x="1230" y="215" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="23px" font-style="italic">y<tspan dy="6" font-size="15px" font-style="normal">3</tspan></text>
-<path d="M 38,326 q 0,11.0 14,11.0 L 219,337.0 q 14,0 14,11.0 q 0,-11.0 14,-11.0 L 414,337.0 q 14,0 14,-11.0" fill="none" stroke="#333333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="233" y="378" text-anchor="middle" font-family='"Helvetica Neue", Helvetica, Arial, sans-serif' font-size="28px" fill="#333333">transforms 4D <tspan font-style="italic">x</tspan> to 6D <tspan font-style="italic">h</tspan></text>
-<path d="M 438,326 q 0,11.0 14,11.0 L 619,337.0 q 14,0 14,11.0 q 0,-11.0 14,-11.0 L 814,337.0 q 14,0 14,-11.0" fill="none" stroke="#333333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="633" y="378" text-anchor="middle" font-family='"Helvetica Neue", Helvetica, Arial, sans-serif' font-size="28px" fill="#333333">transforms 6D <tspan font-style="italic">h</tspan> to 5D <tspan font-style="italic">H</tspan></text>
-<path d="M 838,326 q 0,11.0 14,11.0 L 1019,337.0 q 14,0 14,11.0 q 0,-11.0 14,-11.0 L 1214,337.0 q 14,0 14,-11.0" fill="none" stroke="#333333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="1033" y="378" text-anchor="middle" font-family='"Helvetica Neue", Helvetica, Arial, sans-serif' font-size="28px" fill="#333333">fits 3 <tspan font-style="italic">y</tspan> functions in 5D <tspan font-style="italic">H</tspan></text>
+<svg
+   width="1340"
+   height="386"
+   viewBox="0 0 1340 386"
+   version="1.1"
+   id="svg95"
+   sodipodi:docname="network_layers_braces.svg"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs95" />
+  <sodipodi:namedview
+     id="namedview95"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.588806"
+     inkscape:cx="638.84453"
+     inkscape:cy="214.62659"
+     inkscape:current-layer="svg95" />
+  <g
+     fill="none"
+     stroke="#808080"
+     stroke-width="2"
+     stroke-linecap="round"
+     id="g69">
+    <path
+       d="M 56,79 C 233,79 233,27 410,27"
+       id="path1" />
+    <path
+       d="M 56,79 C 233,79 233,79 410,79"
+       id="path2" />
+    <path
+       d="M 56,79 C 233,79 233,131 410,131"
+       id="path3" />
+    <path
+       d="M 56,79 C 233,79 233,183 410,183"
+       id="path4" />
+    <path
+       d="M 56,79 C 233,79 233,235 410,235"
+       id="path5" />
+    <path
+       d="M 56,79 C 233,79 233,287 410,287"
+       id="path6" />
+    <path
+       d="M 56,131 C 233,131 233,27 410,27"
+       id="path7" />
+    <path
+       d="M 56,131 C 233,131 233,79 410,79"
+       id="path8" />
+    <path
+       d="M 56,131 C 233,131 233,131 410,131"
+       id="path9" />
+    <path
+       d="M 56,131 C 233,131 233,183 410,183"
+       id="path10" />
+    <path
+       d="M 56,131 C 233,131 233,235 410,235"
+       id="path11" />
+    <path
+       d="M 56,131 C 233,131 233,287 410,287"
+       id="path12" />
+    <path
+       d="M 56,183 C 233,183 233,27 410,27"
+       id="path13" />
+    <path
+       d="M 56,183 C 233,183 233,79 410,79"
+       id="path14" />
+    <path
+       d="M 56,183 C 233,183 233,131 410,131"
+       id="path15" />
+    <path
+       d="M 56,183 C 233,183 233,183 410,183"
+       id="path16" />
+    <path
+       d="M 56,183 C 233,183 233,235 410,235"
+       id="path17" />
+    <path
+       d="M 56,183 C 233,183 233,287 410,287"
+       id="path18" />
+    <path
+       d="M 56,235 C 233,235 233,27 410,27"
+       id="path19" />
+    <path
+       d="M 56,235 C 233,235 233,79 410,79"
+       id="path20" />
+    <path
+       d="M 56,235 C 233,235 233,131 410,131"
+       id="path21" />
+    <path
+       d="M 56,235 C 233,235 233,183 410,183"
+       id="path22" />
+    <path
+       d="M 56,235 C 233,235 233,235 410,235"
+       id="path23" />
+    <path
+       d="M 56,235 C 233,235 233,287 410,287"
+       id="path24" />
+    <path
+       d="M 456,27 C 633,27 633,53 810,53"
+       id="path25" />
+    <path
+       d="M 456,27 C 633,27 633,105 810,105"
+       id="path26" />
+    <path
+       d="M 456,27 C 633,27 633,157 810,157"
+       id="path27" />
+    <path
+       d="M 456,27 C 633,27 633,209 810,209"
+       id="path28" />
+    <path
+       d="M 456,27 C 633,27 633,261 810,261"
+       id="path29" />
+    <path
+       d="M 456,79 C 633,79 633,53 810,53"
+       id="path30" />
+    <path
+       d="M 456,79 C 633,79 633,105 810,105"
+       id="path31" />
+    <path
+       d="M 456,79 C 633,79 633,157 810,157"
+       id="path32" />
+    <path
+       d="M 456,79 C 633,79 633,209 810,209"
+       id="path33" />
+    <path
+       d="M 456,79 C 633,79 633,261 810,261"
+       id="path34" />
+    <path
+       d="M 456,131 C 633,131 633,53 810,53"
+       id="path35" />
+    <path
+       d="M 456,131 C 633,131 633,105 810,105"
+       id="path36" />
+    <path
+       d="M 456,131 C 633,131 633,157 810,157"
+       id="path37" />
+    <path
+       d="M 456,131 C 633,131 633,209 810,209"
+       id="path38" />
+    <path
+       d="M 456,131 C 633,131 633,261 810,261"
+       id="path39" />
+    <path
+       d="M 456,183 C 633,183 633,53 810,53"
+       id="path40" />
+    <path
+       d="M 456,183 C 633,183 633,105 810,105"
+       id="path41" />
+    <path
+       d="M 456,183 C 633,183 633,157 810,157"
+       id="path42" />
+    <path
+       d="M 456,183 C 633,183 633,209 810,209"
+       id="path43" />
+    <path
+       d="M 456,183 C 633,183 633,261 810,261"
+       id="path44" />
+    <path
+       d="M 456,235 C 633,235 633,53 810,53"
+       id="path45" />
+    <path
+       d="M 456,235 C 633,235 633,105 810,105"
+       id="path46" />
+    <path
+       d="M 456,235 C 633,235 633,157 810,157"
+       id="path47" />
+    <path
+       d="M 456,235 C 633,235 633,209 810,209"
+       id="path48" />
+    <path
+       d="M 456,235 C 633,235 633,261 810,261"
+       id="path49" />
+    <path
+       d="M 456,287 C 633,287 633,53 810,53"
+       id="path50" />
+    <path
+       d="M 456,287 C 633,287 633,105 810,105"
+       id="path51" />
+    <path
+       d="M 456,287 C 633,287 633,157 810,157"
+       id="path52" />
+    <path
+       d="M 456,287 C 633,287 633,209 810,209"
+       id="path53" />
+    <path
+       d="M 456,287 C 633,287 633,261 810,261"
+       id="path54" />
+    <path
+       d="M 856,53 C 1033,53 1033,105 1210,105"
+       id="path55" />
+    <path
+       d="M 856,53 C 1033,53 1033,157 1210,157"
+       id="path56" />
+    <path
+       d="M 856,53 C 1033,53 1033,209 1210,209"
+       id="path57" />
+    <path
+       d="M 856,105 C 1033,105 1033,105 1210,105"
+       id="path58" />
+    <path
+       d="M 856,105 C 1033,105 1033,157 1210,157"
+       id="path59" />
+    <path
+       d="M 856,105 C 1033,105 1033,209 1210,209"
+       id="path60" />
+    <path
+       d="M 856,157 C 1033,157 1033,105 1210,105"
+       id="path61" />
+    <path
+       d="M 856,157 C 1033,157 1033,157 1210,157"
+       id="path62" />
+    <path
+       d="M 856,157 C 1033,157 1033,209 1210,209"
+       id="path63" />
+    <path
+       d="M 856,209 C 1033,209 1033,105 1210,105"
+       id="path64" />
+    <path
+       d="M 856,209 C 1033,209 1033,157 1210,157"
+       id="path65" />
+    <path
+       d="M 856,209 C 1033,209 1033,209 1210,209"
+       id="path66" />
+    <path
+       d="M 856,261 C 1033,261 1033,105 1210,105"
+       id="path67" />
+    <path
+       d="M 856,261 C 1033,261 1033,157 1210,157"
+       id="path68" />
+    <path
+       d="M 856,261 C 1033,261 1033,209 1210,209"
+       id="path69" />
+  </g>
+  <line
+     x1="1256"
+     y1="105"
+     x2="1319"
+     y2="105"
+     stroke="#808080"
+     stroke-width="3"
+     id="line69" />
+  <path
+     d="M 1336,105 l -26,-8 8,8 -8,8 z"
+     fill="#808080"
+     id="path70" />
+  <line
+     x1="1256"
+     y1="157"
+     x2="1319"
+     y2="157"
+     stroke="#808080"
+     stroke-width="3"
+     id="line70" />
+  <path
+     d="M 1336,157 l -26,-8 8,8 -8,8 z"
+     fill="#808080"
+     id="path71" />
+  <line
+     x1="1256"
+     y1="209"
+     x2="1319"
+     y2="209"
+     stroke="#808080"
+     stroke-width="3"
+     id="line71" />
+  <path
+     d="M 1336,209 l -26,-8 8,8 -8,8 z"
+     fill="#808080"
+     id="path72" />
+  <rect
+     x="10"
+     y="56"
+     width="46"
+     height="46"
+     fill="#fbd5b0"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect72" />
+  <text
+     x="30"
+     y="85"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text72">x<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan72">1</tspan></text>
+  <rect
+     x="10"
+     y="108"
+     width="46"
+     height="46"
+     fill="#fbd5b0"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect73" />
+  <text
+     x="30"
+     y="137"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text73">x<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan73">2</tspan></text>
+  <rect
+     x="10"
+     y="160"
+     width="46"
+     height="46"
+     fill="#fbd5b0"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect74" />
+  <text
+     x="30"
+     y="189"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text74">x<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan74">3</tspan></text>
+  <rect
+     x="10"
+     y="212"
+     width="46"
+     height="46"
+     fill="#fbd5b0"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect75" />
+  <text
+     x="30"
+     y="241"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text75">x<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan75">4</tspan></text>
+  <rect
+     x="410"
+     y="4"
+     width="46"
+     height="46"
+     fill="#c6dcf0"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect76" />
+  <text
+     x="430"
+     y="33"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text76">h<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan76">1</tspan></text>
+  <rect
+     x="410"
+     y="56"
+     width="46"
+     height="46"
+     fill="#c6dcf0"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect77" />
+  <text
+     x="430"
+     y="85"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text77">h<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan77">2</tspan></text>
+  <rect
+     x="410"
+     y="108"
+     width="46"
+     height="46"
+     fill="#c6dcf0"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect78" />
+  <text
+     x="430"
+     y="137"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text78">h<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan78">3</tspan></text>
+  <rect
+     x="410"
+     y="160"
+     width="46"
+     height="46"
+     fill="#c6dcf0"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect79" />
+  <text
+     x="430"
+     y="189"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text79">h<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan79">4</tspan></text>
+  <rect
+     x="410"
+     y="212"
+     width="46"
+     height="46"
+     fill="#c6dcf0"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect80" />
+  <text
+     x="430"
+     y="241"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text80">h<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan80">5</tspan></text>
+  <rect
+     x="410"
+     y="264"
+     width="46"
+     height="46"
+     fill="#c6dcf0"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect81" />
+  <text
+     x="430"
+     y="293"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text81">h<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan81">6</tspan></text>
+  <rect
+     x="810"
+     y="30"
+     width="46"
+     height="46"
+     fill="#cde7c4"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect82" />
+  <text
+     x="830"
+     y="59"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text82">H<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan82">1</tspan></text>
+  <rect
+     x="810"
+     y="82"
+     width="46"
+     height="46"
+     fill="#cde7c4"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect83" />
+  <text
+     x="830"
+     y="111"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text83">H<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan83">2</tspan></text>
+  <rect
+     x="810"
+     y="134"
+     width="46"
+     height="46"
+     fill="#cde7c4"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect84" />
+  <text
+     x="830"
+     y="163"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text84">H<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan84">3</tspan></text>
+  <rect
+     x="810"
+     y="186"
+     width="46"
+     height="46"
+     fill="#cde7c4"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect85" />
+  <text
+     x="830"
+     y="215"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text85">H<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan85">4</tspan></text>
+  <rect
+     x="810"
+     y="238"
+     width="46"
+     height="46"
+     fill="#cde7c4"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect86" />
+  <text
+     x="830"
+     y="267"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text86">H<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan86">5</tspan></text>
+  <rect
+     x="1210"
+     y="82"
+     width="46"
+     height="46"
+     fill="#e2d2ef"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect87" />
+  <text
+     x="1230"
+     y="111"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text87">y<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan87">1</tspan></text>
+  <rect
+     x="1210"
+     y="134"
+     width="46"
+     height="46"
+     fill="#e2d2ef"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect88" />
+  <text
+     x="1230"
+     y="163"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text88">y<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan88">2</tspan></text>
+  <rect
+     x="1210"
+     y="186"
+     width="46"
+     height="46"
+     fill="#e2d2ef"
+     stroke="#000"
+     stroke-width="2.5"
+     id="rect89" />
+  <text
+     x="1230"
+     y="215"
+     text-anchor="middle"
+     font-family="Helvetica, Arial, sans-serif"
+     font-size="23px"
+     font-style="italic"
+     id="text89">y<tspan
+   dy="6"
+   font-size="15px"
+   font-style="normal"
+   id="tspan89">3</tspan></text>
+  <path
+     d="M 38,326 q 0,11.0 14,11.0 L 219,337.0 q 14,0 14,11.0 q 0,-11.0 14,-11.0 L 414,337.0 q 14,0 14,-11.0"
+     fill="none"
+     stroke="#333333"
+     stroke-width="2.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="path89" />
+  <text
+     x="232.552"
+     y="378"
+     text-anchor="middle"
+     font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+     font-size="28px"
+     fill="#333333"
+     id="text91">transforms <tspan
+   style="font-style:italic"
+   id="tspan95">x</tspan> to <tspan
+   style="font-style:italic"
+   id="tspan96">h</tspan></text>
+  <path
+     d="M 438,326 q 0,11.0 14,11.0 L 619,337.0 q 14,0 14,11.0 q 0,-11.0 14,-11.0 L 814,337.0 q 14,0 14,-11.0"
+     fill="none"
+     stroke="#333333"
+     stroke-width="2.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="path91" />
+  <text
+     x="631.72601"
+     y="378"
+     text-anchor="middle"
+     font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+     font-size="28px"
+     fill="#333333"
+     id="text93">transforms <tspan
+   style="font-style:italic"
+   id="tspan97">h</tspan> to <tspan
+   style="font-style:italic"
+   id="tspan98">H</tspan></text>
+  <path
+     d="M 838,326 q 0,11.0 14,11.0 L 1019,337.0 q 14,0 14,11.0 q 0,-11.0 14,-11.0 L 1214,337.0 q 14,0 14,-11.0"
+     fill="none"
+     stroke="#333333"
+     stroke-width="2.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="path93" />
+  <text
+     x="1031.754"
+     y="378"
+     text-anchor="middle"
+     font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+     font-size="28px"
+     fill="#333333"
+     id="text95">fits 3 <tspan
+   style="font-style:italic"
+   id="tspan99">y</tspan> functions in <tspan
+   style="font-style:italic"
+   id="tspan100">H</tspan></text>
 </svg>

@@ -65,9 +65,9 @@
 
   <p class="fragment">When computers were first invented, they were imagined as thinking entities that you could pose questions to and get answers from, more like an oracle than a calculator.</p>
 
-  <p class="fragment">Now that many people can access personal computers and the Internet, we’ve come to think of them as a <span class="bold">thing</span> or a <span class="bold">place</span>: desktop, tool, game, cyberspace, platform, storefront, feed.</p>
+  <p class="fragment">In the generations since we got personal computers and the Internet, we’ve come to think of them as a <span class="bold">thing</span> or a <span class="bold">place</span>: desktop, tool, game, cyberspace, platform, storefront, feed.</p>
 
-  <p class="fragment">Now computers <span class="italic">actually can</span> hold a conversation, like on <span class="italic">Star Trek</span>.</p>
+  <p class="fragment">Now computers <span class="italic">actually can</span> hold a conversation, like the computer on <span class="italic">Star Trek</span>.</p>
 
   <div class="fragment">
     <p>The purpose of this talk is to understand what happened, without anthropomorphizing.</p>
@@ -80,14 +80,14 @@
 </section>
 
 <section>
-  <h2>Through-line for this talk</h2>
+  <h2>Storyline for this talk</h2>
 
   <div class="fragment">
     <ol style="padding-left: 100px;">
       <li style="margin-top: 20px;">Data can be represented as points in space.</li>
       <li style="margin-top: 20px;">Models are smooth functions over space, fitted to match the training data.</li>
       <li style="margin-top: 20px;">Space can be transformed to different coordinate systems, taking the data with it.</li>
-      <li style="margin-top: 20px;">A neural network is a model that discovers symmetric patterns in space.</li>
+      <li style="margin-top: 20px;">A neural network is a model that discovers patterns of patterns in space.</li>
     </ol>
   </div>
 
@@ -113,14 +113,14 @@
 </section>
 
 <section>
-  <h2>Through-line for this talk</h2>
+  <h2>Storyline for this talk</h2>
 
   <div style="position: relative;">
     <ol style="padding-left: 100px; visibility: hidden;" aria-hidden="true">
       <li style="margin-top: 20px;">Data can be represented as points in space.</li>
       <li style="margin-top: 20px;">Models are smooth functions over space, fitted to match the training data.</li>
       <li style="margin-top: 20px;">Space can be transformed to different coordinate systems, taking the data with it.</li>
-      <li style="margin-top: 20px;">A neural network is a model that discovers symmetric patterns in space.</li>
+      <li style="margin-top: 20px;">A neural network is a model that discovers patterns of patterns in space.</li>
     </ol>
     <ol style="position: absolute; top: calc(50% + (24px - 40px) / 2); transform: translateY(-50%); left: 0; right: 0; padding-left: 100px;">
       <li style="margin: 0; list-style-type: '1–4. ';">How to find hidden geometric patterns in spatial data.</li>
@@ -159,7 +159,7 @@
 </section>
 
 <section>
-  <h2 style="text-align: center; margin-top: 300px;">How to find hidden geometric<br>patterns in spatial data.</h2>
+  <h2 style="text-align: center; margin-top: 250px;"><span class="bold">Part 1:</span><br>How to find hidden geometric<br>patterns in spatial data.</h2>
 </section>
 
 <section>
@@ -198,7 +198,7 @@
     <img style="height: 300px; display: block; margin: 0 auto;" src="img/curve_fit.svg">
   </div>
 
-  <p class="fragment" style="margin-top: 30px;">A function <span class="italic">f</span> is some algorithm (a formula or a computer program) that predicts a single number <span class="italic">f(x)</span> for every number <span class="italic">x</span>.</p>
+  <p class="fragment" style="margin-top: 30px;">A function <span class="italic">f</span> is some algorithm that predicts a point <span class="italic">f(x)</span> for every point <span class="italic">x</span>.<br>It can be a formula in a math book or a program on a computer.</p>
 </section>
 
 <!-- 2. a model: a smooth function from the data's space to the prediction -->
@@ -323,17 +323,18 @@
 <section>
   <h2>Why build layers when one artificial neuron approximates any function?</h2>
 
-  <p style="margin-top: 150px; color: #1f6fb4;"><span style="visibility: hidden;">3.</span> Fitting a deep (many-layered) neural network is a search for symmetries in the data.</p>
+  <p style="margin-top: 120px; color: #1f6fb4;"><span style="visibility: hidden;">3.</span> Fitting a deep (many-layered) neural network is a search for symmetries in the data.</p>
 
   <br><br>
-  <p class="fragment"><span style="visibility: hidden;">3.</span> Many real-world datasets consist of hierarchical patterns of patterns.</p>
+  <p class="fragment"><span style="visibility: hidden;">3.</span> Many real-world datasets have hierarchical patterns of patterns and hidden symmetries.</p>
 
   <br><br>
-  <p class="fragment"><span style="visibility: hidden;">3.</span> Neural networks are good at finding them <span class="italic">in spatial shapes</span>.</p>
+  <p class="fragment"><span style="visibility: hidden;">3.</span> Neural networks are good at finding them <span class="italic">as spatial shapes</span>.</p>
+  <p class="fragment"><span style="visibility: hidden;">3.</span> They expect distance, continuity, and geometric relationships to be meaningful.</p>
 </section>
 
 <section>
-  <h2 style="text-align: center; margin-top: 300px;">How to turn linguistic meaning into<br>geometry and find its patterns.</h2>
+  <h2 style="text-align: center; margin-top: 250px;"><span class="bold">Part 2:</span><br>How to turn linguistic meaning into<br>geometry and find its patterns.</h2>
 </section>
 
 <section>
@@ -349,20 +350,20 @@
     <br><br>
     <p>But this encoding doesn’t capture semantic meaning:</p>
     <ul>
-      <li>“If” and “Whether” are close in meaning, but spelled entirely differently.</li>
-      <li>“Showing” and “Snowing” are far in meaning, but spelled nearly the same.</li>
+      <li>“If” and “Whether” are close in meaning, but are spelled entirely differently.</li>
+      <li>“Showing” and “Snowing” are far in meaning, but are spelled nearly the same.</li>
     </ul>
   </div>
 
   <br><br>
-  <p class="fragment">Remember that neural networks look for <span class="italic">spatial</span> patterns, and words encoded this way don’t have relationships in space.</p>
+  <p class="fragment">Remember that neural networks look for <span class="italic">spatial</span> patterns, and words encoded this way don’t reveal their relationships in space.</p>
 </section>
 
 <section>
   <h2>Words as points in space</h2>
 
   <br><br><br>
-  <p>Instead, train a model to transform words into points in a 100-dimensional space.</p>
+  <p>Instead, train a model to map words to points in a 100-dimensional space.</p>
 
   <br><br><br><br>
   <p>Nearby points are similar words, faraway points are dissimilar, and arithmetic relationships correspond to semantic relationships.</p>
@@ -375,7 +376,7 @@
   <h2>What about relationships between words?</h2>
   <div class="cite"><a href="https://doi.org/10.48550/arXiv.1706.03762" target="_blank" rel="noopener">A. Vaswani et al., <i>Attention Is All You Need</i> (2017).</a></div>
 
-  <p class="fragment">Words that are very far from each other in a text can have important connections.</p>
+  <p class="fragment">Distant words in a text can have important connections, such as a name in a murder mystery.</p>
 
   <div class="fragment">
     <p>To learn these relationships, the neural network in a language model computes an <span class="bold">attention matrix</span> between every pair of words in the sequence and uses that to make predictions.</p>
@@ -410,7 +411,7 @@
 <section data-background-iframe="demo4-attention/3-verb-classes.html" data-background-interactive></section>
 
 <section>
-  <h2 style="text-align: center; margin-top: 300px;">How to build systems that talk, using<br>linguistic patterns from millions of humans.</h2>
+  <h2 style="text-align: center; margin-top: 250px;"><span class="bold">Part 3:</span><br>How to build systems that talk, using<br>linguistic patterns from millions of humans.</h2>
 </section>
 
 <section>
@@ -462,7 +463,7 @@
   <p class="fragment" data-fragment-index="1">Training on raw text made an LLM that could be tricked into providing information or solving problems, but it would be more useful if you could just ask questions and get the answers.</p>
 
   <br><br>
-  <p class="fragment" data-fragment-index="2">So continue training the LLM on text, this time in the form of stage directions between two characters, “Assistant” and “User”, with the LLM only completing “Assistant” messages.</p>
+  <p class="fragment" data-fragment-index="2">So we continue training the LLM on text, this time in the form of stage directions between two characters, “Assistant” and “User”, with the LLM only completing “Assistant” messages.</p>
 
   <br><br>
   <p class="fragment" data-fragment-index="3"><span class="bold">Reinforcement Learning from Human Feedback (RLHF):</span> humans rate the quality of the messages, and this score is what the fitter optimizes.</p>
@@ -493,7 +494,7 @@
 
   <div class="r-hstack" style="align-items: flex-start;">
     <div style="width: 40%;">
-      <p><span style="color: #f28c28;">Prompt:</span> What follows “It was the best of times”?</p>
+      <p><span style="color: #f28c28;">Prompt:</span> What follows “It was<br>the best of times”?</p>
 
       <p style="font-size: 0.75em;">
 → it was the worst of times.<br>
@@ -663,14 +664,14 @@ Apple beguiles cursed, dwarfs enchant fair girl, huntsman intervenes; jealous ki
 </section>
 
 <section>
-  <h2>Through-line for this talk</h2>
+  <h2>Storyline for this talk</h2>
 
   <div>
     <ol style="padding-left: 100px;">
       <li style="margin-top: 20px;">Data can be represented as points in space.</li>
       <li style="margin-top: 20px;">Models are smooth functions over space, fitted to match the training data.</li>
       <li style="margin-top: 20px;">Space can be transformed to different coordinate systems, taking the data with it.</li>
-      <li style="margin-top: 20px;">A neural network is a model that discovers symmetric patterns in space.</li>
+      <li style="margin-top: 20px;">A neural network is a model that discovers patterns of patterns in space.</li>
     </ol>
   </div>
 
@@ -696,14 +697,14 @@ Apple beguiles cursed, dwarfs enchant fair girl, huntsman intervenes; jealous ki
 </section>
 
 <section>
-  <h2>Through-line for this talk</h2>
+  <h2>Storyline for this talk</h2>
 
   <div style="position: relative;">
     <ol style="padding-left: 100px; visibility: hidden;" aria-hidden="true">
       <li style="margin-top: 20px;">Data can be represented as points in space.</li>
       <li style="margin-top: 20px;">Models are smooth functions over space, fitted to match the training data.</li>
       <li style="margin-top: 20px;">Space can be transformed to different coordinate systems, taking the data with it.</li>
-      <li style="margin-top: 20px;">A neural network is a model that discovers symmetric patterns in space.</li>
+      <li style="margin-top: 20px;">A neural network is a model that discovers patterns of patterns in space.</li>
     </ol>
     <ol style="position: absolute; top: calc(50% + (24px - 40px) / 2); transform: translateY(-50%); left: 0; right: 0; padding-left: 100px;">
       <li style="margin: 0; list-style-type: '1–4. ';">How to find hidden geometric patterns in spatial data.</li>
@@ -758,7 +759,7 @@ Apple beguiles cursed, dwarfs enchant fair girl, huntsman intervenes; jealous ki
     </ul>
   </div>
 
-  <p class="fragment" style="margin-top: 45px;">In other words, working through the consequences of that discovery!</p>
+  <p class="fragment" style="margin-top: 45px;">In other words, working through the consequences of few-shot learning!</p>
 </section>
 
 </div>
