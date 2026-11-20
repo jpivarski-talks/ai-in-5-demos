@@ -313,13 +313,13 @@
   <img style="display: block; margin: 0 auto 12px auto;" src="img/network_layers_braces.svg">
 
   <br>
-  <p class="fragment" style="color: blue;">3. Fitting a deep (many-layered) neural network is a search for symmetries in the data.</p>
+  <p class="fragment" style="color: #1f6fb4;">3. Fitting a deep (many-layered) neural network is a search for symmetries in the data.</p>
 </section>
 
 <section>
   <h2>Why build layers when one artificial neuron approximates any function?</h2>
 
-  <p style="margin-top: 150px; color: blue;"><span style="visibility: hidden;">3.</span> Fitting a deep (many-layered) neural network is a search for symmetries in the data.</p>
+  <p style="margin-top: 150px; color: #1f6fb4;"><span style="visibility: hidden;">3.</span> Fitting a deep (many-layered) neural network is a search for symmetries in the data.</p>
 
   <br><br>
   <p class="fragment"><span style="visibility: hidden;">3.</span> Many real-world datasets consist of hierarchical patterns of patterns.</p>
@@ -369,6 +369,7 @@
 
 <section>
   <h2>What about relationships between words?</h2>
+  <div class="cite"><a href="https://doi.org/10.48550/arXiv.1706.03762" target="_blank" rel="noopener">A. Vaswani et al., <i>Attention Is All You Need</i> (2017).</a></div>
 
   <p class="fragment">Words that are very far from each other in a text can have important connections.</p>
 
@@ -408,19 +409,78 @@
   <h2 style="text-align: center; margin-top: 300px;">How to build systems that talk, using<br>linguistic patterns from millions of humans.</h2>
 </section>
 
+<section>
+  <h2>Large Language Model (LLM)</h2>
 
+  <p>An LLM is a neural network with word embeddings and attention matrices, trained on Internet-scale text, with enough parameters and layers to find all the nuanced patterns.</p>
 
+  <img style="height: 610px; display: block; margin: 0 auto; margin-top: -20px;" src="img/trillions-of-words-and-parameters.svg">
+</section>
 
+<section>
+  <h2>First round of training: “base” LLMs</h2>
+
+  <p>Trained to predict the next word in a long sequence.</p>
+
+  <div class="fragment">
+    <p>To generate output, pass in incomplete text and ask for a likely word to complete it.</p>
+
+    <img style="height: 250px; display: block; margin: 0 auto;" src="img/llm-token-prediction-1.svg">
+  </div>
+
+  <div class="fragment">
+    <p>Then append the predicted word to the input and do it again (and again…).</p>
+
+    <img style="height: 250px; display: block; margin: 0 auto;" src="img/llm-token-prediction-2.svg">
+  </div>
+</section>
 
 <!-- 8. a base LLM: knowledge and few-shot problem solving -->
 <section data-background-iframe="demo5-few-shot/1-complete.html" data-background-interactive></section>
-<!-- 9. RLHF (no demo) -->
-<!-- 10. chatbots and agents: transcripts passed between LLMs, users, and tools -->
+
 <section>
-  <img class="at" style="left: 0; top: 0; width: 1600px; height: 900px; object-fit: contain;" src="img/basic-chatbot.png">
+  <h2>An LLM trained purely to complete Internet-scale text…</h2>
+
+  <br><br><br>
+  <p class="fragment">1. Contains knowledge about the world (like a book) in a way that can be queried with natural language (unlike a book).</p>
+
+  <br><br><br><br>
+  <p class="fragment">2. Can be instructed to follow new, previously unseen patterns, and therefore solve generic problems without explicit training and only a few examples.</p>
 </section>
+
+<!-- 9. RLHF (no demo) -->
+
 <section>
-  <img class="at" style="left: 0; top: 0; width: 1600px; height: 900px; object-fit: contain;" src="img/tool-web-search.png">
+  <h2>Second round of training: “instruct” LLMs</h2>
+  <div class="cite"><a class="fragment" data-fragment-index="3" href="https://doi.org/10.48550/arXiv.2203.02155" target="_blank" rel="noopener">L. Ouyang et al., <i>Training language models to follow instructions with human feedback</i> (2022).</a><a class="fragment" data-fragment-index="4" href="https://doi.org/10.48550/arXiv.2411.15124" target="_blank" rel="noopener">N. Lambert et al., <i>Tülu 3: Pushing Frontiers in Open Language Model Post-Training</i> (2024).</a></div>
+
+  <br>
+  <p class="fragment" data-fragment-index="1">Training on raw text made an LLM that could be tricked into providing information or solving problems, but it would be more useful if you could just ask questions and get the answers.</p>
+
+  <br><br>
+  <p class="fragment" data-fragment-index="2">So continue training the LLM on curated text, in the form of stage directions between two characters, “Assistant” and “User”, with the LLM only completing “Assistant” messages.</p>
+
+  <br><br>
+  <p class="fragment" data-fragment-index="3"><span class="bold">Reinforcement Learning from Human Feedback (RLHF):</span> humans rate the quality of the messages, and this score is what the fitter optimizes.</p>
+
+  <br><br>
+  <p class="fragment" data-fragment-index="4">And/or use tests of knowledge and skills (designed for humans) as a score to optimize.</p>
+</section>
+
+<section>
+  <h2>Basic chatbot = LLM + transcript</h2>
+
+  <p>An LLM has no memory and need not even be a persistent entity.</p>
+
+  <img style="height: 640px; display: block; margin: 0 auto;" src="img/basic-chatbot.png">
+</section>
+
+<section>
+  <h2>Modern chatbots also talk to “tools” like web search</h2>
+
+  <p>The web is a better source of correct facts than the neural network itself.</p>
+
+  <img style="height: 640px; display: block; margin: 0 auto;" src="img/tool-web-search.png">
 </section>
 
 <section>
@@ -429,7 +489,7 @@
 
   <div class="r-hstack" style="align-items: flex-start;">
     <div style="width: 40%;">
-      <p>What follows “It was the best of times”?</p>
+      <p><span style="color: #f28c28;">Prompt:</span> What follows “It was the best of times”?</p>
 
       <p style="font-size: 0.75em;">
 → it was the worst of times.<br>
@@ -449,7 +509,7 @@
 
     </div>
     <div style="width: 60%;">
-      <p>What follows “His judges sat upon the Bench in feathered hats”?</p>
+      <p><span style="color: #f28c28;">Prompt:</span> What follows “His judges sat upon the Bench in feathered hats”?</p>
 
       <p style="font-size: 0.75em;">
 → and looked at Monsieur the Marquis as if they thought him too much above the common herd to be tried by such canaille.<br>
@@ -509,34 +569,39 @@
   </div>
 
   <br>
-  <p class="fragment">Now it’s correct every time.</p>
+  <p class="fragment" style="color: #1f6fb4;">Now it’s correct every time for the obscure line as well.</p>
 
-  <p class="fragment">We’re only relying on its ability to summarize the source, which is much more accurate.</p>
-
+  <p class="fragment">We’re only relying on its ability to extract information from the full text: much more accurate.</p>
 </section>
 
 <section>
-  <img class="at" style="left: 0; top: 0; width: 1600px; height: 900px; object-fit: contain;" src="img/tool-reasoning.png">
+  <h2>An internal tool: “reasoning”</h2>
+  <div class="cite"><a href="https://doi.org/10.48550/arXiv.2201.11903" target="_blank" rel="noopener">J. Wei et al., <i>Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</i> (2022).</a><a href="https://doi.org/10.1038/s41586-025-09422-z" target="_blank" rel="noopener">D. Guo et al., <i>DeepSeek-R1 incentivizes reasoning in LLMs through reinforcement learning</i> (2025).</a></div>
+
+  <p>A complex problem is more likely to be solved correctly if it’s a summary of a long transcript with the problem broken down into steps. Intermediate transcripts aren’t shown to the user.</p>
+
+  <br>
+  <img style="height: 500px; display: block; margin: 0 auto;" src="img/tool-reasoning.png">
 </section>
 
 <section>
-  <h2 style="margin-bottom: 26px;">Experiment: Snow White in 26 words, from A to Z</h2>
+  <h2 style="margin-bottom: 26px;">Experiment: a hard problem with a verifiable answer</h2>
   <div class="cite"><span>OpenAI gpt-5.4, temperature 1, no web search, no reasoning.</span></div>
   <style>
     .reveal .az-list { font-size: 24px; line-height: 1.25; margin: 0; }
     .reveal .az-list li { margin: 0 0 6px 0; list-style: none; text-indent: -1.4em; padding-left: 1.4em; }
     .reveal .az-bad { background: rgb(251, 214, 172); border-radius: 4px; padding: 0 2px; }
-    .reveal .az-miss { display: inline-block; text-indent: 0; font-size: 0.8em; line-height: 1.15; color: #b35c00; border: 1.5px solid rgb(245, 147, 34); border-radius: 4px; padding: 0 4px; margin: 0 4px 0 0; }
+    .reveal .az-miss { display: inline-block; text-indent: 0; font-size: 0.8em; line-height: 1.15; color: red; border: 1.5px solid red; border-radius: 4px; padding: 0 4px; margin: 0 4px 0 0; }
   </style>
-  <p style="font-size: 27px; margin-bottom: 16px;">Write the story of Snow White in 26 words, in which the initial letter of each word is in alphabetical order.</p>
+  <p style="font-size: 27px; margin-bottom: 16px;"><span style="color: #f28c28;">Prompt:</span> Write the story of Snow White in 26 words, in which the initial letter of each word is in alphabetical order.</p>
   <ul class="az-list">
     <li>→ A bashful child, deceived, eats fatal gift; hunters investigate, join kindly locals. Mysteriously, nobility overcomes poisoning; queen repents, serenity triumphs, until villains wane.<span class="az-miss">x–z</span></li>
     <li>→ A beauty chased, dwarfs entertained, fatefully given, hidden in jealousy, killed; later, magic nudged open poisoned queen&#x27;s rage, sleeping transformed, undone, victoriously waking.<span class="az-miss">x–z</span></li>
     <li>→ A beauty, cursed, dwells; envious foes give harmful injections. <span class="az-miss">j</span>Kind love matures, nurturing one peaceful queen, resurrected, safe, thriving under vigilant woodland xenial youths&#x27; zeal.</li>
-    <li>→ A bewitched child, deepens enchantment; fleeing, gains haven in jolly kingdom. Lurking malice nears, offering poisoned quince. Rescued, Snow triumphs; united victor weds xenial youth zealously.</li>
+    <li>→ A bewitched child, deepens enchantment; fleeing, gains haven in jolly kingdom. Lurking malice nears, offering poisoned quince. Rescued, Snow triumphs; united victor weds xenial youth zealously. <span style="color: #1f6fb4; font-weight: bold;">CORRECT!</span></li>
     <li>→ A beautiful captive dodges envy; forest gnomes house innocent jewelkeeper, kindling love. Meanwhile, nasty <span class="az-miss">o</span><span class="az-miss">p</span>queen readies sleeping trick; until valiant woodsman x-rays youthful zest.</li>
     <li>→ A beauty, cursed, dwarfs encounter fairness; grim huntsman ignores jealousy, keeps living maiden nearby. One prince quietly revives sleeping treasure; united, villainess withers.<span class="az-miss">x–z</span></li>
-    <li>→ A bashful child dwells, enchanted, fleeing grim huntsman; in jealous kingdom, lovely maiden nears ominous poisoned quietude, revived; seven tiny unicorns vanquish wicked xenial youth&#x27;s zeal.</li>
+    <li>→ A bashful child dwells, enchanted, fleeing grim huntsman; in jealous kingdom, lovely maiden nears ominous poisoned quietude, revived; seven tiny unicorns vanquish wicked xenial youth&#x27;s zeal. <span style="color: #1f6fb4; font-weight: bold;">CORRECT!</span></li>
     <li>→ A beautiful child, doomed, escaped forests, gained haven; <span class="az-miss">i</span>jealous kingdom lady made <span class="az-miss">n</span><span class="az-miss">o</span>poisoned quince. Rescued, Snow triumphed; upon <span class="az-miss">v</span>waking, xenial youths zigzagged.</li>
     <li>→ Aged beauty, chased, deepens envy; fleeing, grieving, hidden in jungle, keeps low, meeting nurturing outcasts, poisoning quenched; revived, safe, triumphant, ultimately vindicating white <span class="az-miss">x</span>youth.<span class="az-miss">z</span></li>
     <li>→ A beautiful child, doomed, enchanted, fled; gentle huntsman intervened. Jealous kingdom lady mirrored, noting one peer: queenly refugee Snowed <span class="az-miss">t</span>under, vexing wickedness. Xenial youths zealously.</li>
@@ -564,7 +629,132 @@ Apple beguiles cursed, dwarfs enchant fair girl, huntsman intervenes; jealous ki
 </section>
 
 <section>
-  <img class="at" style="left: 0; top: 0; width: 1600px; height: 900px; object-fit: contain;" src="img/tool-agent.png">
+  <h2>Agents, such as coding agents</h2>
+
+  <p>If these transcripts are interpreted by other programs as instructions to run, the chatbot can change real things, like creating files of code and running them.</p>
+
+  <img style="height: 600px; display: block; margin: 0 auto;" src="img/tool-agent.png">
+</section>
+
+<section>
+  <h2>Two fronts for generative AI</h2>
+
+  <br>
+  <ul>
+    <li><span class="bold">Refinement:</span> frontier labs have been making bigger models, curating training data, improving RLHF techniques, and integrating LLMs with image recognition and generation.
+
+    <li style="margin-top: 30px;" class="fragment"><span class="bold">Agents:</span> everyone else has been building workflows of conventional code around LLMs.
+      <ul style="margin-top: 30px;">
+        <li>Integrating into search engines, retrieval over private documents
+        <li>Memory systems, LLM-accessible databases
+        <li>Coding agents that write, run, and test code in a loop
+        <li>New connectors through the Model Context Protocol (MCP)
+        <li>Browser and computer use: clicking and typing in applications designed for humans
+        <li>Orchestration: one agent delegating subtasks to others
+        <li>Statistical workflows with LLMs as classifiers or for structuring free-text data
+        <li>Guardrails: code that checks LLM output
+      </ul>
+      <img style="display: block; margin: -200px 0 0 auto; height: 200px;" src="img/redstone.png">
+  </ul>
+</section>
+
+<section>
+  <h2>Through-line for this talk</h2>
+
+  <div>
+    <ol style="padding-left: 100px;">
+      <li style="margin-top: 20px;">Data can be represented as points in space.</li>
+      <li style="margin-top: 20px;">Models are smooth functions over space, fitted to match the training data.</li>
+      <li style="margin-top: 20px;">Space can be transformed to different coordinate systems, taking the data with it.</li>
+      <li style="margin-top: 20px;">A neural network is a model that discovers symmetric patterns in space.</li>
+    </ol>
+  </div>
+
+  <div>
+    <hr>
+
+    <ol style="padding-left: 100px;" start="5">
+      <li style="margin-top: 20px;">Meanings of words can be represented as points in space.</li>
+      <li style="margin-top: 20px;">Relationships between words can be encoded in an attention matrix.</li>
+      <li style="margin-top: 20px;">Natural language has syntax patterns that point to world-modeling.</li>
+    </ol>
+  </div>
+
+  <div>
+    <hr>
+
+    <ol style="padding-left: 100px;" start="8">
+      <li style="margin-top: 20px;">Training on large enough bodies of text yields problem-solving capabilities.</li>
+      <li style="margin-top: 20px;">Modern chatbots refine this capability and reshape it into Q&amp;A format.</li>
+      <li style="margin-top: 20px;">Agents are conventional systems built around this problem-solving unit.</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2>Through-line for this talk</h2>
+
+  <div style="position: relative;">
+    <ol style="padding-left: 100px; visibility: hidden;" aria-hidden="true">
+      <li style="margin-top: 20px;">Data can be represented as points in space.</li>
+      <li style="margin-top: 20px;">Models are smooth functions over space, fitted to match the training data.</li>
+      <li style="margin-top: 20px;">Space can be transformed to different coordinate systems, taking the data with it.</li>
+      <li style="margin-top: 20px;">A neural network is a model that discovers symmetric patterns in space.</li>
+    </ol>
+    <ol style="position: absolute; top: calc(50% + (24px - 40px) / 2); transform: translateY(-50%); left: 0; right: 0; padding-left: 100px;">
+      <li style="margin: 0; list-style-type: '1–4. ';">How to find hidden geometric patterns in spatial data.</li>
+    </ol>
+  </div>
+
+  <div>
+    <hr>
+
+    <div style="position: relative;">
+      <ol style="padding-left: 100px; visibility: hidden;" aria-hidden="true" start="5">
+        <li style="margin-top: 20px;">Meanings of words can be represented as points in space.</li>
+        <li style="margin-top: 20px;">Relationships between words can be encoded in an attention matrix.</li>
+        <li style="margin-top: 20px;">Natural language has syntax patterns that point to world-modeling.</li>
+      </ol>
+      <ol style="position: absolute; top: calc(50% + (24px - 20px) / 2); transform: translateY(-50%); left: 0; right: 0; padding-left: 100px;">
+        <li style="margin: 0; list-style-type: '5–7. ';">How to turn linguistic meaning into geometry and find its patterns.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div>
+    <hr>
+
+    <div style="position: relative;">
+      <ol style="padding-left: 100px; visibility: hidden;" aria-hidden="true" start="8">
+        <li style="margin-top: 20px;">Training on large enough bodies of text yields problem-solving capabilities.</li>
+        <li style="margin-top: 20px;">Modern chatbots refine this capability and reshape it into Q&amp;A format.</li>
+        <li style="margin-top: 20px;">Agents are conventional systems built around this problem-solving unit.</li>
+      </ol>
+      <ol style="position: absolute; top: calc(50% + (24px - 20px) / 2); transform: translateY(-50%); left: 0; right: 0; padding-left: 100px;">
+        <li style="margin: 0; list-style-type: '8–10. ';">How to build systems that talk, using linguistic patterns from millions of humans.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Conclusion</h2>
+
+  <p style="margin-top: 45px;">I hope this makes chatbots seem less mysterious.</p>
+
+  <p class="fragment" style="margin-top: 45px;">As you saw, the algorithms are only fitting geometrical curves to language data, matching the data in a way that seeks internal symmetries, rather than rote memorization.</p>
+
+  <p class="fragment" style="margin-top: 45px;">I find it surprising that <span class="italic">just doing that</span> gives us a general-purpose problem-solver, the discovery of <span class="bold">few-shot learning</span>.</p>
+
+  <div class="fragment">
+    <p style="margin-top: 45px;">What’s happened since 2020:</p>
+    <ul>
+      <li><span class="bold">Refining that capability:</span> aligning the LLM with user interests and cleaning the interface.</li>
+      <li><span class="bold">Building around it:</span> using its strengths (e.g. summarizing web articles more than drawing on internal knowledge) and putting it to work (e.g. writing code).</li>
+    </ul>
+  </div>
+
+  <p class="fragment" style="margin-top: 45px;">In other words, working through the consequences of that discovery!</p>
 </section>
 
 </div>

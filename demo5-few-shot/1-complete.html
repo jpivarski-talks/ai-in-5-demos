@@ -45,7 +45,7 @@ const side = Stage.el("div", { id: "side" });
 // the citation tops the right column; the presets start below however many lines it takes
 const cite = Stage.cite([["T. B. Brown et al., <i>Language Models are Few-Shot Learners</i> (2020).", "https://doi.org/10.48550/arXiv.2005.14165"]],
   { x: 1300, y: 20, w: 280 }, { align: "left" });
-const sideTop = 20 + cite.offsetHeight + 14;
+const sideTop = 20 + cite.offsetHeight + 30;   // a little space below the citation
 Stage.place(side, { x: 1300, y: sideTop, w: 280, h: 720 - sideTop });
 const err = Stage.el("div", { id: "err" });
 Stage.place(err, { x: 1300, y: 590, w: 280, h: 90 });
@@ -76,7 +76,10 @@ Stage.place(gear, { x: 1535, y: 822, w: 40, h: 40 });
 
 let abort = null;
 
-// a preset just fills in the text box (and "verbatim" also turns on the check against the book)
+// a preset just fills in the text box (and "verbatim" also turns on the check against the book);
+// the buttons are headed "Examples:", the size of the labels of the knobs below but bold, in the text color
+const examples = Stage.el("div", { text: "Examples:" }, side);
+Object.assign(examples.style, { fontSize: "22px", fontWeight: "bold", color: Stage.COLORS.ink });
 for (const p of PRESETS) {
   Stage.button(p.label, () => { stop(); setText(p.prompt); setVerbatim(p.verbatim ? p.verbatim() : null); }, side);
 }
